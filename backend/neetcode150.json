@@ -2,15 +2,27 @@
   {
     "topic": "Arrays & Hashing",
     "problems": [
-      { "title": "Contains Duplicate", "titleSlug": "contains-duplicate", "difficulty": "Easy" },
-      { "title": "Valid Anagram", "titleSlug": "valid-anagram", "difficulty": "Easy" },
+      {
+        "title": "Contains Duplicate",
+        "titleSlug": "contains-duplicate",
+        "difficulty": "Easy"
+      },
+      {
+        "title": "Valid Anagram",
+        "titleSlug": "valid-anagram",
+        "difficulty": "Easy"
+      },
       { "title": "Two Sum", "titleSlug": "two-sum", "difficulty": "Easy" }
     ]
   },
   {
     "topic": "Two Pointers",
     "problems": [
-      { "title": "Valid Palindrome", "titleSlug": "valid-palindrome", "difficulty": "Easy" },
+      {
+        "title": "Valid Palindrome",
+        "titleSlug": "valid-palindrome",
+        "difficulty": "Easy"
+      },
       { "title": "3Sum", "titleSlug": "3sum", "difficulty": "Medium" }
     ]
   }

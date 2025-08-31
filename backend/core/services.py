@@ -5,8 +5,43 @@ from typing import Any, Dict, List, Optional
 
 import pytz
 import requests
+from cryptography.fernet import Fernet, InvalidToken
+from django.conf import settings
 
 from .models import Problem, Profile, RoadmapSnapshot, Submission
+
+
+class EncryptionService:
+    def __init__(self):
+        key = settings.ENCRYPTION_KEY
+        if not key:
+            raise ValueError(
+                "ENCRYPTION_KEY not found in settings. Please set it in your .env file."
+            )
+        self.fernet = Fernet(key.encode())  # Fernet requires the key to be in bytes
+
+    def encrypt(self, data: str) -> str:
+        """Encrypts a string and returns it as a string."""
+        if not data:
+            return ""
+        return self.fernet.encrypt(data.encode()).decode()
+
+    def decrypt(self, encrypted_data: str) -> str:
+        """Decrypts a string and returns it. Returns empty string on failure."""
+        if not encrypted_data:
+            return ""
+        try:
+            return self.fernet.decrypt(encrypted_data.encode()).decode()
+        except InvalidToken:
+            # This can happen if the key changes or the data is corrupt
+            print(
+                "Warning: Failed to decrypt data. It might be invalid or use an old key."
+            )
+            return ""
+
+
+# Create a single instance that the rest of our app can use
+encryption_service = EncryptionService()
 
 LEETCODE_API_ENDPOINT = "https://leetcode.com/graphql"
 
@@ -194,15 +229,24 @@ def run_intelligent_sync_for_user(profile: Profile):
     # Case 3: Desync or Initial Sync. Trigger the heavy request.
     print("Desync detected or initial sync. Performing full history fetch.")
 
-    # TODO: In a real app, you would decrypt this cookie before using it.
-    # For now, we use it directly.
+    # --- THIS IS THE KEY CHANGE ---
+    # Decrypt the cookie before using it.
     if not profile.encrypted_session_cookie:
         print(
             f"No session cookie available for {profile.user.username}. Cannot perform full sync."
         )
         return
 
-    full_history = fetch_full_history(profile.encrypted_session_cookie)
+    decrypted_cookie = encryption_service.decrypt(profile.encrypted_session_cookie)
+    if not decrypted_cookie:
+        print(
+            f"Cookie for {profile.user.username} is missing or corrupt. Invalidating."
+        )
+        profile.is_cookie_valid = False
+        profile.save()
+        return
+
+    full_history = fetch_full_history(decrypted_cookie)
 
     if full_history is None:  # This is our specific signal for auth failure
         print(

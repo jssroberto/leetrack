@@ -2,7 +2,7 @@
 from django.utils import timezone
 from rest_framework import serializers
 
-from .models import Problem, Profile, Submission, WeeklyGoal
+from .models import Problem, Submission, WeeklyGoal
 
 
 class UserSubmissionStatusSerializer(serializers.ModelSerializer):
@@ -60,14 +60,12 @@ class RoadmapProblemSerializer(serializers.ModelSerializer):
         return statuses
 
 
-class ProfileSettingsSerializer(serializers.ModelSerializer):
+class ProfileSettingsSerializer(serializers.Serializer):
     """
-    Serializer for updating a user's profile settings, specifically the cookie.
+    Serializer for displaying user settings. Not used for updating anymore.
     """
 
-    class Meta:
-        model = Profile
-        fields = ["encrypted_session_cookie"]
+    session_cookie = serializers.CharField(source="encrypted_session_cookie")
 
 
 class PledgedProblemSerializer(serializers.ModelSerializer):

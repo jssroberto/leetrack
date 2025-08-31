@@ -29,6 +29,9 @@ SECRET_KEY = config("SECRET_KEY")
 # We also read the debug setting from the .env file
 DEBUG = config("DEBUG", default=False, cast=bool)
 
+# Encryption key for secure cookie storage
+ENCRYPTION_KEY = config("ENCRYPTION_KEY")
+
 ALLOWED_HOSTS = []
 
 

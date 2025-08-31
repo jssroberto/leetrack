@@ -2,6 +2,7 @@
 from collections import defaultdict
 from datetime import timedelta
 
+import requests
 from django.utils import timezone
 from rest_framework import status, viewsets
 from rest_framework.permissions import IsAuthenticated
@@ -10,11 +11,37 @@ from rest_framework.views import APIView
 
 from .models import Problem, Profile, WeeklyGoal
 from .serializers import (
-    ProfileSettingsSerializer,
     RoadmapProblemSerializer,
     WeeklyGoalSerializer,
 )
-from .services import run_intelligent_sync_for_user  # Import our service
+from .services import (  # Import our service
+    encryption_service,
+    run_intelligent_sync_for_user,
+)
+
+
+def is_leetcode_cookie_valid(session_cookie: str) -> bool:
+    """
+    Performs a lightweight test API call to check if a session cookie is valid.
+    Returns True if valid, False otherwise.
+    """
+    if not session_cookie:
+        return False
+
+    # We can use a simple query to test authentication
+    test_query = "query { userStatus { isSignedIn } }"
+
+    s = requests.Session()
+    s.cookies.set("LEETCODE_SESSION", session_cookie, domain=".leetcode.com")
+
+    try:
+        response = s.post("https://leetcode.com/graphql", json={"query": test_query})
+        response.raise_for_status()
+        data = response.json()
+        # The query returns `isSignedIn: true` for a valid cookie
+        return data.get("data", {}).get("userStatus", {}).get("isSignedIn", False)
+    except (requests.exceptions.RequestException, KeyError):
+        return False
 
 
 class RoadmapViewSet(viewsets.ReadOnlyModelViewSet):
@@ -60,19 +87,42 @@ class ProfileSettingsView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        serializer = ProfileSettingsSerializer(request.user.profile)
-        return Response(serializer.data)
+        # We need to decrypt the cookie before sending it to the user
+        encrypted_cookie = request.user.profile.encrypted_session_cookie
+        decrypted_cookie = encryption_service.decrypt(encrypted_cookie)
+        return Response({"session_cookie": decrypted_cookie})
 
     def put(self, request):
         profile = request.user.profile
-        # For now, we save it directly. Later, we'll add validation and encryption.
-        serializer = ProfileSettingsSerializer(profile, data=request.data, partial=True)
-        if serializer.is_valid():
-            # TODO: Add validation logic here (test the cookie)
-            # TODO: Encrypt the cookie before saving
-            serializer.save()
-            return Response({"status": "Profile settings updated successfully"})
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # The frontend will send the plain-text cookie
+        plain_text_cookie = request.data.get("session_cookie")
+
+        if not plain_text_cookie:
+            return Response(
+                {"error": "session_cookie field is required."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # Step 1: Validate the new cookie
+        if not is_leetcode_cookie_valid(plain_text_cookie):
+            return Response(
+                {
+                    "error": "The provided LeetCode session cookie is invalid or expired."
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # Step 2: Encrypt the valid cookie
+        encrypted_cookie = encryption_service.encrypt(plain_text_cookie)
+
+        # Step 3: Save the encrypted cookie and update the profile status
+        profile.encrypted_session_cookie = encrypted_cookie
+        profile.is_cookie_valid = True
+        profile.save()
+
+        return Response(
+            {"status": "LeetCode session cookie updated and validated successfully!"}
+        )
 
 
 class SyncTriggerView(APIView):

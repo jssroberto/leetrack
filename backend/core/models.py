@@ -66,3 +66,21 @@ class RoadmapSnapshot(models.Model):
 
     def __str__(self):
         return f"Snapshot for {self.profile.user.username}"
+
+
+class WeeklyGoal(models.Model):
+    profile = models.ForeignKey(
+        Profile, on_delete=models.CASCADE, related_name="weekly_goals"
+    )
+    # This will always be the Monday of the week for which the goal is set.
+    start_date = models.DateField()
+    # The list of problems the user commits to solving this week.
+    problems = models.ManyToManyField(Problem, related_name="pledged_in_goals")
+
+    class Meta:
+        # A user can only have one goal object per week.
+        unique_together = ("profile", "start_date")
+        ordering = ["-start_date"]
+
+    def __str__(self):
+        return f"Goal for {self.profile.user.username} - Week of {self.start_date.strftime('%Y-%m-%d')}"

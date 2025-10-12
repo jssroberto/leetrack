@@ -1,0 +1,228 @@
+# ============================================
+# Dependencies
+# ============================================
+node_modules/
+.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# ============================================
+# Build outputs
+# ============================================
+dist/
+build/
+out/
+.next/
+.angular/
+.output/
+
+# NestJS specific
+apps/api/dist/
+
+# Angular specific
+apps/web/dist/
+apps/web/.angular/
+apps/web/tmp/
+
+# Browser extension
+apps/extension/dist/
+apps/extension/build/
+apps/extension/*.crx
+apps/extension/*.pem
+apps/extension/*.xpi
+apps/extension/web-ext-artifacts/
+
+# ============================================
+# Environment variables
+# ============================================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env*.local
+
+# ============================================
+# Prisma
+# ============================================
+# Keep migrations, ignore generated client
+libs/database/node_modules/
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# ============================================
+# Logs
+# ============================================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ============================================
+# IDEs and Editors
+# ============================================
+# VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/
+*.code-workspace
+
+# JetBrains (WebStorm, IntelliJ IDEA, etc.)
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+.\#*
+
+# ============================================
+# OS specific
+# ============================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ============================================
+# Testing
+# ============================================
+coverage/
+.nyc_output/
+*.lcov
+.cache/
+
+# Jest
+jest-*.json
+
+# Cypress
+cypress/videos/
+cypress/screenshots/
+cypress/downloads/
+
+# Playwright
+test-results/
+playwright-report/
+playwright/.cache/
+
+# ============================================
+# Temporary files
+# ============================================
+*.tmp
+*.temp
+.temp/
+.tmp/
+
+# ============================================
+# Package manager locks (keep pnpm-lock.yaml)
+# ============================================
+package-lock.json
+yarn.lock
+
+# ============================================
+# PNPM specific
+# ============================================
+.pnpm-store/
+.pnpm-debug.log
+
+# Optional: Uncomment if using virtual store in .pnpm
+# .pnpm/
+
+# ============================================
+# TypeScript
+# ============================================
+*.tsbuildinfo
+
+# ============================================
+# Production and deployment
+# ============================================
+.vercel
+.netlify
+.firebase/
+.serverless/
+
+# ============================================
+# Documentation
+# ============================================
+.docusaurus/
+
+# ============================================
+# Sensitive data
+# ============================================
+# Secrets
+secrets/
+*.key
+*.pem
+*.cert
+*.crt
+*.pfx
+
+# Database backups
+*.sql
+*.dump
+
+# ============================================
+# Miscellaneous
+# ============================================
+.eslintcache
+.stylelintcache
+*.tgz
+*.zip
+*.tar.gz
+*.rar

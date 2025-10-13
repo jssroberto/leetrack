@@ -47,6 +47,7 @@ apps/extension/web-ext-artifacts/
 # ============================================
 # Keep migrations, ignore generated client
 libs/database/node_modules/
+libs/database/src/generated/
 *.db
 *.db-journal
 *.sqlite

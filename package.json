@@ -1,9 +1,15 @@
 {
   "name": "leetrack",
   "version": "1.0.0",
+  "private": true,
   "description": "",
-  "main": "index.js",
   "scripts": {
+    "dev": "pnpm --parallel dev",
+    "dev:api": "pnpm --filter api dev",
+    "dev:web": "pnpm --filter web dev",
+    "build": "pnpm build:api && pnpm build:web",
+    "build:api": "pnpm --filter api build",
+    "build:web": "pnpm --filter web build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

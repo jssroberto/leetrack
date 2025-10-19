@@ -10,10 +10,22 @@
     "build": "pnpm build:api && pnpm build:web",
     "build:api": "pnpm --filter api build",
     "build:web": "pnpm --filter web build",
+    "lint": "eslint .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "packageManager": "pnpm@10.18.1"
+  "packageManager": "pnpm@10.18.1",
+  "devDependencies": {
+    "@angular-eslint/builder": "^18.0.1",
+    "@angular-eslint/eslint-plugin": "^18.0.1",
+    "@angular-eslint/template-parser": "^18.0.1",
+    "@typescript-eslint/eslint-plugin": "latest",
+    "eslint": "latest",
+    "typescript-eslint": "latest",
+    "@eslint/js": "^9.38.0",
+    "eslint-plugin-prettier": "^5.5.4",
+    "globals": "^16.4.0"
+  }
 }

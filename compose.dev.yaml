@@ -1,0 +1,77 @@
+services:
+  postgres:
+    image: postgres:18-alpine
+    container_name: leetrack-postgres-dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - leetrack-network
+
+  api:
+    container_name: leetrack-api-dev
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile.dev
+      target: development
+    ports:
+      - "${API_PORT:-3000}:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    env_file:
+      - .env
+    volumes:
+      - ./apps/api/src:/app/apps/api/src:cached
+      - ./libs:/app/libs:cached
+      - /app/node_modules
+      - /app/apps/api/node_modules
+    networks:
+      - leetrack-network
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./apps/api/package.json
+          target: /app/apps/api/package.json
+
+  web:
+    container_name: leetrack-web-dev
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile.dev
+      target: development
+    ports:
+      - "${WEB_PORT:-4200}:4200"
+    environment:
+      API_URL: http://api:3000
+    volumes:
+      - ./apps/web/src:/app/apps/web/src:cached
+      - ./libs:/app/libs:cached
+      - /app/node_modules
+      - /app/apps/web/node_modules
+    networks:
+      - leetrack-network
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./apps/web/package.json
+          target: /app/apps/web/package.json
+
+networks:
+  leetrack-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    name: leetrack-postgres-dev

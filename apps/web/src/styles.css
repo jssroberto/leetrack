@@ -1,1 +1,38 @@
 @import "tailwindcss";
+@plugin "@midudev/tailwind-animations";
+
+@theme {
+    --font-family-roboto-slab: 'RobotoSlabRegular', sans-serif;
+    --font-family-roboto-slab-bold: 'RobotoSlabBold', sans-serif;
+}
+
+@font-face {
+    font-family: 'RobotoSlabRegular';
+    src: url('/assets/fonts/RobotoSlab/RobotoSlab-Regular.woff2') format('woff2');
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: 'RobotoSlabBold';
+    src: url('/assets/fonts/RobotoSlab/RobotoSlab-Bold.woff2') format('woff2');
+    font-weight: bold;
+}
+
+:root {
+    --primary-color: #1F1F1F;
+    --secondary-color: #E97436;
+
+    --dark: #2F2F2F;
+    --gray: #979797;
+
+    --pink: #CC41C9;
+    --brown: #63422E;
+    
+    --red: #D02A2A;
+    --yellow: #EFB436;
+    --green: #50AF38;
+}
+
+body {
+    font-family: var(--font-family-roboto-slab);
+}

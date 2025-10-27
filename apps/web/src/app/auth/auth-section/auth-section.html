@@ -9,5 +9,13 @@
     </p>
   </header>
   <hr class="text-[var(--gray)]" />
-  <ng-content></ng-content>
+  <form action="" class="flex flex-col gap-[3vh]">
+    <ng-content></ng-content>
+    <button
+      type="submit"
+      class="shadow-[0_6px_6px_var(--shadow)] cursor-pointer transition-all duration-200 hover:bg-[var(--secondary-hover)] bg-[var(--secondary-color)] py-4 rounded-md font-family-roboto-slab-bold text-[var(--light)]"
+    >
+      Continue
+    </button>
+  </form>
 </section>

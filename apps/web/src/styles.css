@@ -22,8 +22,13 @@
     --primary-color: #1F1F1F;
     --secondary-color: #E97436;
 
+    --secondary-hover: #A24E21;
+
+    --light: #ffffff;
     --dark: #2F2F2F;
     --gray: #979797;
+
+    --shadow: rgba(0, 0, 0, 0.2);
 
     --pink: #CC41C9;
     --brown: #63422E;
@@ -34,5 +39,6 @@
 }
 
 body {
+    background-color: var(--primary-color);
     font-family: var(--font-family-roboto-slab);
 }

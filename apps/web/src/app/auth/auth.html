@@ -1,1 +1,15 @@
-<p>auth works!</p>
+<div class="w-screen h-screen flex gap-[5vw] p-[3vw]">
+  <main class="flex flex-col gap-[1vw] w-full">
+    <nav class="flex gap-1 items-center text-[var(--secondary-color)]">
+      <span class="font-family-roboto-slab-bold">Leetrack</span>
+      <img src="/assets/icon/logo.svg" alt="" />
+    </nav>
+    <div class="flex flex-col justify-center flex-1">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+  <div class="hidden md:block absolute left-1/2 w-px m-auto h-screen bg-[var(--gray)] top-0"></div>
+  <aside class="hidden md:block w-full">
+    <!-- example text -->
+  </aside>
+</div>

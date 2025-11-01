@@ -1,5 +1,5 @@
 <div class="flex bg-[var(--dark)] whitespace-nowrap text-[12px] p-3 rounded-md gap-2 shadow-[0_6px_6px_var(--shadow)] w-full h-full items-center"
-    [ngClass]="{'aspect-square cursor-pointer': !title && icon}">
+    [ngClass]="{'aspect-square cursor-pointer hover:bg-[var(--dark-gray)]': !title && icon}">
     @if (number) {
     <span class="text-[var(--gray)]">{{ number }}.</span>
     }

@@ -21,8 +21,16 @@ export const routes: Routes = [
     ],
   },
   {
+    path: 'main',
+    loadComponent: () => import('./main/main').then((m) => m.Main)
+  },
+  {
     path: '',
     redirectTo: 'login',
     pathMatch: 'full',
+  },
+  {
+    path: '**',
+    redirectTo: 'login',
   },
 ];

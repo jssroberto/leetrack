@@ -1,11 +1,11 @@
 <section class="flex flex-col gap-[3vh]">
   <header class="flex flex-col gap-2">
-    <h1 class="text-[var(--light)] text-[clamp(2rem,3vw,3rem)] font-family-roboto-slab-bold">
+    <h1 class="text-[var(--light)] text-[clamp(2rem,2vw,3rem)] font-family-roboto-slab-bold">
       {{ title }}
     </h1>
     <p class="text-[var(--gray)] text-base">
       {{ text }}
-      <a class="text-[var(--secondary-color)] underline" href="{{ link }}">{{ textLink }}</a>
+      <a class="text-[var(--secondary-color)] underline hover:text-[var(--secondary-hover)]" href="{{ link }}">{{ textLink }}</a>
     </p>
   </header>
   <hr class="text-[var(--gray)]" />

@@ -3,7 +3,7 @@
     <h1 class="text-[var(--light)] text-[clamp(2rem,2vw,3rem)] font-family-roboto-slab-bold">
       {{ title }}
     </h1>
-    <p class="text-[var(--gray)] text-base">
+    <p class="text-[var(--gray)] text-md">
       {{ text }}
       <a class="text-[var(--secondary-color)] underline hover:text-[var(--secondary-hover)]" href="{{ link }}">{{ textLink }}</a>
     </p>
@@ -13,7 +13,7 @@
     <ng-content></ng-content>
     <button
       type="submit"
-      class="shadow-[0_6px_6px_var(--shadow)] cursor-pointer transition-all duration-200 hover:bg-[var(--secondary-hover)] bg-[var(--secondary-color)] py-4 rounded-md font-family-roboto-slab-bold text-[var(--light)]"
+      class="shadow-[0_6px_6px_var(--shadow)] cursor-pointer transition-all duration-200 hover:bg-[var(--secondary-hover)] bg-[var(--secondary-color)] py-4 rounded-md font-family-roboto-slab-bold text-[var(--light)] text-sm"
     >
       Continue
     </button>

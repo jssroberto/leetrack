@@ -22,12 +22,21 @@ export const routes: Routes = [
   },
   {
     path: 'main',
-    loadComponent: () => import('./main/main').then((m) => m.Main)
-  },
-  {
-    path: '',
-    redirectTo: 'login',
-    pathMatch: 'full',
+    loadComponent: () => import('./main/main').then((m) => m.Main),
+    children: [
+      {
+        path: 'index',
+        loadComponent: () => import('./main/index').then((m) => m.Index)
+      },
+      {
+        path: 'dashboard',
+        loadComponent: () => import('./main/operations/dashboard/dashboard').then((m) => m.Dashboard)
+      },
+      {
+        path: '**',
+        redirectTo: 'index',
+      },
+    ]
   },
   {
     path: '**',

@@ -1,0 +1,17 @@
+<div class="flex bg-[var(--dark)] whitespace-nowrap text-[12px] p-3 rounded-md gap-2 shadow-[0_6px_6px_var(--shadow)] w-full h-full items-center"
+    [ngClass]="{'aspect-square cursor-pointer': !title && icon}">
+    @if (number) {
+    <span class="text-[var(--gray)]">{{ number }}.</span>
+    }
+
+    @if(title){
+    <span [ngStyle]="{ color: color }" class="text-[var(--light)]">{{ title }}</span>
+    }
+
+    @if (icon) {
+    <svg [attr.width]="icon.size" [attr.height]="icon.size" [attr.viewBox]="icon.viewBox" fill="none"
+        stroke="currentColor">
+        <g [innerHTML]="sanitizeSvg(icon.svg)"></g>
+    </svg>
+    }
+</div>

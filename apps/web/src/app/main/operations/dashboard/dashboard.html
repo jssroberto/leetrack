@@ -1,1 +1,22 @@
-<p>dashboard works!</p>
+<main class="w-full h-full">
+    <h1 class="text-center sm:text-start text-[var(--light)] text-[clamp(2rem,2vw,3rem)] font-family-roboto-slab-bold">
+        Dashboard</h1>
+    <div class="flex flex-col gap-3 items-center">
+        <div class="flex gap-3 w-full">
+            <app-basic-card [color]="'var(--secondary-color)'"
+                [title]="'Longest Substring Without Repeating Characters'" [number]="'58'"
+                class="w-full"></app-basic-card>
+            <app-basic-card [title]="'Hard'" [color]="'var(--red)'"></app-basic-card>
+            <app-basic-card [title]="'+50 XP'" [color]="'var(--pink)'"></app-basic-card>
+            <app-basic-card [icon]="linkIcon"></app-basic-card>
+        </div>
+        <div class="flex gap-3 w-full">
+            <app-basic-card [color]="'var(--secondary-color)'"
+                [title]="'Longest Substring Without Repeating Characters'" [number]="'58'"
+                class="w-full"></app-basic-card>
+            <app-basic-card [title]="'Hard'" [color]="'var(--red)'"></app-basic-card>
+            <app-basic-card [title]="'+50 XP'" [color]="'var(--pink)'"></app-basic-card>
+            <app-basic-card [icon]="linkIcon"></app-basic-card>
+        </div>
+    </div>
+</main>

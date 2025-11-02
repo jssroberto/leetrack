@@ -11,7 +11,11 @@ import { IconRegistryService } from '@web/src/services/icon-registry.service';
 export class Dashboard {
   private iconRegistry = inject(IconRegistryService);
 
-  get linkIcon(){
+  get linkIcon() {
     return this.iconRegistry.getIcon('link')
+  }
+
+  get arrowDownIcon() {
+    return this.iconRegistry.getIcon('arrow_down')
   }
 }

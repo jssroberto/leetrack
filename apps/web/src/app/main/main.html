@@ -1,18 +1,25 @@
-<div class="w-screen h-screen p-[3vw] overflow-hidden">
+<!-- Flex flex-col to use flex-1 -->
+<div class="w-screen h-screen flex flex-col p-[3vw] overflow-hidden gap-8">
     <nav class="flex gap-[1vw] justify-between w-full h-auto items-center">
         <div class="flex gap-1 items-center text-[var(--secondary-color)] cursor-pointer">
             <span class="font-family-roboto-slab-bold">Leetrack</span>
-            <img src="/assets/icon/logo.svg" alt="" draggable="false"/>
+            <img src="/assets/icon/logo.svg" alt="" draggable="false" />
         </div>
         @if (showMenuOptions()) {
         <div class="text-[var(--light)] items-center h-full">
             <ul class="flex gap-[3vw] text-sm">
-                <li class="hover:underline-offset-4 hover:underline hover:text-[var(--secondary-color)] cursor-pointer">Dashboard</li>
-                <li class="hover:underline-offset-4 hover:underline hover:text-[var(--secondary-color)] cursor-pointer">Leaderboard</li>
-                <li class="hover:underline-offset-4 hover:underline hover:text-[var(--secondary-color)] cursor-pointer">Log</li>
-                <li class="hover:underline-offset-4 hover:underline hover:text-[var(--secondary-color)] cursor-pointer">Polling</li>
-                <li class="hover:underline-offset-4 hover:underline hover:text-[var(--secondary-color)] cursor-pointer">Settings</li>
-                <li class="hover:underline-offset-4 hover:underline hover:text-[var(--secondary-color)] cursor-pointer">Groups</li>
+                <li class="hover:underline-offset-4 hover:underline hover:text-[var(--secondary-color)] cursor-pointer">
+                    Dashboard</li>
+                <li class="hover:underline-offset-4 hover:underline hover:text-[var(--secondary-color)] cursor-pointer">
+                    Leaderboard</li>
+                <li class="hover:underline-offset-4 hover:underline hover:text-[var(--secondary-color)] cursor-pointer">
+                    Log</li>
+                <li class="hover:underline-offset-4 hover:underline hover:text-[var(--secondary-color)] cursor-pointer">
+                    Polling</li>
+                <li class="hover:underline-offset-4 hover:underline hover:text-[var(--secondary-color)] cursor-pointer">
+                    Settings</li>
+                <li class="hover:underline-offset-4 hover:underline hover:text-[var(--secondary-color)] cursor-pointer">
+                    Groups</li>
             </ul>
         </div>
         }
@@ -21,7 +28,7 @@
                 <span class="font-family-roboto-slab">User</span>
                 <div class="bg-[var(--secondary-color)] rounded-4xl flex justify-center items-center size-8 z-1">
                     <!-- Margin right depends on level digits -->
-                    <img src="/assets/svgs/user-icon.svg" alt="" draggable="false"/>
+                    <img src="/assets/svgs/user-icon.svg" alt="" draggable="false" />
                 </div>
             </div>
             <div class="relative w-[4rem] h-[30px]">
@@ -36,5 +43,7 @@
         </div>
     </nav>
     <!-- main content -->
-    <router-outlet></router-outlet>
+    <div class="h-full">
+        <router-outlet></router-outlet>
+    </div>
 </div>

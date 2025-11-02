@@ -1,24 +1,20 @@
-<div class="flex bg-[var(--dark)] text-[12px] p-3 rounded-md gap-2 shadow-[0_6px_6px_var(--shadow)] w-full h-full items-center"
-    [ngClass]="{'aspect-square cursor-pointer hover:bg-[var(--dark-gray)] justify-center': !title && icon}">
+<div class="flex bg-[var(--dark)] text-[12px] rounded-md gap-2 shadow-[0_6px_6px_var(--shadow)] w-full h-full items-center"
+    [ngClass]="{
+    'aspect-square cursor-pointer hover:bg-[var(--dark-gray)] justify-center': icon, 
+    'p-3': !icon
+    }">
     @if (number) {
     <span class="text-[var(--gray)]">{{ number }}.</span>
     }
 
     @if(title){
-    <span [ngStyle]="{ color: color || 'var(--light)' }" class="whitespace-nowrap overflow-hidden text-ellipsis">{{ title }}</span>
+    <span [ngStyle]="{ color: color || 'var(--light)' }" class="whitespace-nowrap overflow-hidden text-ellipsis">{{
+        title }}</span>
     }
 
     <!-- Current color para que agarre el color que se le asigna con css -->
     <!-- Fallback icono gray para cuando no hay color asignado -->
     @if (icon) {
-    <svg 
-        [attr.width]="size || icon.size" 
-        [attr.height]="size || icon.size" 
-        [attr.viewBox]="icon.viewBox"
-        fill="none"
-        [style.color]="color || 'var(--gray)'"
-        stroke="currentColor">
-        <g [innerHTML]="sanitizeSvg(icon.svg)"></g>
-    </svg>
+    <lucide-icon [img]="icon" class="my-icon" [size]="size" [color]="color" [strokeWidth]="iconWidth"></lucide-icon>
     }
 </div>

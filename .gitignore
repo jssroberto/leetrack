@@ -10,7 +10,6 @@ node_modules/
 # Build outputs
 # ============================================
 dist/
-build/
 out/
 .next/
 .angular/
@@ -26,7 +25,6 @@ apps/web/tmp/
 
 # Browser extension
 apps/extension/dist/
-apps/extension/build/
 apps/extension/*.crx
 apps/extension/*.pem
 apps/extension/*.xpi

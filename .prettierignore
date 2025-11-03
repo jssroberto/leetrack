@@ -1,6 +1,5 @@
 node_modules
 dist
-build
 coverage
 .angular
 pnpm-lock.yaml

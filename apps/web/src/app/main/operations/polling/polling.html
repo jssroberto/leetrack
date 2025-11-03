@@ -1,0 +1,56 @@
+<main class="w-full h-full text-[var(--light)] flex flex-col gap-4">
+    <!-- main title -->
+    <app-main-title class="flex flex-col gap-2" [title]="'Polling'" [subTitle]="'Active poll'"></app-main-title>
+    <div class="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-3">
+        <div class="flex gap-3 flex-1 lg:min-w-auto min-w-[100px] w-full">
+            <div
+                class="flex cursor-pointer hover:bg-[var(--dark-gray)] bg-[var(--dark)] whitespace-nowrap rounded-md shadow-[0_6px_6px_var(--shadow)] h-full px-4 items-center">
+                <p class="text-[12px] font-family-roboto-slab-bold">1.</p>
+            </div>
+            <app-basic-card [title]="'25 votes'" [color]="'var(--gray)'"></app-basic-card>
+            <div
+                class="text-[var(--gray)] flex cursor-pointer hover:bg-[var(--dark-gray)] bg-[var(--dark)] whitespace-nowrap rounded-md shadow-[0_6px_6px_var(--shadow)] h-full px-4 items-center gap-1">
+                <span class="text-[12px] font-family-roboto-slab-bold">Proposed by:</span>
+                <span class="text-[12px]">edtarsz</span>
+            </div>
+            <app-basic-card [title]="'Longest Substring Without Repeating Characters'" [number]="'4'"
+                class="w-full min-w-0"></app-basic-card>
+            <app-basic-card [title]="'Hard'" [color]="'var(--red)'"></app-basic-card>
+            <app-basic-card [iconName]="'chevronDown'" [color]="'var(--light)'"></app-basic-card>
+        </div>
+
+        <div class="flex gap-3 flex-1 lg:min-w-auto min-w-[100px]">
+            <div
+                class="flex cursor-pointer hover:bg-[var(--dark-gray)] bg-[var(--dark)] whitespace-nowrap rounded-md shadow-[0_6px_6px_var(--shadow)] h-full px-4 items-center">
+                <p class="text-[12px] font-family-roboto-slab-bold">1.</p>
+            </div>
+            <app-basic-card [title]="'25 votes'" [color]="'var(--gray)'"></app-basic-card>
+            <div
+                class="text-[var(--gray)] flex cursor-pointer hover:bg-[var(--dark-gray)] bg-[var(--dark)] whitespace-nowrap rounded-md shadow-[0_6px_6px_var(--shadow)] h-full px-4 items-center gap-1">
+                <span class="text-[12px] font-family-roboto-slab-bold">Proposed by:</span>
+                <span class="text-[12px]">edtarsz</span>
+            </div>
+            <app-basic-card [title]="'Longest Substring Without Repeating Characters'" [number]="'4'"
+                class="w-full min-w-0"></app-basic-card>
+            <app-basic-card [title]="'Hard'" [color]="'var(--red)'"></app-basic-card>
+            <app-basic-card [iconName]="'chevronDown'" [color]="'var(--light)'"></app-basic-card>
+        </div>
+
+        <div class="flex gap-3 flex-1 lg:min-w-auto min-w-[100px]">
+            <div
+                class="flex cursor-pointer hover:bg-[var(--dark-gray)] bg-[var(--dark)] whitespace-nowrap rounded-md shadow-[0_6px_6px_var(--shadow)] h-full px-4 items-center">
+                <p class="text-[12px] font-family-roboto-slab-bold">1.</p>
+            </div>
+            <app-basic-card [title]="'25 votes'" [color]="'var(--gray)'"></app-basic-card>
+            <div
+                class="text-[var(--gray)] flex cursor-pointer hover:bg-[var(--dark-gray)] bg-[var(--dark)] whitespace-nowrap rounded-md shadow-[0_6px_6px_var(--shadow)] h-full px-4 items-center gap-1">
+                <span class="text-[12px] font-family-roboto-slab-bold">Proposed by:</span>
+                <span class="text-[12px]">edtarsz</span>
+            </div>
+            <app-basic-card [title]="'Longest Substring Without Repeating Characters'" [number]="'4'"
+                class="w-full min-w-0"></app-basic-card>
+            <app-basic-card [title]="'Hard'" [color]="'var(--red)'"></app-basic-card>
+            <app-basic-card [iconName]="'chevronDown'" [color]="'var(--light)'"></app-basic-card>
+        </div>
+    </div>
+</main>

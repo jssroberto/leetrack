@@ -33,6 +33,10 @@ export const routes: Routes = [
         loadComponent: () => import('./main/operations/dashboard/dashboard').then((m) => m.Dashboard)
       },
       {
+        path: 'polling',
+        loadComponent: () => import('./main/operations/polling/polling').then((m) => m.Polling)
+      },
+      {
         path: '**',
         redirectTo: 'index',
       },

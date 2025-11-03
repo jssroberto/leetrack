@@ -9,7 +9,7 @@ import { Router, RouterOutlet } from '@angular/router';
 })
 export class Main {
   currentRoute = signal('');
-  showMenuOptions = computed(() => this.currentRoute() === '/main/dashboard');
+  showMenuOptions = computed(() => this.currentRoute() === '/main/dashboard' || this.currentRoute() === '/main/polling');
 
   constructor(private router: Router) {
     this.router.events.subscribe(() => {

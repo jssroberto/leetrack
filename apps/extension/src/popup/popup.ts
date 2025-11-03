@@ -1,1 +1,2 @@
-// Popup Script\nconsole.log('Popup loaded');
+// Popup Script
+console.log('Popup loaded');

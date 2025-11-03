@@ -12,9 +12,9 @@
     "paths": {
       "@api/*": ["./apps/api/src/*"],
       "@web/*": ["./apps/web/*"],
+      "@extension/*": ["./apps/extension/src/*"],
       "@leetrack/shared-types": ["./libs/shared/types/src/index.ts"],
       "@leetrack/database": ["./libs/database/src/index.ts"]
     }
   }
 }
-

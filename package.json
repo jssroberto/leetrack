@@ -7,9 +7,11 @@
     "dev": "pnpm --parallel dev",
     "dev:api": "pnpm --filter api dev",
     "dev:web": "pnpm --filter web dev",
-    "build": "pnpm build:api && pnpm build:web",
+    "dev:extension": "pnpm --filter extension dev",
+    "build": "pnpm build:api && pnpm build:web && pnpm build:extension",
     "build:api": "pnpm --filter api build",
     "build:web": "pnpm --filter web build",
+    "build:extension": "pnpm --filter extension build",
     "lint": "eslint .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

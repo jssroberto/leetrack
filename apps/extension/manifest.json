@@ -3,25 +3,24 @@
   "name": "LeeTrack",
   "version": "1.0.0",
   "description": "Track your LeetCode progress collaboratively",
-  "permissions": ["storage", "tabs", "webRequest"],
-  "host_permissions": ["https://leetcode.com/*", "https://leetcode.cn/*"],
+  "permissions": ["storage", "tabs"],
+  "host_permissions": [
+    "https://leetcode.com/*",
+    "https://leetcode.cn/*"
+  ],
   "background": {
-    "service_worker": "dist/background/service-worker.js"
+    "service_worker": "background/service-worker.js",
+    "type": "module"
   },
   "content_scripts": [
     {
       "matches": ["https://leetcode.com/*", "https://leetcode.cn/*"],
-      "js": ["dist/content/submission-tracker.js"],
+      "js": ["content/submission-tracker.js"],
       "run_at": "document_end"
     }
   ],
   "action": {
-    "default_popup": "src/popup/popup.html",
+    "default_popup": "popup/popup.html",
     "default_title": "LeeTrack"
-  },
-  "icons": {
-    "16": "src/assets/icons/icon-16.png",
-    "48": "src/assets/icons/icon-48.png",
-    "128": "src/assets/icons/icon-128.png"
   }
 }

@@ -1,6 +1,7 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import CopyWebpackPlugin from 'copy-webpack-plugin';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const extDir = path.resolve(__dirname, '..');
@@ -26,17 +27,20 @@ export default {
       },
       {
         test: /\.css$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          'css-loader',
-          'postcss-loader',
-        ],
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'],
       },
     ],
   },
   plugins: [
     new MiniCssExtractPlugin({
       filename: '[name].css',
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: path.join(extDir, 'manifest.json'), to: 'manifest.json' },
+        { from: path.join(extDir, 'src/popup/popup.html'), to: 'popup/popup.html' },
+        { from: path.join(extDir, 'src/assets'), to: 'assets' },
+      ],
     }),
   ],
   resolve: {

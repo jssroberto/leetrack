@@ -8,6 +8,11 @@
   </head>
   <body class="text-sm font-sans bg-[var(--color-bg)] text-[var(--color-text)]">
     <div id="app" class="w-[400px] min-h-screen">
+      <!-- Toast -->
+      <div id="toast" class="toast hidden" role="status" aria-live="polite">
+        <span id="toast-text"></span>
+        <button id="toast-close" title="Close" class="ml-2 text-muted hover:text-[var(--color-text)]">✕</button>
+      </div>
       <!-- Auth Screen -->
       <div id="auth-screen" class="screen p-4">
         <div class="mb-6 pb-3 border-b divider">

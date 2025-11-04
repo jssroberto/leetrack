@@ -61,4 +61,17 @@ html, body { height: 100%; }
 .text-muted { color: var(--color-muted); }
 .text-success { color: var(--color-success); }
 .text-warning { color: var(--color-warning); }
+.text-danger { color: var(--color-danger); }
 
+/* Toast notifications */
+.toast {
+  @apply fixed z-50 px-3 py-2 rounded-lg text-sm border shadow-lg transition-opacity duration-200;
+  right: 12px;
+  top: 12px;
+  background: var(--color-surface);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+.toast-success { border-color: var(--color-success); }
+.toast-error { border-color: var(--color-danger); }
+.toast-info { border-color: var(--color-warning); }

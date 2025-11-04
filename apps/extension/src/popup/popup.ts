@@ -7,6 +7,7 @@ import './popup.css';
 class PopupController {
   private storage = new StorageManager();
   private apiClient = new ApiClient();
+  private toastTimer: number | null = null;
 
   async init(): Promise<void> {
     const token = await this.storage.getAuthToken();
@@ -47,6 +48,10 @@ class PopupController {
       this.showMainScreen();
     });
 
+    document.getElementById('toast-close')?.addEventListener('click', () => {
+      this.hideToast();
+    });
+
     document.getElementById('register-link')?.addEventListener('click', (e) => {
       e.preventDefault();
       chrome.tabs.create({ url: 'http://localhost:4200/auth/register' });
@@ -56,6 +61,7 @@ class PopupController {
   private async handleLogin(): Promise<void> {
     const usernameInput = document.getElementById('username') as HTMLInputElement;
     const passwordInput = document.getElementById('password') as HTMLInputElement;
+    const loginBtn = document.getElementById('login-btn') as HTMLButtonElement | null;
 
     const username = usernameInput.value.trim();
     const password = passwordInput.value.trim();
@@ -66,16 +72,30 @@ class PopupController {
     }
 
     try {
+      if (loginBtn) {
+        loginBtn.disabled = true;
+        loginBtn.ariaBusy = 'true';
+        loginBtn.textContent = 'Signing in…';
+      }
+
       const authData = await this.apiClient.login(username, password);
       await this.storage.setAuthToken(authData.accessToken, authData.expiresIn);
       await this.storage.setUserId(username);
 
+      this.showToast('Signed in successfully', 'success');
       this.showMainScreen();
       this.updateRecentSubmissions();
       Logger.log('Login successful');
-    } catch (error) {
+    } catch (error: any) {
       Logger.error('Login failed', error);
-      alert('Login failed. Please check your credentials.');
+      const message = (error && error.message) || 'Login failed. Please check your credentials.';
+      this.showToast(message, 'error');
+    } finally {
+      if (loginBtn) {
+        loginBtn.disabled = false;
+        loginBtn.ariaBusy = 'false';
+        loginBtn.textContent = 'Sign In';
+      }
     }
   }
 
@@ -85,9 +105,9 @@ class PopupController {
     chrome.runtime.sendMessage(message, (response: any) => {
       if (response?.success) {
         this.updateRecentSubmissions();
-        alert('Sync completed!');
+        this.showToast('Sync completed', 'success');
       } else {
-        alert('Sync failed');
+        this.showToast('Sync failed', 'error');
       }
     });
   }
@@ -192,6 +212,28 @@ class PopupController {
         syncStatusEl.className = 'text-sm font-semibold text-amber-500';
       }
     });
+  }
+
+  private showToast(message: string, type: 'success' | 'error' | 'info' = 'info'): void {
+    const toast = document.getElementById('toast');
+    const text = document.getElementById('toast-text');
+    if (!toast || !text) return;
+
+    toast.classList.remove('hidden', 'toast-success', 'toast-error', 'toast-info');
+    toast.classList.add(`toast-${type}`);
+    text.textContent = message;
+
+    if (this.toastTimer) {
+      clearTimeout(this.toastTimer);
+    }
+    this.toastTimer = window.setTimeout(() => this.hideToast(), 4000);
+  }
+
+  private hideToast(): void {
+    const toast = document.getElementById('toast');
+    if (!toast) return;
+    toast.classList.add('hidden');
+    toast.classList.remove('toast-success', 'toast-error', 'toast-info');
   }
 }
 

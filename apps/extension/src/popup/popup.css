@@ -1,0 +1,64 @@
+/* Tailwind CSS v4 entry for the popup UI */
+@import "tailwindcss";
+
+/* LeetCode-inspired dark theme palette */
+:root {
+  --color-bg: #0f172a;        /* slate-900 */
+  --color-surface: #111827;   /* gray-900 */
+  --color-border: #334155;    /* slate-700 */
+  --color-text: #e5e7eb;      /* gray-200 */
+  --color-muted: #94a3b8;     /* slate-400 */
+  --color-primary: #ffa116;   /* LeetCode orange */
+  --color-primary-600: #e6930d; /* darker hover */
+  --color-success: #00b8a3;   /* Accepted */
+  --color-danger: #ef4444;    /* red-500 */
+  --color-warning: #f59e0b;   /* amber-500 */
+}
+
+html, body { height: 100%; }
+
+/* Subtle scrollbar for dark theme */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+*::-webkit-scrollbar { width: 8px; height: 8px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb { background-color: var(--color-border); border-radius: 8px; }
+
+/* Buttons */
+.btn-primary { @apply w-full px-4 py-2.5 rounded-lg font-semibold transition-all duration-150; }
+.btn-primary { background: var(--color-primary); color: #0b0b0b; }
+.btn-primary:hover { background: var(--color-primary-600); }
+.btn-primary:active { @apply scale-95; }
+
+.btn-secondary { @apply w-full px-4 py-2 rounded-lg font-semibold border transition-all duration-150; }
+.btn-secondary { background: var(--color-surface); color: var(--color-text); border-color: var(--color-border); }
+.btn-secondary:hover { background: #0e1525; }
+.btn-secondary:active { @apply scale-95; }
+
+.btn-danger { @apply w-full px-4 py-2 rounded-lg font-semibold transition-all duration-150; }
+.btn-danger { background: var(--color-danger); color: white; }
+.btn-danger:hover { filter: brightness(1.1); }
+.btn-danger:active { @apply scale-95; }
+
+/* Inputs */
+.input {
+  @apply px-3 py-2.5 rounded-lg text-sm font-sans border focus:outline-none focus:ring-2 focus:border-transparent;
+  background: var(--color-surface);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+.input::placeholder { color: var(--color-muted); }
+.input:focus { box-shadow: 0 0 0 2px var(--color-primary); }
+
+/* Cards */
+.card { @apply rounded-lg; background: var(--color-surface); }
+.card-muted { @apply p-3 rounded-lg flex flex-col gap-1.5; background: #0e1525; }
+.divider { border-color: var(--color-border); }
+
+/* Text helpers */
+.text-muted { color: var(--color-muted); }
+.text-success { color: var(--color-success); }
+.text-warning { color: var(--color-warning); }
+

@@ -4,35 +4,36 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>LeeTrack</title>
+    <link rel="stylesheet" href="popup.css" />
   </head>
-  <body class="bg-white text-gray-900 text-sm font-sans">
-    <div id="app" class="w-[400px] min-h-screen bg-white">
+  <body class="text-sm font-sans bg-[var(--color-bg)] text-[var(--color-text)]">
+    <div id="app" class="w-[400px] min-h-screen">
       <!-- Auth Screen -->
       <div id="auth-screen" class="screen p-4">
-        <div class="mb-6 pb-3 border-b border-gray-200">
+        <div class="mb-6 pb-3 border-b divider">
           <h2 class="text-xl font-bold">LeeTrack</h2>
-          <p class="text-xs text-gray-600 mt-1">Track LeetCode collaboratively</p>
+          <p class="text-xs text-muted mt-1">Track LeetCode collaboratively</p>
         </div>
 
         <form id="login-form" class="mb-4">
           <div class="mb-3 flex flex-col">
-            <label for="username" class="font-semibold mb-1.5 text-gray-900"> Username </label>
+            <label for="username" class="font-semibold mb-1.5"> Username </label>
             <input
               type="text"
               id="username"
               placeholder="Enter username"
-              class="px-3 py-2.5 border border-gray-300 rounded-lg text-sm font-sans focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              class="input"
               required
             />
           </div>
 
           <div class="mb-4 flex flex-col">
-            <label for="password" class="font-semibold mb-1.5 text-gray-900"> Password </label>
+            <label for="password" class="font-semibold mb-1.5"> Password </label>
             <input
               type="password"
               id="password"
               placeholder="Enter password"
-              class="px-3 py-2.5 border border-gray-300 rounded-lg text-sm font-sans focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              class="input"
               required
             />
           </div>
@@ -40,15 +41,15 @@
           <button
             type="submit"
             id="login-btn"
-            class="w-full px-4 py-2.5 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 active:scale-95 transition-all duration-150 mb-2"
+            class="btn-primary mb-2"
           >
             Sign In
           </button>
         </form>
 
-        <p class="text-center text-xs text-gray-600 mt-3">
+        <p class="text-center text-xs text-muted mt-3">
           No account yet?
-          <a href="#" id="register-link" class="text-blue-500 font-semibold hover:underline">
+          <a href="#" id="register-link" class="font-semibold hover:underline" style="color: var(--color-primary)">
             Create one
           </a>
         </p>
@@ -56,11 +57,11 @@
 
       <!-- Main Screen (After Auth) -->
       <div id="main-screen" class="screen hidden p-4">
-        <div class="mb-5 pb-3 border-b border-gray-200 flex justify-between items-center">
+        <div class="mb-5 pb-3 border-b divider flex justify-between items-center">
           <h3 class="text-lg font-bold">LeeTrack</h3>
           <button
             id="settings-btn"
-            class="text-lg p-1 rounded-lg hover:bg-gray-100 transition-colors"
+            class="text-lg p-1 rounded-lg hover:bg-[var(--color-surface)] transition-colors"
             title="Settings"
           >
             ⚙️
@@ -68,31 +69,31 @@
         </div>
 
         <div class="grid grid-cols-2 gap-3 mb-4">
-          <div class="bg-gray-50 p-3 rounded-lg flex flex-col gap-1.5">
-            <span class="text-xs text-gray-600 font-semibold">Status</span>
-            <span id="sync-status" class="text-sm font-semibold text-green-600"> ✓ Synced </span>
+          <div class="card-muted">
+            <span class="text-xs text-muted font-semibold">Status</span>
+            <span id="sync-status" class="text-sm font-semibold text-success"> ✓ Synced </span>
           </div>
-          <div class="bg-gray-50 p-3 rounded-lg flex flex-col gap-1.5">
-            <span class="text-xs text-gray-600 font-semibold">Pending</span>
-            <span id="pending-count" class="text-sm font-semibold text-amber-500"> 0 </span>
+          <div class="card-muted">
+            <span class="text-xs text-muted font-semibold">Pending</span>
+            <span id="pending-count" class="text-sm font-semibold text-warning"> 0 </span>
           </div>
         </div>
 
         <button
           id="sync-btn"
-          class="w-full px-4 py-2 bg-gray-100 text-gray-900 rounded-lg font-semibold border border-gray-300 hover:bg-gray-200 active:scale-95 transition-all duration-150 mb-4"
+          class="btn-secondary mb-4"
         >
           Sync Submissions
         </button>
 
         <div class="mb-4">
-          <h4 class="text-sm font-semibold mb-2 text-gray-900">Recent Submissions</h4>
+          <h4 class="text-sm font-semibold mb-2">Recent Submissions</h4>
           <div id="submissions-list" class="max-h-52 overflow-y-auto space-y-2"></div>
         </div>
 
         <button
           id="logout-btn"
-          class="w-full px-4 py-2 bg-red-500 text-white rounded-lg font-semibold hover:bg-red-600 active:scale-95 transition-all duration-150"
+          class="btn-danger"
         >
           Sign Out
         </button>
@@ -100,30 +101,30 @@
 
       <!-- Settings Screen -->
       <div id="settings-screen" class="screen hidden p-4">
-        <div class="mb-6 pb-3 border-b border-gray-200">
+        <div class="mb-6 pb-3 border-b divider">
           <h3 class="text-lg font-bold">Settings</h3>
         </div>
 
         <div class="mb-4">
           <div class="mb-3 flex flex-col">
-            <label for="api-url" class="font-semibold mb-1.5 text-gray-900"> API URL </label>
+            <label for="api-url" class="font-semibold mb-1.5"> API URL </label>
             <input
               type="text"
               id="api-url"
               placeholder="http://localhost:3000"
-              class="px-3 py-2.5 border border-gray-300 rounded-lg text-sm font-sans focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              class="input"
             />
           </div>
 
           <button
             id="save-settings-btn"
-            class="w-full px-4 py-2 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 active:scale-95 transition-all duration-150 mb-2"
+            class="btn-primary mb-2"
           >
             Save Settings
           </button>
           <button
             id="back-settings-btn"
-            class="w-full px-4 py-2 bg-gray-100 text-gray-900 rounded-lg font-semibold border border-gray-300 hover:bg-gray-200 active:scale-95 transition-all duration-150"
+            class="btn-secondary"
           >
             Back
           </button>

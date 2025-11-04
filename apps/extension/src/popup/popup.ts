@@ -2,6 +2,7 @@ import { StorageManager } from '@extension/utils/storage';
 import { ApiClient } from '@extension/background/api-client';
 import { Logger } from '@extension/utils/logger';
 import type { ExtensionMessage } from '@extension/types/leetcode';
+import './popup.css';
 
 class PopupController {
   private storage = new StorageManager();

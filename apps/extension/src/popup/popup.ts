@@ -36,17 +36,7 @@ class PopupController {
       this.handleLogout();
     });
 
-    document.getElementById('settings-btn')?.addEventListener('click', () => {
-      this.showSettingsScreen();
-    });
-
-    document.getElementById('save-settings-btn')?.addEventListener('click', () => {
-      this.handleSaveSettings();
-    });
-
-    document.getElementById('back-settings-btn')?.addEventListener('click', () => {
-      this.showMainScreen();
-    });
+    // Settings removed: API URL is configured at build time.
 
     document.getElementById('toast-close')?.addEventListener('click', () => {
       this.hideToast();
@@ -59,15 +49,15 @@ class PopupController {
   }
 
   private async handleLogin(): Promise<void> {
-    const usernameInput = document.getElementById('username') as HTMLInputElement;
+    const emailInput = document.getElementById('email') as HTMLInputElement;
     const passwordInput = document.getElementById('password') as HTMLInputElement;
     const loginBtn = document.getElementById('login-btn') as HTMLButtonElement | null;
 
-    const username = usernameInput.value.trim();
+    const email = emailInput.value.trim();
     const password = passwordInput.value.trim();
 
-    if (!username || !password) {
-      alert('Please enter username and password');
+    if (!email || !password) {
+      this.showToast('Please enter email and password', 'error');
       return;
     }
 
@@ -78,9 +68,10 @@ class PopupController {
         loginBtn.textContent = 'Signing in…';
       }
 
-      const authData = await this.apiClient.login(username, password);
+      const authData = await this.apiClient.login(email, password);
       await this.storage.setAuthToken(authData.accessToken, authData.expiresIn);
-      await this.storage.setUserId(username);
+      const payload = this.decodeJwt<{ sub: string; email: string }>(authData.accessToken);
+      await this.storage.setUserId(payload?.sub || email);
 
       this.showToast('Signed in successfully', 'success');
       this.showMainScreen();
@@ -96,6 +87,16 @@ class PopupController {
         loginBtn.ariaBusy = 'false';
         loginBtn.textContent = 'Sign In';
       }
+    }
+  }
+
+  private decodeJwt<T = any>(token: string): T | null {
+    try {
+      const base64 = token.split('.')[1];
+      const json = atob(base64);
+      return JSON.parse(json) as T;
+    } catch {
+      return null;
     }
   }
 
@@ -118,16 +119,7 @@ class PopupController {
     Logger.log('Logged out');
   }
 
-  private async handleSaveSettings(): Promise<void> {
-    const apiUrlInput = document.getElementById('api-url') as HTMLInputElement;
-    const apiUrl = apiUrlInput.value.trim();
-
-    if (apiUrl) {
-      this.apiClient.setBaseURL(apiUrl);
-      alert('Settings saved');
-      this.showMainScreen();
-    }
-  }
+  // Settings removed
 
   private showAuthScreen(): void {
     this.switchScreen('auth-screen');
@@ -139,9 +131,7 @@ class PopupController {
     this.updateSyncStatus();
   }
 
-  private showSettingsScreen(): void {
-    this.switchScreen('settings-screen');
-  }
+  // Settings removed
 
   private switchScreen(screenId: string): void {
     document.querySelectorAll('.screen').forEach((screen) => {

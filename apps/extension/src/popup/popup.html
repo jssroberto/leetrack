@@ -22,11 +22,11 @@
 
         <form id="login-form" class="mb-4">
           <div class="mb-3 flex flex-col">
-            <label for="username" class="font-semibold mb-1.5"> Username </label>
+            <label for="email" class="font-semibold mb-1.5"> Email </label>
             <input
               type="text"
-              id="username"
-              placeholder="Enter username"
+              id="email"
+              placeholder="Enter email"
               class="input"
               required
             />
@@ -64,13 +64,6 @@
       <div id="main-screen" class="screen hidden p-4">
         <div class="mb-5 pb-3 border-b divider flex justify-between items-center">
           <h3 class="text-lg font-bold">LeeTrack</h3>
-          <button
-            id="settings-btn"
-            class="text-lg p-1 rounded-lg hover:bg-[var(--color-surface)] transition-colors"
-            title="Settings"
-          >
-            ⚙️
-          </button>
         </div>
 
         <div class="grid grid-cols-2 gap-3 mb-4">
@@ -104,37 +97,7 @@
         </button>
       </div>
 
-      <!-- Settings Screen -->
-      <div id="settings-screen" class="screen hidden p-4">
-        <div class="mb-6 pb-3 border-b divider">
-          <h3 class="text-lg font-bold">Settings</h3>
-        </div>
-
-        <div class="mb-4">
-          <div class="mb-3 flex flex-col">
-            <label for="api-url" class="font-semibold mb-1.5"> API URL </label>
-            <input
-              type="text"
-              id="api-url"
-              placeholder="http://localhost:3000"
-              class="input"
-            />
-          </div>
-
-          <button
-            id="save-settings-btn"
-            class="btn-primary mb-2"
-          >
-            Save Settings
-          </button>
-          <button
-            id="back-settings-btn"
-            class="btn-secondary"
-          >
-            Back
-          </button>
-        </div>
-      </div>
+      
     </div>
 
     <script src="popup.js"></script>

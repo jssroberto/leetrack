@@ -5,12 +5,12 @@ export class ApiClient {
   private baseURL: string;
 
   constructor(baseURL?: string) {
-    this.baseURL = baseURL || 'http://localhost:3000';
+    this.baseURL = baseURL || (__LEETRACK_API_URL__ ?? 'http://localhost:3002');
   }
 
   async submitProblem(submission: ApiSubmissionRequest, token: string): Promise<ApiSubmissionResponse> {
     try {
-      const response = await fetch(`${this.baseURL}/submissions`, {
+      const response = await fetch(`${this.baseURL}/api/v1/submissions`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -30,21 +30,21 @@ export class ApiClient {
     }
   }
 
-  async login(username: string, password: string): Promise<AuthToken> {
+  async login(email: string, password: string): Promise<AuthToken> {
     try {
-      const response = await fetch(`${this.baseURL}/auth/login`, {
+      const response = await fetch(`${this.baseURL}/api/v1/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ email, password }),
       });
 
       if (!response.ok) {
         throw new Error('Authentication failed');
       }
 
-      const data = (await response.json()) as any;
+      const data = (await response.json()) as { accessToken: string; expiresIn?: number };
       return {
         accessToken: data.accessToken,
         expiresIn: data.expiresIn || 86400,
@@ -55,13 +55,9 @@ export class ApiClient {
     }
   }
 
-  setBaseURL(url: string): void {
-    this.baseURL = url;
-  }
-
   async healthCheck(): Promise<boolean> {
     try {
-      const response = await fetch(`${this.baseURL}/health`, {
+      const response = await fetch(`${this.baseURL}/api/v1/health`, {
         method: 'GET',
       });
       return response.ok;
@@ -70,3 +66,4 @@ export class ApiClient {
     }
   }
 }
+declare const __LEETRACK_API_URL__: string | undefined;

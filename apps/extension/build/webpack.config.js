@@ -1,6 +1,7 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import webpack from 'webpack';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -32,6 +33,9 @@ export default {
     ],
   },
   plugins: [
+    new webpack.DefinePlugin({
+      __LEETRACK_API_URL__: JSON.stringify(process.env.LEETRACK_API_URL || 'http://localhost:3002'),
+    }),
     new MiniCssExtractPlugin({
       filename: '[name].css',
     }),

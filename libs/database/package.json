@@ -6,11 +6,11 @@
   "main": "./src/index.ts",
   "types": "./src/index.ts",
   "scripts": {
-    "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate dev",
-    "prisma:studio": "prisma studio",
-    "prisma:push": "prisma db push",
-    "prisma:seed": "tsx prisma/seed.ts"
+    "prisma:generate": "dotenv -e ../../.env -- prisma generate",
+    "prisma:migrate": "dotenv -e ../../.env -- prisma migrate dev",
+    "prisma:studio": "dotenv -e ../../.env -- prisma studio",
+    "prisma:push": "dotenv -e ../../.env -- prisma db push",
+    "prisma:seed": "dotenv -e ../../.env -- tsx prisma/seed.ts"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +21,7 @@
     "prisma": "^6.17.1"
   },
   "devDependencies": {
+    "dotenv-cli": "^11.0.0",
     "tsx": "^4.20.6"
   }
 }

@@ -5,17 +5,34 @@
     </h1>
     <p class="text-[var(--gray)] text-md">
       {{ text }}
-      <a class="text-[var(--secondary-color)] hover:underline hover:underline-offset-4 hover:text-[var(--secondary-hover)]" href="{{ link }}">{{ textLink }}</a>
+      <a 
+        class="text-[var(--secondary-color)] hover:underline hover:underline-offset-4 hover:text-[var(--secondary-hover)]" 
+        [routerLink]="['/' + link]"
+      >
+        {{ textLink }}
+      </a>
     </p>
   </header>
+  
   <hr class="text-[var(--gray)]" />
-  <form action="" class="flex flex-col gap-[3vh]">
+  
+  <div 
+    *ngIf="errorMessage" 
+    class="bg-red-500/10 border border-red-500 text-red-500 rounded-md px-4 py-3 text-sm"
+  >
+    {{ errorMessage }}
+  </div>
+  
+  <form [formGroup]="formGroup" (ngSubmit)="onSubmit()" class="flex flex-col gap-[3vh]">
     <ng-content></ng-content>
+    
     <button
       type="submit"
-      class="shadow-[0_6px_6px_var(--shadow)] cursor-pointer transition-all duration-200 hover:bg-[var(--secondary-hover)] bg-[var(--secondary-color)] py-4 rounded-md font-family-roboto-slab-bold text-[var(--light)] text-sm"
+      [disabled]="isLoading || formGroup.invalid"
+      class="shadow-[0_6px_6px_var(--shadow)] cursor-pointer transition-all duration-200 hover:bg-[var(--secondary-hover)] bg-[var(--secondary-color)] disabled:bg-gray-600 disabled:cursor-not-allowed py-4 rounded-md font-family-roboto-slab-bold text-[var(--light)] text-sm"
     >
-      Continue
+      <span *ngIf="!isLoading">{{ buttonText }}</span>
+      <span *ngIf="isLoading">Loading...</span>
     </button>
   </form>
 </section>

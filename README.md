@@ -20,17 +20,32 @@ All development services are containerised. You only need Docker; Node.js, PNPM,
 - Optional: PNPM 10+ locally if you want to run scripts outside containers
 
 ### First Run
+1. Run the package manager to install all project dependencies:
 
-1. Duplicate the example environment file:
+    ```bash
+    pnpm install
+    ```
+
+2. Duplicate the example environment file:
    ```bash
    cp .env.example .env
    ```
-2. Adjust any ports or credentials in `.env` as needed.
-3. Build and start the development stack:
+3. Adjust any ports or credentials in `.env` as needed.
+
+4. Before bringing up the containers, you must generate the Prisma client for the database.
+   ```bash
+    cd libs/database
+    pnpm prisma:migrate
+    pnpm prisma:generate
+    cd ../..
+    ```
+
+5. Build and start the development stack:
    ```bash
    docker compose -f compose.dev.yaml up --build
    ```
-4. When the logs show `api` and `web` ready messages, visit the apps:
+   
+6. When the logs show `api` and `web` ready messages, visit the apps:
    - API: http://localhost:3000 (or `${API_PORT}` from `.env`)
    - Web: http://localhost:4200 (or `${WEB_PORT}` from `.env`)
 

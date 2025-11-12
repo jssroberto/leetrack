@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, tap } from 'rxjs';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 interface RegisterRequest {
   email: string;
@@ -31,7 +32,7 @@ interface User {
 })
 export class AuthService {
   
-  private apiUrl = 'http://localhost:3000/api/v1/auth';
+  private authBaseUrl = `${environment.apiBaseUrl}/auth`;
   
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
@@ -49,14 +50,14 @@ export class AuthService {
   }
 
   register(email: string, password: string): Observable<User> {
-    return this.http.post<User>(`${this.apiUrl}/register`, { 
+    return this.http.post<User>(`${this.authBaseUrl}/register`, { 
       email, 
       password 
     });
   }
 
   login(email: string, password: string): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, { 
+    return this.http.post<LoginResponse>(`${this.authBaseUrl}/login`, { 
       email, 
       password 
     }).pipe(
@@ -76,7 +77,7 @@ export class AuthService {
   }
 
   loadCurrentUser(): void {
-    this.http.get<User>(`${this.apiUrl}/me`).subscribe({
+    this.http.get<User>(`${this.authBaseUrl}/me`).subscribe({
       next: (user) => {
         this.currentUserSubject.next(user);
       },

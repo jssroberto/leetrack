@@ -10,13 +10,13 @@ import { RouterLink } from '@angular/router';
   styleUrl: './auth-section.css',
 })
 export class AuthSection {
-  @Input() title!: string;
-  @Input() text!: string;
-  @Input() textLink!: string;
-  @Input() link!: string;
-  @Input() formGroup!: FormGroup; 
-  @Input() onSubmit!: () => void;  
-  @Input() buttonText: string = 'Continue'; 
+  @Input() title: string = '';
+  @Input() text: string = '';
+  @Input() textLink: string = '';
+  @Input() link: string = '';
+  @Input() formGroup!: FormGroup;
+  @Input() onSubmit!: () => void;
+  @Input() buttonText: string = '';
   @Input() isLoading: boolean = false;
-  @Input() errorMessage: string = ''; 
+  @Input() errorMessage: string = '';
 }

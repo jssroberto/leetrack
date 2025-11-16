@@ -1,9 +1,9 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 import { AuthSection } from "../auth-section/auth-section";
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
+import { Component, inject } from "@angular/core";
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl } from "@angular/forms";
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-signup',
@@ -13,80 +13,80 @@ import { CommonModule } from '@angular/common';
   styleUrl: './register.css'
 })
 export class Register {
+  private fb = inject(FormBuilder);
+  private authService = inject(AuthService)
+  private router = inject(Router)
+
   registerForm: FormGroup;
   errorMessage: string = '';
   isLoading: boolean = false;
 
-  constructor(
-    private fb: FormBuilder,
-    private authService: AuthService,
-    private router: Router,
-    private cdr: ChangeDetectorRef 
-  ) {
+  constructor() {
     this.registerForm = this.fb.group({
       firstName: ['', [Validators.required, Validators.minLength(2)]],
       lastName: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', [Validators.required]]
     }, {
-      validators: this.passwordMatchValidator
+      validators: [this.passwordMatchValidator],
+      updateOn: 'change'
     });
   }
 
-  passwordMatchValidator(form: FormGroup) {
-    const password = form.get('password');
-    const confirmPassword = form.get('confirmPassword');
-    
+  private passwordMatchValidator(control: AbstractControl) {
+    const password = control.get('password');
+    const confirmPassword = control.get('confirmPassword');
+
     if (password && confirmPassword && password.value !== confirmPassword.value) {
       confirmPassword.setErrors({ passwordMismatch: true });
       return { passwordMismatch: true };
     }
+
+    if (confirmPassword?.hasError('passwordMismatch') && password?.value === confirmPassword?.value) {
+      confirmPassword.setErrors(null);
+    }
     return null;
   }
 
-  onSubmit = () => {  
+  // se necesita usar arrow function para mantener el contexto de 'this'
+  onSubmit = () => {
     this.errorMessage = '';
-    this.cdr.detectChanges(); 
 
     if (this.registerForm.invalid) {
       this.registerForm.markAllAsTouched();
-      this.cdr.detectChanges(); 
       return;
     }
 
     this.isLoading = true;
-    this.cdr.detectChanges(); 
 
     const { email, password } = this.registerForm.value;
 
     this.authService.register(email, password).subscribe({
       next: (user) => {
         console.log('User registered:', user);
-        
+
         // Auto-login después del registro
         this.authService.login(email, password).subscribe({
           next: () => {
             this.isLoading = false;
-            this.cdr.detectChanges(); 
-            this.router.navigate(['/main/dashboard']); 
+            this.router.navigate(['/main/dashboard']);
           },
           error: (loginError) => {
             this.isLoading = false;
             this.errorMessage = 'Registration successful but login failed. Please login manually.';
-            this.cdr.detectChanges(); 
-            
+
             setTimeout(() => {
               this.router.navigate(['/login']);
             }, 2000);
-            
+
             console.error('Auto-login error:', loginError);
           }
         });
       },
       error: (error) => {
         this.isLoading = false;
-        
+
         if (error.status === 0) {
           this.errorMessage = 'Cannot connect to server. Please verify the backend is running.';
         } else if (error.status === 400) {
@@ -96,21 +96,20 @@ export class Register {
         } else {
           this.errorMessage = 'Registration error. Please try again.';
         }
-        
-        this.cdr.detectChanges(); 
+
         console.error('Registration error:', error);
       }
     });
   }
 
-  hasError(field: string): boolean {
-    const control = this.registerForm.get(field);
-    return !!(control && control.invalid && (control.touched || control.dirty));
+  hasError(fieldName: string): boolean {
+    const field = this.registerForm.get(fieldName);
+    return !!(field && field.invalid && field.touched);
   }
 
   getErrorMessage(field: string): string {
     const control = this.registerForm.get(field);
-    
+
     if (!control || (!control.touched && !control.dirty)) {
       return '';
     }
@@ -118,16 +117,16 @@ export class Register {
     if (control.hasError('required')) {
       return this.getFieldLabel(field) + ' is required';
     }
-    
+
     if (control.hasError('email')) {
       return 'Please enter a valid email';
     }
-    
+
     if (control.hasError('minlength')) {
       const minLength = control.errors?.['minlength'].requiredLength;
       return `Must be at least ${minLength} characters`;
     }
-    
+
     if (control.hasError('passwordMismatch')) {
       return 'Passwords do not match';
     }

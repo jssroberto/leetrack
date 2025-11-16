@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -20,19 +20,18 @@ export class Login {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router,
-    private cdr: ChangeDetectorRef
+    private router: Router
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
-    });
+      password: ['', [Validators.required, Validators.minLength(8)]]
+    }, { updateOn: 'change' });
   }
 
   // Método para verificar si un campo tiene error
   hasError(fieldName: string): boolean {
     const field = this.loginForm.get(fieldName);
-    return !!(field && field.invalid && (field.dirty || field.touched));
+    return !!(field && field.invalid && field.touched);
   }
 
   // Método para obtener el mensaje de error específico
@@ -53,7 +52,7 @@ export class Login {
 
     if (field.hasError('minlength')) {
       const minLength = field.errors['minlength'].requiredLength;
-      return `Password must be at least ${minLength} characters`;
+      return `Must be at least ${minLength} characters`;
     }
 
     return 'Invalid field';
@@ -70,7 +69,6 @@ export class Login {
 
   onSubmit = () => {
     this.errorMessage = '';
-    this.cdr.detectChanges();
 
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
@@ -78,13 +76,11 @@ export class Login {
     }
 
     this.isLoading = true;
-    this.cdr.detectChanges();
     const { email, password } = this.loginForm.value;
 
     this.authService.login(email, password).subscribe({
       next: () => {
         this.isLoading = false;
-        this.cdr.detectChanges();
         this.router.navigate(['/main/dashboard']);
       },
       error: (error) => {
@@ -100,12 +96,10 @@ export class Login {
           this.errorMessage = 'Login error. Please try again.';
         }
         
-        this.cdr.detectChanges();
         console.error('Login error:', error);
       },
       complete: () => {
         this.isLoading = false;
-        this.cdr.detectChanges();
       }
     });
   }

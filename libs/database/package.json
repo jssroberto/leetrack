@@ -8,6 +8,7 @@
   "scripts": {
     "prisma:generate": "dotenv -e ../../.env -- prisma generate",
     "prisma:migrate": "dotenv -e ../../.env -- prisma migrate dev",
+    "prisma:reset": "dotenv -e ../../.env -- prisma migrate reset",
     "prisma:studio": "dotenv -e ../../.env -- prisma studio",
     "prisma:push": "dotenv -e ../../.env -- prisma db push",
     "prisma:seed": "dotenv -e ../../.env -- tsx prisma/seed.ts"

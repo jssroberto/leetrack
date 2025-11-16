@@ -9,79 +9,84 @@
   [isLoading]="isLoading"
   [errorMessage]="errorMessage"
 >
-  <!-- First Name & Last Name -->
-  <div class="flex gap-[3vh]">
-    <div class="w-full">
-      <input
-        type="text"
-        formControlName="firstName"
-        placeholder="First Name"
-        class="w-full focus:border-[var(--secondary-color)] border-1 transition-all duration-200 outline-none shadow-[0_6px_6px_var(--shadow)] bg-[var(--dark)] placeholder:text-[var(--gray)] text-[var(--gray)] rounded-md px-5 py-4 text-sm"
-        [class.border-red-500]="hasError('firstName')"
-        [class.border-transparent]="!hasError('firstName')"
-      />
-      <p *ngIf="hasError('firstName')" class="text-red-500 text-xs mt-1">
-        {{ getErrorMessage('firstName') }}
-      </p>
+    <!-- First Name & Last Name -->
+    <div class="flex gap-[3vh]">
+      <div class="w-full">
+        <input
+          type="text"
+          formControlName="firstName"
+          placeholder="First Name"
+          class="w-full focus:border-[var(--secondary-color)] border-1 border-transparent transition-all duration-200 outline-none shadow-[0_6px_6px_var(--shadow)] bg-[var(--dark)] placeholder:text-[var(--gray)] text-[var(--gray)] rounded-md px-5 py-4 text-sm"
+          [class.border-red-500]="hasError('firstName')"
+        />
+        @if (hasError('firstName')) {
+        <p class="text-red-500 text-xs mt-1">
+          {{ getErrorMessage('firstName') }}
+        </p>
+        }
+      </div>
+
+      <div class="w-full">
+        <input
+          type="text"
+          formControlName="lastName"
+          placeholder="Last Name"
+          class="w-full focus:border-[var(--secondary-color)] border-1 border-transparent transition-all duration-200 outline-none shadow-[0_6px_6px_var(--shadow)] bg-[var(--dark)] placeholder:text-[var(--gray)] text-[var(--gray)] rounded-md px-5 py-4 text-sm"
+          [class.border-red-500]="hasError('lastName')"
+        />
+        @if (hasError('lastName')) {
+        <p class="text-red-500 text-xs mt-1">
+          {{ getErrorMessage('lastName') }}
+        </p>
+        }
+      </div>
     </div>
-    
-    <div class="w-full">
+
+    <!-- Email -->
+    <div>
       <input
-        type="text"
-        formControlName="lastName"
-        placeholder="Last Name"
-        class="w-full focus:border-[var(--secondary-color)] border-1 transition-all duration-200 outline-none shadow-[0_6px_6px_var(--shadow)] bg-[var(--dark)] placeholder:text-[var(--gray)] text-[var(--gray)] rounded-md px-5 py-4 text-sm"
-        [class.border-red-500]="hasError('lastName')"
-        [class.border-transparent]="!hasError('lastName')"
+        type="email"
+        formControlName="email"
+        placeholder="Enter your email"
+        class="w-full focus:border-[var(--secondary-color)] border-1 border-transparent transition-all duration-200 outline-none shadow-[0_6px_6px_var(--shadow)] bg-[var(--dark)] placeholder:text-[var(--gray)] text-[var(--gray)] rounded-md px-5 py-4 text-sm"
+        [class.border-red-500]="hasError('email')"
       />
-      <p *ngIf="hasError('lastName')" class="text-red-500 text-xs mt-1">
-        {{ getErrorMessage('lastName') }}
+      @if (hasError('email')) {
+      <p class="text-red-500 text-xs mt-1">
+        {{ getErrorMessage('email') }}
       </p>
+      }
     </div>
-  </div>
 
-  <!-- Email -->
-  <div>
-    <input
-      type="email"
-      formControlName="email"
-      placeholder="Enter your email"
-      class="w-full focus:border-[var(--secondary-color)] border-1 transition-all duration-200 outline-none shadow-[0_6px_6px_var(--shadow)] bg-[var(--dark)] placeholder:text-[var(--gray)] text-[var(--gray)] rounded-md px-5 py-4 text-sm"
-      [class.border-red-500]="hasError('email')"
-      [class.border-transparent]="!hasError('email')"
-    />
-    <p *ngIf="hasError('email')" class="text-red-500 text-xs mt-1">
-      {{ getErrorMessage('email') }}
-    </p>
-  </div>
+    <!-- Password -->
+    <div>
+      <input
+        type="password"
+        formControlName="password"
+        placeholder="Enter your password"
+        class="w-full focus:border-[var(--secondary-color)] border-1 border-transparent transition-all duration-200 outline-none shadow-[0_6px_6px_var(--shadow)] bg-[var(--dark)] placeholder:text-[var(--gray)] text-[var(--gray)] rounded-md px-5 py-4 text-sm"
+        [class.border-red-500]="hasError('password')"
+      />
+      @if (hasError('password')) {
+      <p class="text-red-500 text-xs mt-1">
+        {{ getErrorMessage('password') }}
+      </p>
+      }
+    </div>
 
-  <!-- Password -->
-  <div>
-    <input
-      type="password"
-      formControlName="password"
-      placeholder="Enter your password"
-      class="w-full focus:border-[var(--secondary-color)] border-1 transition-all duration-200 outline-none shadow-[0_6px_6px_var(--shadow)] bg-[var(--dark)] placeholder:text-[var(--gray)] text-[var(--gray)] rounded-md px-5 py-4 text-sm"
-      [class.border-red-500]="hasError('password')"
-      [class.border-transparent]="!hasError('password')"
-    />
-    <p *ngIf="hasError('password')" class="text-red-500 text-xs mt-1">
-      {{ getErrorMessage('password') }}
-    </p>
-  </div>
-
-  <!-- Confirm Password -->
-  <div>
-    <input
-      type="password"
-      formControlName="confirmPassword"
-      placeholder="Confirm your password"
-      class="w-full focus:border-[var(--secondary-color)] border-1 transition-all duration-200 outline-none shadow-[0_6px_6px_var(--shadow)] bg-[var(--dark)] placeholder:text-[var(--gray)] text-[var(--gray)] rounded-md px-5 py-4 text-sm"
-      [class.border-red-500]="hasError('confirmPassword')"
-      [class.border-transparent]="!hasError('confirmPassword')"
-    />
-    <p *ngIf="hasError('confirmPassword')" class="text-red-500 text-xs mt-1">
-      {{ getErrorMessage('confirmPassword') }}
-    </p>
-  </div>
+    <!-- Confirm Password -->
+    <div>
+      <input
+        type="password"
+        formControlName="confirmPassword"
+        placeholder="Confirm your password"
+        class="w-full focus:border-[var(--secondary-color)] border-1 border-transparent transition-all duration-200 outline-none shadow-[0_6px_6px_var(--shadow)] bg-[var(--dark)] placeholder:text-[var(--gray)] text-[var(--gray)] rounded-md px-5 py-4 text-sm"
+        [class.border-red-500]="hasError('confirmPassword')"
+      />
+      @if (hasError('confirmPassword')) {
+      <p class="text-red-500 text-xs mt-1">
+        {{ getErrorMessage('confirmPassword') }}
+      </p>
+      }
+    </div>
 </app-auth-section>

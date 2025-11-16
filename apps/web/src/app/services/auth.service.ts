@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, tap } from 'rxjs';
 import { Router } from '@angular/router';
@@ -31,35 +31,34 @@ interface User {
   providedIn: 'root'
 })
 export class AuthService {
-  
   private authBaseUrl = `${environment.apiBaseUrl}/auth`;
-  
+
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
-  
+
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasToken());
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
-  constructor(
-    private http: HttpClient,
-    private router: Router
-  ) {
+  private httpClient = inject(HttpClient)
+  private router = inject(Router)
+
+  constructor() {
     if (this.hasToken()) {
       this.loadCurrentUser();
     }
   }
 
   register(email: string, password: string): Observable<User> {
-    return this.http.post<User>(`${this.authBaseUrl}/register`, { 
-      email, 
-      password 
+    return this.httpClient.post<User>(`${this.authBaseUrl}/register`, {
+      email,
+      password
     });
   }
 
   login(email: string, password: string): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.authBaseUrl}/login`, { 
-      email, 
-      password 
+    return this.httpClient.post<LoginResponse>(`${this.authBaseUrl}/login`, {
+      email,
+      password
     }).pipe(
       tap(response => {
         this.setToken(response.accessToken);
@@ -77,7 +76,7 @@ export class AuthService {
   }
 
   loadCurrentUser(): void {
-    this.http.get<User>(`${this.authBaseUrl}/me`).subscribe({
+    this.httpClient.get<User>(`${this.authBaseUrl}/me`).subscribe({
       next: (user) => {
         this.currentUserSubject.next(user);
       },

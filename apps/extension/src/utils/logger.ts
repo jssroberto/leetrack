@@ -12,8 +12,11 @@ export class Logger {
   }
 
   static debug(message: string, data?: any): void {
-    const isDev = (globalThis as any)?.process?.env?.NODE_ENV === 'development';
-    if (isDev) {
+    const globalAny = globalThis as any;
+    const isDev = globalAny?.process?.env?.NODE_ENV === 'development';
+    const forceDebug = Boolean(globalAny?.__LEETRACK_DEBUG__);
+
+    if (isDev || forceDebug) {
       console.debug(`[LeeTrack DEBUG] ${message}`, data);
     }
   }

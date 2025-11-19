@@ -83,6 +83,15 @@ export class StorageManager {
       this.KEYS.AUTH_EXPIRY,
       this.KEYS.USER_ID,
     ]);
+    await this.clearSubmissionData();
+  }
+
+  async clearSubmissionData(): Promise<void> {
+    await chrome.storage.local.remove([
+      this.KEYS.SUBMISSIONS,
+      this.KEYS.PENDING_SYNC,
+      this.KEYS.LAST_SYNC,
+    ]);
   }
 
   async setUserId(userId: string): Promise<void> {
@@ -107,4 +116,3 @@ export class StorageManager {
     });
   }
 }
-

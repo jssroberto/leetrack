@@ -13,6 +13,7 @@ export default {
   entry: {
     'background/service-worker': path.join(extDir, 'src/background/service-worker.ts'),
     'content/submission-tracker': path.join(extDir, 'src/content/submission-tracker.ts'),
+    'content/network-interceptor': path.join(extDir, 'src/content/network-interceptor.ts'),
     'popup/popup': path.join(extDir, 'src/popup/popup.ts'),
   },
   output: {

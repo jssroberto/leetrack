@@ -68,10 +68,17 @@ class PopupController {
         loginBtn.textContent = 'Signing in…';
       }
 
+      const previousUserId = await this.storage.getUserId();
       const authData = await this.apiClient.login(email, password);
       await this.storage.setAuthToken(authData.accessToken, authData.expiresIn);
       const payload = this.decodeJwt<{ sub: string; email: string }>(authData.accessToken);
-      await this.storage.setUserId(payload?.sub || email);
+      const nextUserId = payload?.sub || email;
+
+      if (previousUserId && previousUserId !== nextUserId) {
+        await this.storage.clearSubmissionData();
+      }
+
+      await this.storage.setUserId(nextUserId);
 
       this.showToast('Signed in successfully', 'success');
       this.showMainScreen();

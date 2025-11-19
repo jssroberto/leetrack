@@ -19,6 +19,12 @@
       "run_at": "document_end"
     }
   ],
+  "web_accessible_resources": [
+    {
+      "resources": ["content/network-interceptor.js"],
+      "matches": ["https://leetcode.com/*", "https://leetcode.cn/*"]
+    }
+  ],
   "action": {
     "default_popup": "popup/popup.html",
     "default_title": "LeeTrack"

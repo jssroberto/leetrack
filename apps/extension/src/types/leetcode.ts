@@ -1,4 +1,5 @@
 export interface SubmissionData {
+  submissionId: number;
   questionId: number;
   titleSlug: string;
   questionTitle: string;
@@ -64,4 +65,3 @@ export interface LeetCodeSubmissionDetail {
   };
   timestamp: number;
 }
-

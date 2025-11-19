@@ -20,7 +20,8 @@ export interface ExtensionMessage {
     | 'GET_SYNC_STATUS'
     | 'SYNC_SUBMISSIONS'
     | 'GET_AUTH_TOKEN'
-    | 'CLEAR_AUTH';
+    | 'CLEAR_AUTH'
+    | 'SHOW_SUBMISSION_TOAST';
   payload?: any;
 }
 

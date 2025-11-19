@@ -10,6 +10,7 @@ class PopupController {
   private toastTimer: number | null = null;
 
   async init(): Promise<void> {
+    this.setupRuntimeListeners();
     const token = await this.storage.getAuthToken();
     const isExpired = await this.storage.isTokenExpired();
 
@@ -45,6 +46,26 @@ class PopupController {
     document.getElementById('register-link')?.addEventListener('click', (e) => {
       e.preventDefault();
       chrome.tabs.create({ url: 'http://localhost:4200/auth/register' });
+    });
+  }
+
+  private setupRuntimeListeners(): void {
+    chrome.runtime.onMessage.addListener((message: ExtensionMessage) => {
+      if (message.type === 'SHOW_SUBMISSION_TOAST') {
+        const payload = message.payload as {
+          title: string;
+          status: 'synced' | 'queued';
+        };
+        this.showMainScreen();
+        const toastMessage =
+          payload.status === 'synced'
+            ? `Synced: ${payload.title}`
+            : `Saved locally: ${payload.title}`;
+        this.showToast(toastMessage, payload.status === 'synced' ? 'success' : 'info');
+        this.updateRecentSubmissions();
+        this.updateSyncStatus();
+      }
+      return false;
     });
   }
 

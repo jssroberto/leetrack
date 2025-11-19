@@ -3,7 +3,7 @@
   "name": "LeeTrack",
   "version": "1.0.0",
   "description": "Track your LeetCode progress collaboratively",
-  "permissions": ["storage", "tabs"],
+  "permissions": ["storage", "tabs", "notifications"],
   "host_permissions": [
     "https://leetcode.com/*",
     "https://leetcode.cn/*"

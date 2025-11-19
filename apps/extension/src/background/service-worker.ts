@@ -57,6 +57,7 @@ class BackgroundService {
   }
 
   private async handleNewSubmission(submission: SubmissionData): Promise<void> {
+    let notificationStatus: 'queued' | 'synced' = 'queued';
     try {
       await this.storage.saveSubmission(submission);
       const token = await this.storage.getAuthToken();
@@ -87,9 +88,12 @@ class BackgroundService {
 
       await this.storage.markSubmissionSynced(submission.questionId);
       Logger.log('Submission synced', submission.titleSlug);
+      notificationStatus = 'synced';
     } catch (error) {
       Logger.error('Failed to handle submission, queuing', error);
       await this.storage.savePendingSubmission(submission);
+    } finally {
+      await this.notifyUser(submission, notificationStatus);
     }
   }
 
@@ -147,6 +151,74 @@ class BackgroundService {
     }, FIVE_MINUTES) as unknown as number;
 
     Logger.log('Periodic sync started (5 min interval)');
+  }
+
+  private async notifyUser(submission: SubmissionData, status: 'synced' | 'queued'): Promise<void> {
+    await this.showSubmissionNotification(submission, status);
+    await this.openPopupWithToast(submission, status);
+  }
+
+  private async showSubmissionNotification(
+    submission: SubmissionData,
+    status: 'synced' | 'queued'
+  ): Promise<void> {
+    if (!chrome?.notifications?.create) {
+      return;
+    }
+
+    const iconUrl = chrome.runtime.getURL('assets/icons/icon-128.png');
+    const message =
+      status === 'synced'
+        ? 'Submission synced with LeeTrack.'
+        : 'Submission saved locally. Will sync soon.';
+
+    const options = {
+      type: 'basic',
+      iconUrl,
+      title: `Accepted: ${submission.questionTitle || submission.titleSlug}`,
+      message,
+      priority: 0,
+    };
+
+    try {
+      const result = chrome.notifications.create(undefined, options);
+      if (result instanceof Promise) {
+        await result;
+      }
+    } catch (error) {
+      Logger.warn('Failed to show notification', error);
+    }
+  }
+
+  private async openPopupWithToast(
+    submission: SubmissionData,
+    status: 'synced' | 'queued'
+  ): Promise<void> {
+    if (!chrome?.action?.openPopup) {
+      return;
+    }
+
+    try {
+      const openResult = chrome.action.openPopup();
+      if (openResult instanceof Promise) {
+        await openResult;
+      }
+      setTimeout(() => {
+        chrome.runtime
+          .sendMessage({
+            type: 'SHOW_SUBMISSION_TOAST',
+            payload: {
+              title: submission.questionTitle || submission.titleSlug,
+              status,
+            },
+          })
+          .catch((error: unknown) => {
+            Logger.warn('Failed to send toast message', error);
+          });
+      }, 300);
+    } catch (error) {
+      Logger.warn('Failed to open popup UI', error);
+    }
   }
 }
 

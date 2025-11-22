@@ -1,8 +1,9 @@
+import CopyWebpackPlugin from 'copy-webpack-plugin';
+import fs from 'fs';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import webpack from 'webpack';
-import CopyWebpackPlugin from 'copy-webpack-plugin';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const extDir = path.resolve(__dirname, '..');
@@ -36,6 +37,19 @@ export default {
   plugins: [
     new webpack.DefinePlugin({
       __LEETRACK_API_URL__: JSON.stringify(process.env.LEETRACK_API_URL || 'http://localhost:3002'),
+      __LEETRACK_WEB_PORT__: JSON.stringify(
+        process.env.WEB_PORT ||
+          (() => {
+            try {
+              const envPath = path.join(rootDir, '.env');
+              const envContent = fs.readFileSync(envPath, 'utf-8');
+              const match = envContent.match(/^WEB_PORT=(.*)$/m);
+              return match ? match[1].trim() : '4200';
+            } catch {
+              return '4200';
+            }
+          })(),
+      ),
     }),
     new MiniCssExtractPlugin({
       filename: '[name].css',

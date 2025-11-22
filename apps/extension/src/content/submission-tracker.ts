@@ -1,6 +1,6 @@
-import { Logger } from '@extension/utils/logger';
-import type { SubmissionData, ExtensionMessage } from '@extension/types/leetcode';
 import { injectNetworkInterceptor } from '@extension/content/injector';
+import type { ExtensionMessage, SubmissionData } from '@extension/types/leetcode';
+import { Logger } from '@extension/utils/logger';
 
 const MESSAGE_SOURCE = 'leetrack';
 const SUBMISSION_EVENT = 'SUBMISSION_DETAILS';
@@ -50,7 +50,7 @@ class SubmissionTracker {
       if (!data || data.source !== MESSAGE_SOURCE) return;
 
       Logger.debug(
-        `Message from injector: ${data.type} (${data.payload?.submissionId ?? 'unknown'})`
+        `Message from injector: ${data.type} (${data.payload?.submissionId ?? 'unknown'})`,
       );
 
       if (data.type === QUESTION_EVENT) {
@@ -69,7 +69,10 @@ class SubmissionTracker {
   private handleNetworkSubmission(payload: InterceptedSubmissionMessage): void {
     if (!payload?.submission) return;
     const submissionId = Number(
-      payload.submissionId ?? payload.variables?.submissionId ?? payload.submission?.timestamp ?? Date.now()
+      payload.submissionId ??
+        payload.variables?.submissionId ??
+        payload.submission?.timestamp ??
+        Date.now(),
     );
 
     if (this.hasProcessed(submissionId)) {
@@ -86,15 +89,23 @@ class SubmissionTracker {
     const submission: SubmissionData = {
       submissionId,
       questionId: Number(
-        payload.submission.question?.questionId ?? metadata?.questionId ?? this.extractQuestionId()
+        payload.submission.question?.questionId ?? metadata?.questionId ?? this.extractQuestionId(),
       ),
       titleSlug: slug || this.extractTitleSlug(),
       questionTitle: metadata?.title || this.extractFallbackTitle(),
-      difficulty: metadata?.difficulty || 'Medium',
+      difficulty: metadata?.difficulty || this.extractFallbackDifficulty(),
       status: 'Accepted',
       timestamp: Number(payload.submission.timestamp || Date.now() / 1000) * 1000,
       language: payload.submission.lang?.name || payload.submission.lang?.verboseName || 'unknown',
     };
+
+    // Ignore submissions older than 5 minutes (to avoid re-triggering when viewing history)
+    const MAX_SUBMISSION_AGE = 5 * 60 * 1000;
+    const age = Date.now() - submission.timestamp;
+    if (age > MAX_SUBMISSION_AGE) {
+      Logger.debug('Ignoring old submission', { slug, age });
+      return;
+    }
 
     this.markSubmissionProcessed(submissionId);
     this.forwardSubmission(submission);
@@ -106,6 +117,29 @@ class SubmissionTracker {
       document.querySelector('[data-cy="question-title"]') ||
       document.querySelector('div[class*="title"]');
     return titleElement?.textContent?.trim() || 'Unknown Problem';
+  }
+
+  private extractFallbackDifficulty(): 'Easy' | 'Medium' | 'Hard' {
+    // Try to find difficulty in the DOM
+    // Also look for text content directly
+    const elements = Array.from(document.querySelectorAll('div, span, p'));
+
+    for (const el of elements) {
+      const text = el.textContent?.trim();
+      if (text === 'Easy' || text === 'Medium' || text === 'Hard') {
+        // Check if it's likely the difficulty label (usually near the title)
+        // This is a heuristic; might need refinement
+        if (el.className.includes('text-') || el.className.includes('difficulty')) {
+          return text as 'Easy' | 'Medium' | 'Hard';
+        }
+        // Fallback: if we find exact match in a small element
+        if (text.length === (el.textContent || '').length) {
+          return text as 'Easy' | 'Medium' | 'Hard';
+        }
+      }
+    }
+
+    return 'Medium'; // Ultimate fallback
   }
 
   private hasProcessed(id: number): boolean {

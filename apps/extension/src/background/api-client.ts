@@ -1,4 +1,8 @@
-import type { ApiSubmissionRequest, ApiSubmissionResponse, AuthToken } from '@extension/types/leetcode';
+import type {
+  ApiSubmissionRequest,
+  ApiSubmissionResponse,
+  AuthToken,
+} from '@extension/types/leetcode';
 import { Logger } from '@extension/utils/logger';
 
 export class ApiClient {
@@ -8,7 +12,10 @@ export class ApiClient {
     this.baseURL = baseURL || (__LEETRACK_API_URL__ ?? 'http://localhost:3002');
   }
 
-  async submitProblem(submission: ApiSubmissionRequest, token: string): Promise<ApiSubmissionResponse> {
+  async submitProblem(
+    submission: ApiSubmissionRequest,
+    token: string,
+  ): Promise<ApiSubmissionResponse> {
     try {
       const response = await fetch(`${this.baseURL}/api/v1/submissions`, {
         method: 'POST',
@@ -66,4 +73,3 @@ export class ApiClient {
     }
   }
 }
-declare const __LEETRACK_API_URL__: string | undefined;

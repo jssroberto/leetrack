@@ -8,7 +8,7 @@
     "dev": "webpack --config build/webpack.config.js --mode development --watch",
     "build": "webpack --config build/webpack.config.js --mode production",
     "build:clean": "rm -rf dist && webpack --config build/webpack.config.js --mode production",
-    "lint": "eslint src --ext .ts",
+    "lint": "eslint src",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {

@@ -1,7 +1,7 @@
-import { StorageManager } from '@extension/utils/storage';
 import { ApiClient } from '@extension/background/api-client';
-import { Logger } from '@extension/utils/logger';
 import type { ExtensionMessage } from '@extension/types/leetcode';
+import { Logger } from '@extension/utils/logger';
+import { StorageManager } from '@extension/utils/storage';
 import './popup.css';
 
 class PopupController {
@@ -45,7 +45,8 @@ class PopupController {
 
     document.getElementById('register-link')?.addEventListener('click', (e) => {
       e.preventDefault();
-      chrome.tabs.create({ url: 'http://localhost:4200/auth/register' });
+      const port = __LEETRACK_WEB_PORT__ || '4200';
+      chrome.tabs.create({ url: `http://localhost:${port}/register` });
     });
   }
 
@@ -179,7 +180,8 @@ class PopupController {
     const recentFive = submissions.slice(-5).reverse();
 
     if (recentFive.length === 0) {
-      container.innerHTML = '<p class="text-sm text-gray-500 text-center py-4">No submissions yet</p>';
+      container.innerHTML =
+        '<p class="text-sm text-gray-500 text-center py-4">No submissions yet</p>';
       return;
     }
 
@@ -188,8 +190,8 @@ class PopupController {
         sub.difficulty === 'Easy'
           ? 'bg-green-100 text-green-800'
           : sub.difficulty === 'Medium'
-          ? 'bg-yellow-100 text-yellow-800'
-          : 'bg-red-100 text-red-800';
+            ? 'bg-yellow-100 text-yellow-800'
+            : 'bg-red-100 text-red-800';
 
       const syncIcon = sub.synced ? '✓' : '⏳';
 

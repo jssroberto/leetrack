@@ -11,7 +11,13 @@
       <!-- Toast -->
       <div id="toast" class="toast hidden" role="status" aria-live="polite">
         <span id="toast-text"></span>
-        <button id="toast-close" title="Close" class="ml-2 text-muted hover:text-[var(--color-text)]">✕</button>
+        <button
+          id="toast-close"
+          title="Close"
+          class="ml-2 text-muted hover:text-[var(--color-text)]"
+        >
+          ✕
+        </button>
       </div>
       <!-- Auth Screen -->
       <div id="auth-screen" class="screen p-4">
@@ -23,13 +29,7 @@
         <form id="login-form" class="mb-4">
           <div class="mb-3 flex flex-col">
             <label for="email" class="font-semibold mb-1.5"> Email </label>
-            <input
-              type="text"
-              id="email"
-              placeholder="Enter email"
-              class="input"
-              required
-            />
+            <input type="text" id="email" placeholder="Enter email" class="input" required />
           </div>
 
           <div class="mb-4 flex flex-col">
@@ -43,18 +43,19 @@
             />
           </div>
 
-          <button
-            type="submit"
-            id="login-btn"
-            class="btn-primary mb-2"
-          >
-            Sign In
-          </button>
+          <div id="login-error" class="text-xs text-red-500 mb-3 hidden"></div>
+
+          <button type="submit" id="login-btn" class="btn-primary mb-2">Sign In</button>
         </form>
 
         <p class="text-center text-xs text-muted mt-3">
           No account yet?
-          <a href="#" id="register-link" class="font-semibold hover:underline" style="color: var(--color-primary)">
+          <a
+            href="#"
+            id="register-link"
+            class="font-semibold hover:underline"
+            style="color: var(--color-primary)"
+          >
             Create one
           </a>
         </p>
@@ -77,27 +78,15 @@
           </div>
         </div>
 
-        <button
-          id="sync-btn"
-          class="btn-secondary mb-4"
-        >
-          Sync Submissions
-        </button>
+        <button id="sync-btn" class="btn-secondary mb-4">Sync Submissions</button>
 
         <div class="mb-4">
           <h4 class="text-sm font-semibold mb-2">Recent Submissions</h4>
           <div id="submissions-list" class="max-h-52 overflow-y-auto space-y-2"></div>
         </div>
 
-        <button
-          id="logout-btn"
-          class="btn-danger"
-        >
-          Sign Out
-        </button>
+        <button id="logout-btn" class="btn-danger">Sign Out</button>
       </div>
-
-      
     </div>
 
     <script src="popup.js"></script>

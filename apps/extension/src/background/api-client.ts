@@ -48,7 +48,8 @@ export class ApiClient {
       });
 
       if (!response.ok) {
-        throw new Error('Authentication failed');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Authentication failed');
       }
 
       const data = (await response.json()) as { accessToken: string; expiresIn?: number };

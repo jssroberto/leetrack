@@ -83,6 +83,12 @@ class PopupController {
       return;
     }
 
+    const errorEl = document.getElementById('login-error');
+    if (errorEl) {
+      errorEl.classList.add('hidden');
+      errorEl.textContent = '';
+    }
+
     try {
       if (loginBtn) {
         loginBtn.disabled = true;
@@ -109,7 +115,13 @@ class PopupController {
     } catch (error: any) {
       Logger.error('Login failed', error);
       const message = (error && error.message) || 'Login failed. Please check your credentials.';
-      this.showToast(message, 'error');
+
+      if (errorEl) {
+        errorEl.textContent = message;
+        errorEl.classList.remove('hidden');
+      } else {
+        this.showToast(message, 'error');
+      }
     } finally {
       if (loginBtn) {
         loginBtn.disabled = false;

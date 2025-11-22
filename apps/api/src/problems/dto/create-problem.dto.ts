@@ -1,5 +1,5 @@
-import { IsString, IsInt, IsEnum, IsArray, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsArray, IsEnum, IsInt, IsString } from 'class-validator';
 
 export enum Difficulty {
   EASY = 'EASY',

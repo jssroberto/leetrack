@@ -1,14 +1,23 @@
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import * as request from 'supertest';
+import { Server } from 'http';
+import request from 'supertest';
 import { AppModule } from './../src/app.module';
 import { PrismaService } from './../src/prisma/prisma.service';
+
+interface LoginResponse {
+  accessToken: string;
+}
+
+interface SubmissionResponse {
+  id: string;
+  problemId: string;
+}
 
 describe('SubmissionsController (e2e)', () => {
   let app: INestApplication;
   let prisma: PrismaService;
   let jwtToken: string;
-  let userId: string;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -29,19 +38,22 @@ describe('SubmissionsController (e2e)', () => {
     const password = 'password';
 
     // Register
-    await request(app.getHttpServer()).post('/auth/register').send({ email, password }).expect(201);
+    await request(app.getHttpServer() as Server)
+      .post('/auth/register')
+      .send({ email, password })
+      .expect(201);
 
     // Login
-    const loginRes = await request(app.getHttpServer())
+    const loginRes = await request(app.getHttpServer() as Server)
       .post('/auth/login')
       .send({ email, password })
       .expect(201);
 
-    jwtToken = loginRes.body.accessToken;
+    const body = loginRes.body as LoginResponse;
+    jwtToken = body.accessToken;
 
     // Get user Id
-    const user = await prisma.user.findUnique({ where: { email } });
-    userId = user.id;
+    await prisma.user.findUnique({ where: { email } });
   });
 
   afterAll(async () => {
@@ -63,27 +75,33 @@ describe('SubmissionsController (e2e)', () => {
       problem: problemData,
     };
 
-    const response = await request(app.getHttpServer())
+    const response = await request(app.getHttpServer() as Server)
       .post('/submissions')
       .set('Authorization', `Bearer ${jwtToken}`)
       .send(submissionData)
       .expect(201);
 
-    expect(response.body).toHaveProperty('id');
-    expect(response.body.problemId).toBeDefined();
+    const submissionBody = response.body as SubmissionResponse;
+
+    expect(submissionBody).toHaveProperty('id');
+    expect(submissionBody.problemId).toBeDefined();
 
     // Verify problem was created
     const problem = await prisma.problem.findUnique({
       where: { leetcodeId: 1 },
     });
     expect(problem).toBeDefined();
-    expect(problem.title).toBe('Two Sum');
+    if (problem) {
+      expect(problem.title).toBe('Two Sum');
+    }
 
     // Verify submission was created
     const submission = await prisma.submission.findUnique({
-      where: { id: response.body.id },
+      where: { id: submissionBody.id },
     });
     expect(submission).toBeDefined();
-    expect(submission.problemId).toBe(problem.id);
+    if (submission && problem) {
+      expect(submission.problemId).toBe(problem.id);
+    }
   });
 });

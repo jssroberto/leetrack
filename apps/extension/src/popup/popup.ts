@@ -29,10 +29,6 @@ class PopupController {
       this.handleLogin();
     });
 
-    document.getElementById('sync-btn')?.addEventListener('click', () => {
-      this.handleSync();
-    });
-
     document.getElementById('logout-btn')?.addEventListener('click', () => {
       this.handleLogout();
     });
@@ -139,19 +135,6 @@ class PopupController {
     } catch {
       return null;
     }
-  }
-
-  private async handleSync(): Promise<void> {
-    const message: ExtensionMessage = { type: 'SYNC_SUBMISSIONS' };
-
-    chrome.runtime.sendMessage(message, (response: any) => {
-      if (response?.success) {
-        this.updateRecentSubmissions();
-        this.showToast('Sync completed', 'success');
-      } else {
-        this.showToast('Sync failed', 'error');
-      }
-    });
   }
 
   private async handleLogout(): Promise<void> {

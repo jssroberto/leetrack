@@ -13,14 +13,16 @@ datasource db {
 }
 
 model User {
-  id               String       @id @default(uuid()) @db.Uuid
-  email            String       @unique
-  passwordHash     String
-  leetcodeUsername String?
-  createdAt        DateTime     @default(now())
-  updatedAt        DateTime     @updatedAt
-  groups           UserGroup[]
-  submissions      Submission[]
+  id                String              @id @default(uuid()) @db.Uuid
+  email             String              @unique
+  passwordHash      String
+  leetcodeUsername  String?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  groups            UserGroup[]
+  submissions       Submission[]
+  createdChallenges Challenge[]         @relation("CreatedChallenges")
+  challengeProgress ChallengeProgress[]
 
   @@index([email])
 }
@@ -32,6 +34,7 @@ model Group {
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
   members    UserGroup[]
+  challenges Challenge[]
 
   @@index([inviteCode])
 }
@@ -50,34 +53,91 @@ model UserGroup {
 }
 
 model Problem {
-  id          String       @id @default(uuid()) @db.Uuid
-  leetcodeId  Int          @unique
-  slug        String       @unique
-  title       String
-  difficulty  Difficulty
-  tags        String[]
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  submissions Submission[]
+  id                String              @id @default(uuid()) @db.Uuid
+  leetcodeId        Int                 @unique
+  slug              String              @unique
+  title             String
+  difficulty        Difficulty
+  tags              String[]
+  isPremium         Boolean             @default(false)
+  isNeetCode150     Boolean             @default(false)
+  isBlind75         Boolean             @default(false)
+  neetCodeCategory  String?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  submissions       Submission[]
+  challengeProblems ChallengeProblem[]
+  challengeProgress ChallengeProgress[]
 
   @@index([leetcodeId])
   @@index([difficulty])
   @@index([slug])
+  @@index([isNeetCode150])
+  @@index([isBlind75])
 }
 
 model Submission {
-  id          String   @id @default(uuid()) @db.Uuid
-  userId      String   @db.Uuid
-  problemId   String   @db.Uuid
-  lang        String
-  submittedAt DateTime @default(now())
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  problem     Problem  @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  id              String           @id @default(uuid()) @db.Uuid
+  userId          String           @db.Uuid
+  problemId       String           @db.Uuid
+  lang            String
+  submittedAt     DateTime         @default(now())
+  confidenceLevel ConfidenceLevel?
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  problem         Problem          @relation(fields: [problemId], references: [id], onDelete: Cascade)
 
   @@index([userId, problemId])
   @@index([userId])
   @@index([submittedAt])
   @@index([problemId])
+}
+
+model Challenge {
+  id          String              @id @default(uuid()) @db.Uuid
+  groupId     String              @db.Uuid
+  name        String
+  description String?
+  createdById String              @db.Uuid
+  dueDate     DateTime?
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  group       Group               @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  createdBy   User                @relation("CreatedChallenges", fields: [createdById], references: [id])
+  problems    ChallengeProblem[]
+  progress    ChallengeProgress[]
+
+  @@index([groupId])
+  @@index([createdById])
+}
+
+model ChallengeProblem {
+  challengeId String    @db.Uuid
+  problemId   String    @db.Uuid
+  order       Int
+  addedAt     DateTime  @default(now())
+  challenge   Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+  problem     Problem   @relation(fields: [problemId], references: [id], onDelete: Cascade)
+
+  @@id([challengeId, problemId])
+  @@index([challengeId])
+  @@index([problemId])
+}
+
+model ChallengeProgress {
+  userId        String    @db.Uuid
+  challengeId   String    @db.Uuid
+  problemId     String    @db.Uuid
+  attempts      Int       @default(1)
+  firstSolvedAt DateTime  @default(now())
+  lastAttemptAt DateTime  @default(now())
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  challenge     Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+  problem       Problem   @relation(fields: [problemId], references: [id])
+
+  @@id([userId, challengeId, problemId])
+  @@unique([userId, challengeId, problemId])
+  @@index([userId, challengeId])
+  @@index([challengeId])
 }
 
 enum Role {
@@ -89,4 +149,11 @@ enum Difficulty {
   EASY
   MEDIUM
   HARD
+}
+
+enum ConfidenceLevel {
+  STRUGGLED
+  NEEDED_HINTS
+  SOLVED_ALONE
+  EASY
 }

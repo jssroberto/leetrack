@@ -1,5 +1,15 @@
 import { Body, Controller, Delete, Get, Param, Post, Request, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiForbiddenResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { GroupsService } from './groups.service';
@@ -10,7 +20,7 @@ interface AuthenticatedRequest extends Request {
   };
 }
 
-@ApiTags('groups')
+@ApiTags('Groups')
 @Controller('groups')
 export class GroupsController {
   constructor(private readonly groupsService: GroupsService) {}
@@ -18,6 +28,12 @@ export class GroupsController {
   @Post()
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Create a new group',
+    description: 'Creates a new group and assigns the creator as admin',
+  })
+  @ApiCreatedResponse({ description: 'Group successfully created' })
+  @ApiBadRequestResponse({ description: 'Invalid group data' })
   create(@Body() createGroupDto: CreateGroupDto, @Request() req: AuthenticatedRequest) {
     return this.groupsService.create(createGroupDto, req.user.userId);
   }
@@ -25,11 +41,23 @@ export class GroupsController {
   @Get()
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Get all user groups',
+    description: 'Returns all groups the authenticated user is a member of',
+  })
+  @ApiOkResponse({ description: 'List of groups retrieved successfully' })
   findAll(@Request() req: AuthenticatedRequest) {
     return this.groupsService.findAll(req.user.userId);
   }
 
   @Get(':id')
+  @ApiOperation({
+    summary: 'Get group details',
+    description: 'Returns detailed information about a specific group including members',
+  })
+  @ApiParam({ name: 'id', description: 'Group ID' })
+  @ApiOkResponse({ description: 'Group details retrieved successfully' })
+  @ApiNotFoundResponse({ description: 'Group not found' })
   findOne(@Param('id') id: string) {
     return this.groupsService.findOne(id);
   }
@@ -37,6 +65,13 @@ export class GroupsController {
   @Post('join/:inviteCode')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Join a group',
+    description: 'Join a group using an invite code',
+  })
+  @ApiParam({ name: 'inviteCode', description: 'Group invite code' })
+  @ApiOkResponse({ description: 'Successfully joined the group' })
+  @ApiNotFoundResponse({ description: 'Invalid invite code' })
   join(@Param('inviteCode') inviteCode: string, @Request() req: AuthenticatedRequest) {
     return this.groupsService.join(inviteCode, req.user.userId);
   }
@@ -44,6 +79,13 @@ export class GroupsController {
   @Post(':id/leave')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Leave a group',
+    description: 'Remove yourself from a group',
+  })
+  @ApiParam({ name: 'id', description: 'Group ID' })
+  @ApiOkResponse({ description: 'Successfully left the group' })
+  @ApiNotFoundResponse({ description: 'Group not found or not a member' })
   leave(@Param('id') id: string, @Request() req: AuthenticatedRequest) {
     return this.groupsService.leaveGroup(id, req.user.userId);
   }
@@ -51,6 +93,16 @@ export class GroupsController {
   @Delete(':id/members/:userId')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Kick a member from group',
+    description: 'Remove a member from the group (admin only)',
+  })
+  @ApiParam({ name: 'id', description: 'Group ID' })
+  @ApiParam({ name: 'userId', description: 'User ID to kick' })
+  @ApiOkResponse({ description: 'Member successfully removed' })
+  @ApiForbiddenResponse({ description: 'Only admins can kick members' })
+  @ApiNotFoundResponse({ description: 'Group or user not found' })
+  @ApiBadRequestResponse({ description: 'Cannot kick yourself or another admin' })
   kick(
     @Param('id') id: string,
     @Param('userId') userId: string,

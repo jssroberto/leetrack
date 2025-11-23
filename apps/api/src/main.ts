@@ -23,6 +23,11 @@ async function bootstrap() {
     .setDescription('Authentication and core endpoints')
     .setVersion('1.0')
     .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' })
+    .addTag('Auth', 'User authentication and session management')
+    .addTag('Groups', 'Study groups and member management')
+    .addTag('Problems', 'LeetCode problem information')
+    .addTag('Submissions', 'Track problem submissions and progress')
+    .addTag('Challenges', 'Group challenges and leaderboards')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/v1/docs', app, document);

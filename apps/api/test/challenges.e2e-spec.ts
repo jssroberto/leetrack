@@ -18,6 +18,29 @@ interface ChallengeResponse {
   name: string;
 }
 
+interface SubmissionResponse {
+  id: string;
+  problemId: string;
+}
+
+interface LeaderboardEntry {
+  user: { id: string; email: string };
+  problemsCompleted: number;
+  totalAttempts: number;
+}
+
+interface ChallengeDetailsResponse extends ChallengeResponse {
+  problems: unknown[];
+  leaderboard: LeaderboardEntry[];
+}
+
+interface ChallengeWithProgressResponse extends ChallengeResponse {
+  myProgress: {
+    completed: number;
+    total: number;
+  };
+}
+
 describe('ChallengesController (e2e)', () => {
   let app: INestApplication;
   let adminToken: string;
@@ -86,7 +109,7 @@ describe('ChallengesController (e2e)', () => {
         },
       });
 
-    problemId = submissionRes.body.problemId;
+    problemId = (submissionRes.body as SubmissionResponse).problemId;
   });
 
   afterAll(async () => {
@@ -126,9 +149,10 @@ describe('ChallengesController (e2e)', () => {
       .set('Authorization', `Bearer ${adminToken}`)
       .expect(200);
 
-    expect(Array.isArray(response.body)).toBe(true);
-    expect(response.body.length).toBeGreaterThan(0);
-    expect(response.body[0].myProgress).toBeDefined();
+    const challenges = response.body as ChallengeWithProgressResponse[];
+    expect(Array.isArray(challenges)).toBe(true);
+    expect(challenges.length).toBeGreaterThan(0);
+    expect(challenges[0].myProgress).toBeDefined();
   });
 
   it('/groups/:groupId/challenges/:id (GET) - Get Challenge Details with Leaderboard', async () => {
@@ -137,16 +161,17 @@ describe('ChallengesController (e2e)', () => {
       .get(`/groups/${groupId}/challenges`)
       .set('Authorization', `Bearer ${adminToken}`);
 
-    const challengeId = (listResponse.body[0] as ChallengeResponse).id;
+    const challengeId = (listResponse.body as ChallengeResponse[])[0].id;
 
     const response = await request(app.getHttpServer() as Server)
       .get(`/groups/${groupId}/challenges/${challengeId}`)
       .set('Authorization', `Bearer ${adminToken}`)
       .expect(200);
 
-    expect(response.body.id).toBe(challengeId);
-    expect(response.body.problems).toBeDefined();
-    expect(response.body.leaderboard).toBeDefined();
+    const challengeDetails = response.body as ChallengeDetailsResponse;
+    expect(challengeDetails.id).toBe(challengeId);
+    expect(challengeDetails.problems).toBeDefined();
+    expect(challengeDetails.leaderboard).toBeDefined();
   });
 
   it('Automatic Progress Tracking', async () => {
@@ -186,17 +211,17 @@ describe('ChallengesController (e2e)', () => {
       .set('Authorization', `Bearer ${memberToken}`)
       .expect(200);
 
-    const leaderboard = detailsResponse.body.leaderboard;
+    const leaderboard = (detailsResponse.body as ChallengeDetailsResponse).leaderboard;
 
     // Look for member's progress (email might have timestamp)
-    const memberProgress = leaderboard.find(
-      (entry: { user: { id: string } }) => entry.user.id !== undefined,
-    );
+    const memberProgress = leaderboard.find((entry) => entry.user.id !== undefined);
 
     // Verify at least one user has progress
     expect(leaderboard.length).toBeGreaterThan(0);
     expect(memberProgress).toBeDefined();
-    expect(memberProgress.problemsCompleted).toBeGreaterThanOrEqual(1);
+    if (memberProgress) {
+      expect(memberProgress.problemsCompleted).toBeGreaterThanOrEqual(1);
+    }
   });
 
   it('/groups/:groupId/challenges/:id (PUT) - Update Challenge (Admin Only)', async () => {
@@ -204,7 +229,7 @@ describe('ChallengesController (e2e)', () => {
       .get(`/groups/${groupId}/challenges`)
       .set('Authorization', `Bearer ${adminToken}`);
 
-    const challengeId = (listResponse.body[0] as ChallengeResponse).id;
+    const challengeId = (listResponse.body as ChallengeResponse[])[0].id;
 
     await request(app.getHttpServer() as Server)
       .put(`/groups/${groupId}/challenges/${challengeId}`)
@@ -220,7 +245,7 @@ describe('ChallengesController (e2e)', () => {
       .get(`/groups/${groupId}/challenges/${challengeId}`)
       .set('Authorization', `Bearer ${adminToken}`);
 
-    expect(updated.body.name).toBe('Updated Challenge');
+    expect((updated.body as ChallengeResponse).name).toBe('Updated Challenge');
   });
 
   it('/groups/:groupId/challenges/:id (DELETE) - Delete Challenge (Admin Only)', async () => {
@@ -252,7 +277,7 @@ describe('ChallengesController (e2e)', () => {
       .get(`/groups/${groupId}/challenges`)
       .set('Authorization', `Bearer ${adminToken}`);
 
-    const challengeId = (listResponse.body[0] as ChallengeResponse).id;
+    const challengeId = (listResponse.body as ChallengeResponse[])[0].id;
 
     await request(app.getHttpServer() as Server)
       .delete(`/groups/${groupId}/challenges/${challengeId}`)

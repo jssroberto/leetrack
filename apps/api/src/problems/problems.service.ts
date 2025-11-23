@@ -16,6 +16,9 @@ export class ProblemsService {
     return this.prisma.problem.upsert({
       where: { leetcodeId },
       update: {
+        // Only update basic fields that may have changed
+        // DO NOT update NeetCode fields (isNeetCode150, isBlind75, isPremium, neetCodeCategory)
+        // as they are seeded from our curated list and should not be overwritten
         slug,
         title,
         difficulty: difficultyEnum,
@@ -27,6 +30,8 @@ export class ProblemsService {
         title,
         difficulty: difficultyEnum,
         tags,
+        // New problems default to false for NeetCode fields
+        // (will be explicit in DB due to schema defaults)
       },
     });
   }

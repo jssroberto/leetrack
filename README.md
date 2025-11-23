@@ -6,7 +6,7 @@ LeeTrack turns solitary LeetCode practice into a collaborative competition platf
 
 - Backend: NestJS 11, Prisma 6, PostgreSQL 18
 - Frontend: Angular 20, TailwindCSS 4
-- Extension: Vanilla TypeScript
+- Extension: TypeScript, TailwindCSS 4
 - Monorepo: PNPM workspaces
 
 ## Development Environment
@@ -20,11 +20,12 @@ All development services are containerised. You only need Docker; Node.js, PNPM,
 - Optional: PNPM 10+ locally if you want to run scripts outside containers
 
 ### First Run
+
 1. Run the package manager to install all project dependencies:
 
-    ```bash
-    pnpm install
-    ```
+   ```bash
+   pnpm install
+   ```
 
 2. Duplicate the example environment file:
    ```bash
@@ -33,18 +34,18 @@ All development services are containerised. You only need Docker; Node.js, PNPM,
 3. Adjust any ports or credentials in `.env` as needed.
 
 4. Before bringing up the containers, you must generate the Prisma client for the database.
+
    ```bash
     cd libs/database
     pnpm prisma:migrate
     pnpm prisma:generate
     cd ../..
-    ```
+   ```
 
 5. Build and start the development stack:
    ```bash
    docker compose -f compose.dev.yaml up --build
    ```
-   
 6. When the logs show `api` and `web` ready messages, visit the apps:
    - API: http://localhost:3000 (or `${API_PORT}` from `.env`)
    - Web: http://localhost:4200 (or `${WEB_PORT}` from `.env`)
@@ -108,15 +109,15 @@ This path still requires PostgreSQL running locally and a proper `.env`.
 
 The containers load configuration from `.env`. Start with `.env.example`; key variables are:
 
-| Variable        | Default                | Purpose                                   |
-|-----------------|------------------------|-------------------------------------------|
-| `POSTGRES_USER` | `leetrack`             | Database user                             |
-| `POSTGRES_PASSWORD` | `password`        | Database password                         |
-| `POSTGRES_DB`   | `leetrack_dev`         | Database name                             |
-| `POSTGRES_PORT` | `5432`                 | Host port bound to Postgres service       |
-| `DATABASE_URL`  | Uses service hostname  | Prisma connection string (points to `postgres`) |
-| `API_PORT`      | `3000`                 | Host port bound to the API service        |
-| `WEB_PORT`      | `4200`                 | Host port bound to the web dev server     |
+| Variable            | Default               | Purpose                                         |
+| ------------------- | --------------------- | ----------------------------------------------- |
+| `POSTGRES_USER`     | `leetrack`            | Database user                                   |
+| `POSTGRES_PASSWORD` | `password`            | Database password                               |
+| `POSTGRES_DB`       | `leetrack_dev`        | Database name                                   |
+| `POSTGRES_PORT`     | `5432`                | Host port bound to Postgres service             |
+| `DATABASE_URL`      | Uses service hostname | Prisma connection string (points to `postgres`) |
+| `API_PORT`          | `3000`                | Host port bound to the API service              |
+| `WEB_PORT`          | `4200`                | Host port bound to the web dev server           |
 
 Edit the `.env` file before starting the stack if you need different ports or credentials. Changes require restarting the relevant services.
 

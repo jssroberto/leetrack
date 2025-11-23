@@ -42,7 +42,10 @@ export class AuthService {
   private httpClient = inject(HttpClient)
   private router = inject(Router)
 
-  constructor() {
+  constructor() { }
+
+  // Se ejecuta al iniciar la aplicación
+  async initialize(): Promise<void> {
     if (this.hasToken()) {
       this.loadCurrentUser();
     }
@@ -80,8 +83,14 @@ export class AuthService {
       next: (user) => {
         this.currentUserSubject.next(user);
       },
-      error: () => {
-        this.logout();
+      error: (error) => {
+        // Solo cerrar sesión si el token es realmente inválido o expiró
+        if (error.status === 401) {
+          this.logout();
+        }
+
+        // Si es error de conexión (0) o servidor (500), mantenemos la sesión local
+        console.error('Error loading user:', error);
       }
     });
   }

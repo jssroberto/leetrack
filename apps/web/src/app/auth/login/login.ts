@@ -37,7 +37,7 @@ export class Login {
   // Método para obtener el mensaje de error específico
   getErrorMessage(fieldName: string): string {
     const field = this.loginForm.get(fieldName);
-    
+
     if (!field || !field.errors) {
       return '';
     }
@@ -84,8 +84,8 @@ export class Login {
         this.router.navigate(['/main/dashboard']);
       },
       error: (error) => {
-        this.isLoading = false;
-        
+        this.isLoading = false; 
+
         if (error.status === 0) {
           this.errorMessage = 'Cannot connect to server. Please verify the backend is running.';
         } else if (error.status === 401) {
@@ -95,7 +95,7 @@ export class Login {
         } else {
           this.errorMessage = 'Login error. Please try again.';
         }
-        
+
         console.error('Login error:', error);
       },
       complete: () => {

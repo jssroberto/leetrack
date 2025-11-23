@@ -13,6 +13,18 @@ export const authGuard: CanActivateFn = (route, state) => {
   router.navigate(['/login'], {
     queryParams: { returnUrl: state.url }
   });
-  
+
+  return false;
+};
+
+export const publicGuard: CanActivateFn = () => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
+
+  if (!authService.isAuthenticated()) {
+    return true;
+  }
+
+  router.navigate(['/main/index']);
   return false;
 };

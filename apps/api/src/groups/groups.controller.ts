@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Request, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CreateGroupDto } from './dto/create-group.dto';
@@ -39,5 +39,23 @@ export class GroupsController {
   @ApiBearerAuth()
   join(@Param('inviteCode') inviteCode: string, @Request() req: AuthenticatedRequest) {
     return this.groupsService.join(inviteCode, req.user.userId);
+  }
+
+  @Post(':id/leave')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  leave(@Param('id') id: string, @Request() req: AuthenticatedRequest) {
+    return this.groupsService.leaveGroup(id, req.user.userId);
+  }
+
+  @Delete(':id/members/:userId')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  kick(
+    @Param('id') id: string,
+    @Param('userId') userId: string,
+    @Request() req: AuthenticatedRequest,
+  ) {
+    return this.groupsService.kickMember(id, req.user.userId, userId);
   }
 }

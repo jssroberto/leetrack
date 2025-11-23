@@ -1,5 +1,10 @@
 import { Prisma, Role } from '@leetrack/database';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateGroupDto } from './dto/create-group.dto';
 
@@ -102,5 +107,78 @@ export class GroupsService {
     });
 
     return group;
+  }
+
+  async leaveGroup(groupId: string, userId: string) {
+    const userGroup = await this.prisma.userGroup.findUnique({
+      where: {
+        userId_groupId: {
+          userId,
+          groupId,
+        },
+      },
+    });
+
+    if (!userGroup) {
+      throw new NotFoundException('You are not a member of this group');
+    }
+
+    return this.prisma.userGroup.delete({
+      where: {
+        userId_groupId: {
+          userId,
+          groupId,
+        },
+      },
+    });
+  }
+
+  async kickMember(groupId: string, adminId: string, targetUserId: string) {
+    // 1. Verify Admin
+    const adminMember = await this.prisma.userGroup.findUnique({
+      where: {
+        userId_groupId: {
+          userId: adminId,
+          groupId,
+        },
+      },
+    });
+
+    if (!adminMember || adminMember.role !== Role.ADMIN) {
+      throw new ForbiddenException('Only admins can kick members');
+    }
+
+    // 2. Verify Target
+    const targetMember = await this.prisma.userGroup.findUnique({
+      where: {
+        userId_groupId: {
+          userId: targetUserId,
+          groupId,
+        },
+      },
+    });
+
+    if (!targetMember) {
+      throw new NotFoundException('User is not in this group');
+    }
+
+    // 3. Protection: Self-kick
+    if (adminId === targetUserId) {
+      throw new BadRequestException('You cannot kick yourself. Use leave group instead.');
+    }
+
+    // 4. Protection: Kick Admin
+    if (targetMember.role === Role.ADMIN) {
+      throw new ForbiddenException('Cannot kick another admin');
+    }
+
+    return this.prisma.userGroup.delete({
+      where: {
+        userId_groupId: {
+          userId: targetUserId,
+          groupId,
+        },
+      },
+    });
   }
 }

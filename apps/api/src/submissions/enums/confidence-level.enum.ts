@@ -1,0 +1,6 @@
+export enum ConfidenceLevel {
+  STRUGGLED = 'STRUGGLED',
+  NEEDED_HINTS = 'NEEDED_HINTS',
+  SOLVED_ALONE = 'SOLVED_ALONE',
+  EASY = 'EASY',
+}

@@ -13,7 +13,7 @@ export class SubmissionsService {
   ) {}
 
   async create(createSubmissionDto: CreateSubmissionDto, userId: string) {
-    const { problem: problemData, lang } = createSubmissionDto;
+    const { problem: problemData, lang, confidenceLevel } = createSubmissionDto;
 
     // 1. Upsert the problem (Lazy Loading)
     const problem = await this.problemsService.upsertProblem(problemData);
@@ -24,6 +24,7 @@ export class SubmissionsService {
         userId,
         problemId: problem.id,
         lang,
+        confidenceLevel,
       },
     });
 

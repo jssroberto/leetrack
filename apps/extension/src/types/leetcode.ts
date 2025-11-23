@@ -8,7 +8,10 @@ export interface SubmissionData {
   timestamp: number;
   language: string;
   tags: string[];
+  confidenceLevel?: ConfidenceLevel;
 }
+
+export type ConfidenceLevel = 'STRUGGLED' | 'NEEDED_HINTS' | 'SOLVED_ALONE' | 'EASY';
 
 export interface StoredSubmission extends SubmissionData {
   synced: boolean;
@@ -47,6 +50,7 @@ export interface ApiSubmissionRequest {
     difficulty: string;
     tags: string[];
   };
+  confidenceLevel?: ConfidenceLevel;
 }
 
 export interface ApiSubmissionResponse {

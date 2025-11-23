@@ -26,6 +26,7 @@ export class ApiClient {
         difficulty: submission.difficulty.toUpperCase(),
         tags: submission.tags,
       },
+      confidenceLevel: submission.confidenceLevel,
     };
 
     try {

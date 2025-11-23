@@ -1,6 +1,7 @@
 import { injectNetworkInterceptor } from '@extension/content/injector';
 import type { ExtensionMessage, SubmissionData } from '@extension/types/leetcode';
 import { Logger } from '@extension/utils/logger';
+import { ConfidenceModal } from './confidence-modal';
 
 const MESSAGE_SOURCE = 'leetrack';
 const SUBMISSION_EVENT = 'SUBMISSION_DETAILS';
@@ -67,7 +68,7 @@ class SubmissionTracker {
     this.questionMetaCache.set(metadata.titleSlug, metadata);
   }
 
-  private handleNetworkSubmission(payload: InterceptedSubmissionMessage): void {
+  private async handleNetworkSubmission(payload: InterceptedSubmissionMessage): Promise<void> {
     if (!payload?.submission) return;
     const submissionId = Number(
       payload.submissionId ??
@@ -110,6 +111,18 @@ class SubmissionTracker {
     }
 
     this.markSubmissionProcessed(submissionId);
+
+    // Show confidence modal before forwarding
+    try {
+      Logger.log('Attempting to show confidence modal');
+      const confidence = await ConfidenceModal.show();
+      submission.confidenceLevel = confidence;
+      Logger.log('Confidence level captured', confidence);
+    } catch (error) {
+      Logger.error('Failed to capture confidence level', error);
+      // Continue without confidence level if modal fails
+    }
+
     this.forwardSubmission(submission);
     Logger.log('Submission captured via network', submission.titleSlug);
   }

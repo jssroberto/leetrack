@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsObject, IsString, ValidateNested } from 'class-validator';
+import { IsEnum, IsObject, IsOptional, IsString, ValidateNested } from 'class-validator';
 import { CreateProblemDto } from '../../problems/dto/create-problem.dto';
 
 export class CreateSubmissionDto {
@@ -17,4 +17,9 @@ export class CreateSubmissionDto {
   @ValidateNested()
   @Type(() => CreateProblemDto)
   problem: CreateProblemDto;
+
+  @ApiProperty({ enum: ['STRUGGLED', 'NEEDED_HINTS', 'SOLVED_ALONE', 'EASY'], required: false })
+  @IsOptional()
+  @IsEnum(['STRUGGLED', 'NEEDED_HINTS', 'SOLVED_ALONE', 'EASY'])
+  confidenceLevel?: 'STRUGGLED' | 'NEEDED_HINTS' | 'SOLVED_ALONE' | 'EASY';
 }

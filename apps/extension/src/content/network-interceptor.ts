@@ -38,6 +38,7 @@ const GRAPHQL_PATH = '/graphql/';
         titleSlug: question.titleSlug,
         title: question.title || question.questionTitle || '',
         difficulty: question.difficulty || 'Medium',
+        tags: question.topicTags?.map((t: any) => t.name) || [],
       });
     }
   };
@@ -61,7 +62,10 @@ const GRAPHQL_PATH = '/graphql/';
     }
   };
 
-  const readRequestBody = (input: RequestInfo | URL, init?: RequestInit): Promise<string | null> => {
+  const readRequestBody = (
+    input: RequestInfo | URL,
+    init?: RequestInit,
+  ): Promise<string | null> => {
     if (input instanceof Request) {
       try {
         return input.clone().text();
@@ -75,7 +79,12 @@ const GRAPHQL_PATH = '/graphql/';
       return Promise.resolve(body);
     }
 
-    if (body && typeof body === 'object' && 'text' in body && typeof (body as any).text === 'function') {
+    if (
+      body &&
+      typeof body === 'object' &&
+      'text' in body &&
+      typeof (body as any).text === 'function'
+    ) {
       try {
         return (body as any).text();
       } catch {
@@ -141,7 +150,7 @@ const GRAPHQL_PATH = '/graphql/';
               .then((data) => {
                 log(
                   'Fetch response parsed',
-                  data?.data?.submissionDetails ? 'contains submission' : 'no submission'
+                  data?.data?.submissionDetails ? 'contains submission' : 'no submission',
                 );
                 handleGraphqlResponse(parsed || undefined, data);
               })

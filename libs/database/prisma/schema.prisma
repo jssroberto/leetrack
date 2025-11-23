@@ -74,7 +74,7 @@ model Submission {
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   problem     Problem  @relation(fields: [problemId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, problemId])
+  @@index([userId, problemId])
   @@index([userId])
   @@index([submittedAt])
   @@index([problemId])

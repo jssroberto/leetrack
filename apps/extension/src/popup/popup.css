@@ -1,18 +1,37 @@
 /* Tailwind CSS v4 entry for the popup UI */
 @import "tailwindcss";
 
-/* LeetCode-inspired dark theme palette */
+/* Fonts */
+@font-face {
+  font-family: 'RobotoSlabRegular';
+  src: url('../assets/fonts/RobotoSlab-Regular.woff2') format('woff2');
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: 'RobotoSlabBold';
+  src: url('../assets/fonts/RobotoSlab-Bold.woff2') format('woff2');
+  font-weight: bold;
+}
+
 :root {
-  --color-bg: #0f172a;        /* slate-900 */
-  --color-surface: #111827;   /* gray-900 */
-  --color-border: #334155;    /* slate-700 */
-  --color-text: #e5e7eb;      /* gray-200 */
-  --color-muted: #94a3b8;     /* slate-400 */
-  --color-primary: #ffa116;   /* LeetCode orange */
-  --color-primary-600: #e6930d; /* darker hover */
-  --color-success: #00b8a3;   /* Accepted */
-  --color-danger: #ef4444;    /* red-500 */
-  --color-warning: #f59e0b;   /* amber-500 */
+  /* Web App Palette */
+  --color-bg: #1F1F1F;        /* --primary-color */
+  --color-surface: #2F2F2F;   /* --dark */
+  --color-border: #3B3B3B;    /* --dark-gray */
+  --color-text: #ffffff;      /* --light */
+  --color-muted: #979797;     /* --gray */
+
+  --color-primary: #E97436;   /* --secondary-color */
+  --color-primary-600: #A24E21; /* --secondary-hover */
+
+  --color-success: #50AF38;   /* --green */
+  --color-danger: #D02A2A;    /* --red */
+  --color-warning: #EFB436;   /* --yellow */
+}
+
+body {
+  font-family: 'RobotoSlabRegular', serif;
 }
 
 html, body { height: 100%; }

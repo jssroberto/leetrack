@@ -30,6 +30,7 @@ interface QuestionMetadata {
   titleSlug: string;
   title: string;
   difficulty: 'Easy' | 'Medium' | 'Hard';
+  tags: string[];
 }
 
 class SubmissionTracker {
@@ -97,6 +98,7 @@ class SubmissionTracker {
       status: 'Accepted',
       timestamp: Number(payload.submission.timestamp || Date.now() / 1000) * 1000,
       language: payload.submission.lang?.name || payload.submission.lang?.verboseName || 'unknown',
+      tags: metadata?.tags || [],
     };
 
     // Ignore submissions older than 5 minutes (to avoid re-triggering when viewing history)

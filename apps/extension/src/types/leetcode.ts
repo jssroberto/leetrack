@@ -7,6 +7,7 @@ export interface SubmissionData {
   status: 'Accepted' | 'Wrong' | 'Compile Error';
   timestamp: number;
   language: string;
+  tags: string[];
 }
 
 export interface StoredSubmission extends SubmissionData {
@@ -37,11 +38,15 @@ export interface User {
 }
 
 export interface ApiSubmissionRequest {
-  questionId: number;
-  titleSlug: string;
-  difficulty: string;
-  language: string;
-  timestamp: number;
+  leetcodeUsername: string;
+  lang: string;
+  problem: {
+    leetcodeId: number;
+    slug: string;
+    title: string;
+    difficulty: string;
+    tags: string[];
+  };
 }
 
 export interface ApiSubmissionResponse {

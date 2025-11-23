@@ -1,7 +1,7 @@
-import { StorageManager } from '@extension/utils/storage';
 import { ApiClient } from '@extension/background/api-client';
-import { Logger } from '@extension/utils/logger';
 import type { ExtensionMessage, SubmissionData } from '@extension/types/leetcode';
+import { Logger } from '@extension/utils/logger';
+import { StorageManager } from '@extension/utils/storage';
 
 class BackgroundService {
   private storage = new StorageManager();
@@ -15,15 +15,17 @@ class BackgroundService {
   }
 
   private setupMessageListeners(): void {
-    chrome.runtime.onMessage.addListener((message: ExtensionMessage, sender: any, sendResponse: (response: any) => void) => {
-      this.handleMessage(message)
-        .then(sendResponse)
-        .catch((error) => {
-          Logger.error('Message handler error', error);
-          sendResponse({ error: (error as Error).message });
-        });
-      return true;
-    });
+    chrome.runtime.onMessage.addListener(
+      (message: ExtensionMessage, sender: any, sendResponse: (response: any) => void) => {
+        this.handleMessage(message)
+          .then(sendResponse)
+          .catch((error) => {
+            Logger.error('Message handler error', error);
+            sendResponse({ error: (error as Error).message });
+          });
+        return true;
+      },
+    );
   }
 
   private async handleMessage(message: ExtensionMessage): Promise<any> {
@@ -75,16 +77,7 @@ class BackgroundService {
         return;
       }
 
-      await this.apiClient.submitProblem(
-        {
-          questionId: submission.questionId,
-          titleSlug: submission.titleSlug,
-          difficulty: submission.difficulty,
-          language: submission.language,
-          timestamp: submission.timestamp,
-        },
-        token
-      );
+      await this.apiClient.submitProblem(submission, token);
 
       await this.storage.markSubmissionSynced(submission.questionId);
       Logger.log('Submission synced', submission.titleSlug);
@@ -120,16 +113,7 @@ class BackgroundService {
 
     for (const submission of pending) {
       try {
-        await this.apiClient.submitProblem(
-          {
-            questionId: submission.questionId,
-            titleSlug: submission.titleSlug,
-            difficulty: submission.difficulty,
-            language: submission.language,
-            timestamp: submission.timestamp,
-          },
-          token
-        );
+        await this.apiClient.submitProblem(submission, token);
 
         await this.storage.markSubmissionSynced(submission.questionId);
         Logger.log('Synced', submission.titleSlug);
@@ -160,7 +144,7 @@ class BackgroundService {
 
   private async showSubmissionNotification(
     submission: SubmissionData,
-    status: 'synced' | 'queued'
+    status: 'synced' | 'queued',
   ): Promise<void> {
     if (!chrome?.notifications?.create) {
       return;
@@ -192,7 +176,7 @@ class BackgroundService {
 
   private async openPopupWithToast(
     submission: SubmissionData,
-    status: 'synced' | 'queued'
+    status: 'synced' | 'queued',
   ): Promise<void> {
     if (!chrome?.action?.openPopup) {
       return;

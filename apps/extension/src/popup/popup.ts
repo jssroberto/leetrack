@@ -59,8 +59,6 @@ class PopupController {
             ? `Synced: ${payload.title}`
             : `Saved locally: ${payload.title}`;
         this.showToast(toastMessage, payload.status === 'synced' ? 'success' : 'info');
-        this.updateRecentSubmissions();
-        this.updateSyncStatus();
       }
       return false;
     });
@@ -152,7 +150,6 @@ class PopupController {
   private showMainScreen(): void {
     this.switchScreen('main-screen');
     this.updateRecentSubmissions();
-    this.updateSyncStatus();
   }
 
   // Settings removed
@@ -205,27 +202,6 @@ class PopupController {
         </div>
       `;
       container.appendChild(el);
-    });
-  }
-
-  private async updateSyncStatus(): Promise<void> {
-    const message: ExtensionMessage = { type: 'GET_SYNC_STATUS' };
-
-    chrome.runtime.sendMessage(message, (response: any) => {
-      const pendingCountEl = document.getElementById('pending-count');
-      const syncStatusEl = document.getElementById('sync-status');
-
-      if (pendingCountEl) {
-        pendingCountEl.textContent = response.pendingCount.toString();
-      }
-
-      if (syncStatusEl && response.pendingCount === 0) {
-        syncStatusEl.textContent = '✓ Synced';
-        syncStatusEl.className = 'text-sm font-semibold text-green-600';
-      } else if (syncStatusEl) {
-        syncStatusEl.textContent = '⏳ Pending';
-        syncStatusEl.className = 'text-sm font-semibold text-amber-500';
-      }
     });
   }
 

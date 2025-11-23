@@ -13,9 +13,21 @@ export class ApiClient {
   }
 
   async submitProblem(
-    submission: ApiSubmissionRequest,
+    submission: import('@extension/types/leetcode').SubmissionData,
     token: string,
   ): Promise<ApiSubmissionResponse> {
+    const payload: ApiSubmissionRequest = {
+      leetcodeUsername: 'user', // Placeholder, backend uses token userId
+      lang: submission.language,
+      problem: {
+        leetcodeId: submission.questionId,
+        slug: submission.titleSlug,
+        title: submission.questionTitle,
+        difficulty: submission.difficulty.toUpperCase(),
+        tags: submission.tags,
+      },
+    };
+
     try {
       const response = await fetch(`${this.baseURL}/api/v1/submissions`, {
         method: 'POST',
@@ -23,7 +35,7 @@ export class ApiClient {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(submission),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {

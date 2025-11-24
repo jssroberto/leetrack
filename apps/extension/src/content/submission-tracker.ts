@@ -116,8 +116,12 @@ class SubmissionTracker {
     try {
       Logger.log('Attempting to show confidence modal');
       const confidence = await ConfidenceModal.show();
-      submission.confidenceLevel = confidence;
-      Logger.log('Confidence level captured', confidence);
+      if (confidence) {
+        submission.confidenceLevel = confidence;
+        Logger.log('Confidence level captured', confidence);
+      } else {
+        Logger.log('Confidence modal dismissed');
+      }
     } catch (error) {
       Logger.error('Failed to capture confidence level', error);
       // Continue without confidence level if modal fails

@@ -79,7 +79,7 @@ class BackgroundService {
 
       await this.apiClient.submitProblem(submission, token);
 
-      await this.storage.markSubmissionSynced(submission.questionId);
+      await this.storage.markSubmissionSynced(submission.submissionId);
       Logger.log('Submission synced', submission.titleSlug);
       notificationStatus = 'synced';
     } catch (error) {
@@ -115,7 +115,7 @@ class BackgroundService {
       try {
         await this.apiClient.submitProblem(submission, token);
 
-        await this.storage.markSubmissionSynced(submission.questionId);
+        await this.storage.markSubmissionSynced(submission.submissionId);
         Logger.log('Synced', submission.titleSlug);
       } catch (error) {
         Logger.error('Failed to sync submission', { submission, error });

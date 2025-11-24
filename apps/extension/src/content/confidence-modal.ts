@@ -3,7 +3,7 @@ import { ConfidenceLevel } from '@extension/types/leetcode';
 export class ConfidenceModal {
   private static readonly CONTAINER_ID = 'leetrack-confidence-modal';
 
-  static async show(): Promise<ConfidenceLevel> {
+  static async show(): Promise<ConfidenceLevel | null> {
     return new Promise((resolve) => {
       // Remove existing modal if any
       const existing = document.getElementById(this.CONTAINER_ID);
@@ -95,6 +95,14 @@ export class ConfidenceModal {
       // Content
       const overlay = document.createElement('div');
       overlay.className = 'overlay';
+
+      // Close on overlay click
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) {
+          container.remove();
+          resolve(null);
+        }
+      });
 
       const modal = document.createElement('div');
       modal.className = 'modal';

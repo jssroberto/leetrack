@@ -4,7 +4,7 @@ import { SubTitle } from "../sub-title/sub-title";
 
 @Component({
   selector: 'app-main-title',
-  imports: [BasicCard, SubTitle],
+  imports: [BasicCard],
   templateUrl: './main-title.html',
   styleUrl: './main-title.css'
 })

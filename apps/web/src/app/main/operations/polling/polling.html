@@ -1,5 +1,23 @@
 <main class="w-full h-full text-[var(--light)] flex flex-col gap-4">
-    <app-main-title class="flex flex-col" [title]="'Polling'" [subTitle]="'Active poll'"></app-main-title>
+    <div class="w-full flex justify-between flex-col">
+        <app-main-title class="flex flex-col" [title]="'Polling'"></app-main-title>
+        <app-sub-title [subTitle]="'Active Poll'">
+            <!-- Para activar el justify-between -->
+            <div></div>
+            <ul class="flex gap-5 text-xs">
+                <li class="cursor-pointer">
+                    <span class="underline underline-offset-4 text-[var(--secondary-color)]">
+                        Poll
+                    </span>
+                </li>
+                <li class="cursor-pointer">
+                    <span class="hover:underline underline-offset-4 hover:text-[var(--secondary-color)]">
+                        My Proposals
+                    </span>
+                </li>
+            </ul>
+        </app-sub-title>
+    </div>
 
     <div class="grid grid-cols-[repeat(auto-fit,minmax(600px,1fr))] gap-3 overflow-auto scrollbar-hide h-full">
         <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
@@ -60,6 +78,11 @@
             [votes]="'25 votes'" [size]="'18'" [iconWidth]="'2'"></app-voting-basic-card>
     </div>
 
+    <div class="w-full flex justify-end text-xs text-[var(--gray)] gap-1">
+        <p class="font-family-roboto-slab-bold">Voted problems:</p>
+        <span>7/10</span>
+    </div>
+
     <app-sub-title [subTitle]="'Problems'">
         <div class="flex gap-2 items-center px-4 shadow-[0_6px_6px_var(--shadow)] bg-[var(--dark)] rounded-full w-[20vw] min-w-[250px] 
             transition-all duration-200 
@@ -72,28 +95,26 @@
                 class="bg-transparent focus:outline-none border-none text-xs py-3 text-[var(--gray)] w-full placeholder:text-[var(--gray)]"
                 placeholder="Search problem">
         </div>
-        <div>
-            <ul class="flex gap-5 text-xs">
-                <li class="cursor-pointer">
-                    <div class="flex items-center gap-2">
-                        <span>
-                            Difficulty
-                        </span>
-                        <lucide-icon [img]="getIcon('minus')" class="my-icon" [size]="'16'"
-                            [strokeWidth]="'2'"></lucide-icon>
-                    </div>
-                </li>
-                <li class="cursor-pointer">
-                    <div class="flex items-center gap-2">
-                        <span>
-                            Question ID
-                        </span>
-                        <lucide-icon [img]="getIcon('chevronUp')" class="my-icon" [size]="'16'"
-                            [strokeWidth]="'2'"></lucide-icon>
-                    </div>
-                </li>
-            </ul>
-        </div>
+        <ul class="flex gap-5 text-xs">
+            <li class="cursor-pointer">
+                <div class="flex items-center gap-2">
+                    <span>
+                        Difficulty
+                    </span>
+                    <lucide-icon [img]="getIcon('minus')" class="my-icon" [size]="'16'"
+                        [strokeWidth]="'2'"></lucide-icon>
+                </div>
+            </li>
+            <li class="cursor-pointer">
+                <div class="flex items-center gap-2">
+                    <span>
+                        Question ID
+                    </span>
+                    <lucide-icon [img]="getIcon('chevronUp')" class="my-icon" [size]="'16'"
+                        [strokeWidth]="'2'"></lucide-icon>
+                </div>
+            </li>
+        </ul>
     </app-sub-title>
 
     <div class="flex justify-between">

@@ -1,66 +1,18 @@
 <main class="w-full h-full text-[var(--light)] flex flex-col gap-4">
     <!-- main title -->
-    <app-main-title class="flex flex-col gap-2" [title]="'Dashboard'"
-        [subTitle]="'This week problems'"></app-main-title>
-        <!-- If es impar mayor a uno, grid de 3, si es par, grid de 2, si es uno, que abarque todo algo así, to do -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-3">
-        <div class="flex gap-3 flex-1 lg:min-w-auto min-w-[100px]">
-            <app-basic-card [color]="'var(--secondary-color)'"
-                [title]="'Longest Substring Without Repeating Characters'" [number]="'1'"
-                class="w-full min-w-0"></app-basic-card>
-            <app-basic-card [color]="'var(--secondary-color)'" [title]="'Completed in 54:43:10'"
-                class="w-auto"></app-basic-card>
-            <app-basic-card [title]="'Hard'" [color]="'var(--red)'"></app-basic-card>
-            <app-basic-card [title]="'+50 XP'" [color]="'var(--pink)'"></app-basic-card>
-            <app-basic-card [iconName]="'squareArrowOutUpRight'" [size]="'14'" [color]="'var(--gray)'"></app-basic-card>
-        </div>
-        <div class="flex gap-3 flex-1 lg:min-w-auto min-w-[100px]">
-            <app-basic-card [color]="'var(--secondary-color)'"
-                [title]="'Longest Substring Without Repeating Characters'" [number]="'1'"
-                class="w-full min-w-0"></app-basic-card>
-            <app-basic-card [color]="'var(--secondary-color)'" [title]="'Completed in 54:43:10'"
-                class="w-auto"></app-basic-card>
-            <app-basic-card [title]="'Hard'" [color]="'var(--red)'"></app-basic-card>
-            <app-basic-card [title]="'+50 XP'" [color]="'var(--pink)'"></app-basic-card>
-            <app-basic-card [iconName]="'squareArrowOutUpRight'" [size]="'14'" [color]="'var(--gray)'"></app-basic-card>
-        </div>
-        <div class="flex gap-3 flex-1 lg:min-w-auto min-w-[100px]">
-            <app-basic-card [color]="'var(--secondary-color)'"
-                [title]="'Longest Substring Without Repeating Characters'" [number]="'1'"
-                class="w-full min-w-0"></app-basic-card>
-            <app-basic-card [color]="'var(--secondary-color)'" [title]="'Completed in 54:43:10'"
-                class="w-auto"></app-basic-card>
-            <app-basic-card [title]="'Hard'" [color]="'var(--red)'"></app-basic-card>
-            <app-basic-card [title]="'+50 XP'" [color]="'var(--pink)'"></app-basic-card>
-            <app-basic-card [iconName]="'squareArrowOutUpRight'" [size]="'14'" [color]="'var(--gray)'"></app-basic-card>
-        </div>
-        <div class="flex gap-3 flex-1 lg:min-w-auto min-w-[100px]">
-            <app-basic-card [color]="'var(--secondary-color)'"
-                [title]="'Longest Substring Without Repeating Characters'" [number]="'1'"
-                class="w-full min-w-0"></app-basic-card>
-            <app-basic-card [color]="'var(--secondary-color)'" [title]="'Completed in 54:43:10'"
-                class="w-auto"></app-basic-card>
-            <app-basic-card [title]="'Hard'" [color]="'var(--red)'"></app-basic-card>
-            <app-basic-card [title]="'+50 XP'" [color]="'var(--pink)'"></app-basic-card>
-            <app-basic-card [iconName]="'squareArrowOutUpRight'" [size]="'14'" [color]="'var(--gray)'"></app-basic-card>
-        </div>
+    <app-main-title class="flex flex-col" [title]="'Dashboard'" [subTitle]="'This week problems'"></app-main-title>
 
-        <div class="flex gap-3 flex-1 lg:min-w-auto min-w-[100px]">
-            <app-basic-card [color]="'var(--secondary-color)'"
-                [title]="'Longest Substring Without Repeating Characters'" [number]="'2'"
-                class="w-full min-w-0"></app-basic-card>
-            <app-basic-card [title]="'Hard'" [color]="'var(--red)'"></app-basic-card>
-            <app-basic-card [title]="'+50 XP'" [color]="'var(--pink)'"></app-basic-card>
-            <app-basic-card [iconName]="'squareArrowOutUpRight'" [size]="'14'" [color]="'var(--gray)'"></app-basic-card>
-        </div>
-
-        <div class="flex gap-3 flex-1 lg:min-w-auto min-w-[100px]">
-            <app-basic-card [color]="'var(--secondary-color)'"
-                [title]="'Longest Substring Without Repeating Characters'" [number]="'3'"
-                class="w-full min-w-0"></app-basic-card>
-            <app-basic-card [title]="'Hard'" [color]="'var(--red)'"></app-basic-card>
-            <app-basic-card [iconName]="'squareArrowOutUpRight'" [size]="'14'" [color]="'var(--gray)'"></app-basic-card>
-        </div>
+    <!-- Kind of looks good -->
+    <div class="grid grid-cols-[repeat(auto-fit,minmax(500px,1fr))] gap-3">
+        <app-info-basic-card [problem]="'Longest Substring Without Repeating Characters'" [number]="'1'"
+            [completedIn]="'54:43:10'" [xp]="'50'" [difficulty]="'Hard'"></app-info-basic-card>
+        <app-info-basic-card [problem]="'Longest Substring Without Repeating Characters'" [number]="'1'"
+            [completedIn]="'54:43:10'" [xp]="'50'" [difficulty]="'Hard'"></app-info-basic-card>
+        <app-info-basic-card [problem]="'Longest Substring Without Repeating Characters'" [number]="'1'"
+            [completedIn]="'54:43:10'" [xp]="'50'" [difficulty]="'Hard'"></app-info-basic-card>
+        <app-info-basic-card [problem]="'Longest Substring Without Repeating Characters'" [number]="'1'"
+            [completedIn]="'54:43:10'" [xp]="'50'" [difficulty]="'Hard'"></app-info-basic-card>
     </div>
+
     <div class="w-full h-full bg-[var(--dark)] rounded-md"></div>
 </main>

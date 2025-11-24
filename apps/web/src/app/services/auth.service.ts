@@ -4,16 +4,6 @@ import { Observable, BehaviorSubject, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 
-interface RegisterRequest {
-  email: string;
-  password: string;
-}
-
-interface LoginRequest {
-  email: string;
-  password: string;
-}
-
 interface LoginResponse {
   accessToken: string;
   expiresIn: number;

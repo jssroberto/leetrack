@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { authGuard, publicGuard } from './guards/auth.guard'; 
+import { authGuard, publicGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -25,8 +25,9 @@ export const routes: Routes = [
   {
     path: 'main',
     loadComponent: () => import('./main/main').then((m) => m.Main),
-    canActivate: [authGuard], 
+    canActivate: [authGuard],
     children: [
+      // Si ya tiene grupo te redirige a dashboard, a ver como se mete la condición aquí
       {
         path: 'index',
         loadComponent: () => import('./main/index').then((m) => m.Index)

@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
-import { LucideAngularModule, FileIcon, AArrowDown, LucideIconData, LinkIcon, ChevronDown, SquareArrowOutUpRight } from 'lucide-angular';
+import { Component, inject, Input } from '@angular/core';
+import { LucideAngularModule } from 'lucide-angular';
+import { IconService } from '../../services/icon.service';
 
 @Component({
   selector: 'app-basic-card',
@@ -10,11 +11,7 @@ import { LucideAngularModule, FileIcon, AArrowDown, LucideIconData, LinkIcon, Ch
   styleUrls: ['./basic-card.css']
 })
 export class BasicCard {
-  private iconsMap: Record<string, LucideIconData> = {
-    'link': LinkIcon,
-    'chevronDown': ChevronDown,
-    'squareArrowOutUpRight': SquareArrowOutUpRight
-  };
+  private iconService = inject(IconService);
 
   @Input() number!: string;
   @Input() title!: string;
@@ -25,6 +22,6 @@ export class BasicCard {
   @Input() iconWidth: string = '2';
 
   get icon() {
-    return this.iconsMap[this.iconName];
+    return this.iconService.iconsMap[this.iconName];
   }
 }

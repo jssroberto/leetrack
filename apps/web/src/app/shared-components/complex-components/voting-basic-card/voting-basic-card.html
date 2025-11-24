@@ -1,0 +1,7 @@
+<div class="flex gap-3 flex-1">
+    <app-basic-card [number]="rank"></app-basic-card>
+    <app-basic-card [title]="`Proposed by: ${user}`"></app-basic-card>
+    <app-basic-card [title]="problem" [number]="number" class="w-full"></app-basic-card>
+    <app-basic-card [title]="difficulty" [color]="'var(--red)'"></app-basic-card>
+    <app-basic-card [iconName]="'check'" [color]="'var(--light)'" [title]="votes"></app-basic-card>
+</div>

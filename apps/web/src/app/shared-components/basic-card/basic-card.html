@@ -1,8 +1,16 @@
 <div class="flex bg-[var(--dark)] text-[12px] rounded-md gap-2 shadow-[0_6px_6px_var(--shadow)] w-full h-full items-center"
     [ngClass]="{
-    'aspect-square cursor-pointer hover:bg-[var(--dark-gray)] justify-center': icon, 
-    'p-3': !icon
+    'cursor-pointer hover:bg-[var(--dark-gray)] justify-center': (icon && title && !number) || (icon && !title && !number),
+    'aspect-square': icon && !title && !number,
+    'p-3': !icon && (title || number),
+    'px-3': icon && (title || number),
+    'px-4': number
     }">
+    <!-- Solo texto e icono o icono -->
+    <!-- Solo icono -->
+    <!-- Solo texto o numero -->
+    <!-- Numero -->
+
     @if (number) {
     <span class="text-[var(--gray)]">{{ number }}.</span>
     }

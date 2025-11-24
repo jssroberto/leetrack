@@ -1,17 +1,21 @@
 <main class="w-full h-full text-[var(--light)] flex flex-col gap-4">
     <div class="w-full flex justify-between flex-col">
         <app-main-title class="flex flex-col" [title]="'Polling'"></app-main-title>
-        <app-sub-title [subTitle]="'Active Poll'">
+        <app-sub-title [subTitle]="subtitleText">
             <!-- Para activar el justify-between -->
             <div></div>
             <ul class="flex gap-5 text-xs">
-                <li class="cursor-pointer">
-                    <span class="underline underline-offset-4 text-[var(--secondary-color)]">
+                <li class="cursor-pointer" (click)="navigateTo('polling', { filter: 'all' })">
+                    <span class="hover:underline underline-offset-4 hover:text-[var(--secondary-color)]" [ngClass]="{
+                                'underline text-[var(--secondary-color)]': currentFilterValue === 'all'
+                    }">
                         Poll
                     </span>
                 </li>
-                <li class="cursor-pointer">
-                    <span class="hover:underline underline-offset-4 hover:text-[var(--secondary-color)]">
+                <li class="cursor-pointer" (click)="navigateTo('polling', { filter: 'my-proposals' })">
+                    <span class="hover:underline underline-offset-4 hover:text-[var(--secondary-color)]" [ngClass]="{
+                        'underline text-[var(--secondary-color)]': currentFilterValue === 'my-proposals'
+                    }">
                         My Proposals
                     </span>
                 </li>
@@ -19,64 +23,52 @@
         </app-sub-title>
     </div>
 
-    <div class="grid grid-cols-[repeat(auto-fit,minmax(600px,1fr))] gap-3 overflow-auto scrollbar-hide h-full">
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
+    @if (currentFilterValue === 'all') {
+    <div class="flex flex-wrap gap-3 overflow-auto scrollbar-hide h-full justify-start items-start content-start">
+        <app-voting-basic-card class="flex-[1_1_600px] max-w-full" [rank]="'1'" [user]="'edtarsz'"
+            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Easy'"
+            [votes]="'25 votes'" [size]="'18'" [iconWidth]="'2'"></app-voting-basic-card>
+        <app-voting-basic-card class="flex-[1_1_600px] max-w-full" [rank]="'1'" [user]="'edtarsz'"
             [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Medium'"
             [votes]="'25 votes'" [size]="'18'" [iconWidth]="'2'"></app-voting-basic-card>
-
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
-            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Easy'"
-            [votes]="'25 votes'" [size]="'18'" [iconWidth]="'2'"></app-voting-basic-card>
-
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
+        <app-voting-basic-card class="flex-[1_1_600px] max-w-full" [rank]="'1'" [user]="'edtarsz'"
             [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Hard'"
             [votes]="'25 votes'" [size]="'18'" [iconWidth]="'2'"></app-voting-basic-card>
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
-            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Hard'"
+        <app-voting-basic-card class="flex-[1_1_600px] max-w-full" [rank]="'1'" [user]="'edtarsz'"
+            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Medium'"
             [votes]="'25 votes'" [size]="'18'" [iconWidth]="'2'"></app-voting-basic-card>
-
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
-            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Easy'"
+        <app-voting-basic-card class="flex-[1_1_600px] max-w-full" [rank]="'1'" [user]="'edtarsz'"
+            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Medium'"
             [votes]="'25 votes'" [size]="'18'" [iconWidth]="'2'"></app-voting-basic-card>
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
-            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Easy'"
+        <app-voting-basic-card class="flex-[1_1_600px] max-w-full" [rank]="'1'" [user]="'edtarsz'"
+            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Medium'"
             [votes]="'25 votes'" [size]="'18'" [iconWidth]="'2'"></app-voting-basic-card>
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
-            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Hard'"
+        <app-voting-basic-card class="flex-[1_1_600px] max-w-full" [rank]="'1'" [user]="'edtarsz'"
+            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Medium'"
             [votes]="'25 votes'" [size]="'18'" [iconWidth]="'2'"></app-voting-basic-card>
-
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
-            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Hard'"
+        <app-voting-basic-card class="flex-[1_1_600px] max-w-full" [rank]="'1'" [user]="'edtarsz'"
+            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Medium'"
             [votes]="'25 votes'" [size]="'18'" [iconWidth]="'2'"></app-voting-basic-card>
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
-            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Hard'"
-            [votes]="'25 votes'" [size]="'18'" [iconWidth]="'2'"></app-voting-basic-card>
-
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
-            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Hard'"
-            [votes]="'25 votes'" [size]="'18'" [iconWidth]="'2'"></app-voting-basic-card>
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
-            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Easy'"
-            [votes]="'25 votes'" [size]="'18'" [iconWidth]="'2'"></app-voting-basic-card>
-
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
-            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Easy'"
-            [votes]="'25 votes'" [size]="'18'" [iconWidth]="'2'"></app-voting-basic-card>
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
-            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Hard'"
-            [votes]="'25 votes'" [size]="'18'" [iconWidth]="'2'"></app-voting-basic-card>
-
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
-            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Hard'"
-            [votes]="'25 votes'" [size]="'18'" [iconWidth]="'2'"></app-voting-basic-card>
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
-            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Hard'"
-            [votes]="'25 votes'" [size]="'18'" [iconWidth]="'2'"></app-voting-basic-card>
-
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
-            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Hard'"
+        <app-voting-basic-card class="flex-[1_1_600px] max-w-full" [rank]="'1'" [user]="'edtarsz'"
+            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Medium'"
             [votes]="'25 votes'" [size]="'18'" [iconWidth]="'2'"></app-voting-basic-card>
     </div>
+    } @else if (currentFilterValue === 'my-proposals') {
+    <div class="flex flex-wrap gap-3 overflow-auto scrollbar-hide h-full justify-start items-start content-start">
+        <app-voting-basic-card class="flex-[1_1_500px] max-w-full" [rank]="'1'"
+            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Medium'"
+            [votes]="'25 votes'" [size]="'18'" [iconWidth]="'2'"></app-voting-basic-card>
+        <app-voting-basic-card class="flex-[1_1_500px] max-w-full" [rank]="'1'"
+            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Medium'"
+            [votes]="'25 votes'" [size]="'18'" [iconWidth]="'2'"></app-voting-basic-card>
+        <app-voting-basic-card class="flex-[1_1_500px] max-w-full" [rank]="'1'"
+            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Medium'"
+            [votes]="'25 votes'" [size]="'18'" [iconWidth]="'2'"></app-voting-basic-card>
+        <app-voting-basic-card class="flex-[1_1_500px] max-w-full" [rank]="'1'"
+            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Medium'"
+            [votes]="'25 votes'" [size]="'18'" [iconWidth]="'2'"></app-voting-basic-card>
+    </div>
+    }
 
     <div class="w-full flex justify-end text-xs text-[var(--gray)] gap-1">
         <p class="font-family-roboto-slab-bold">Voted problems:</p>
@@ -152,97 +144,44 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-[repeat(auto-fit,minmax(500px,1fr))] gap-3 overflow-auto scrollbar-hide h-full">
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
+    <div class="flex flex-wrap gap-3 overflow-auto scrollbar-hide h-full justify-start items-start content-start">
+        <app-voting-basic-card class="flex-[1_1_500px] max-w-full" [rank]="'1'" [user]="'edtarsz'"
+            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Easy'"
+            [size]="'16'" [iconWidth]="'1'" [isProposing]="true"></app-voting-basic-card>
+        <app-voting-basic-card class="flex-[1_1_500px] max-w-full" [rank]="'1'" [user]="'edtarsz'"
+            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Hard'"
+            [size]="'16'" [iconWidth]="'1'" [isProposing]="true"></app-voting-basic-card>
+        <app-voting-basic-card class="flex-[1_1_500px] max-w-full" [rank]="'1'" [user]="'edtarsz'"
             [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Medium'"
             [size]="'16'" [iconWidth]="'1'" [isProposing]="true"></app-voting-basic-card>
-
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
+        <app-voting-basic-card class="flex-[1_1_500px] max-w-full" [rank]="'1'" [user]="'edtarsz'"
             [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Medium'"
             [size]="'16'" [iconWidth]="'1'" [isProposing]="true"></app-voting-basic-card>
-
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
+        <app-voting-basic-card class="flex-[1_1_500px] max-w-full" [rank]="'1'" [user]="'edtarsz'"
             [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Medium'"
             [size]="'16'" [iconWidth]="'1'" [isProposing]="true"></app-voting-basic-card>
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
+        <app-voting-basic-card class="flex-[1_1_500px] max-w-full" [rank]="'1'" [user]="'edtarsz'"
             [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Medium'"
             [size]="'16'" [iconWidth]="'1'" [isProposing]="true"></app-voting-basic-card>
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
+        <app-voting-basic-card class="flex-[1_1_500px] max-w-full" [rank]="'1'" [user]="'edtarsz'"
             [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Medium'"
             [size]="'16'" [iconWidth]="'1'" [isProposing]="true"></app-voting-basic-card>
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
+        <app-voting-basic-card class="flex-[1_1_500px] max-w-full" [rank]="'1'" [user]="'edtarsz'"
             [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Medium'"
             [size]="'16'" [iconWidth]="'1'" [isProposing]="true"></app-voting-basic-card>
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
+        <app-voting-basic-card class="flex-[1_1_500px] max-w-full" [rank]="'1'" [user]="'edtarsz'"
             [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Medium'"
             [size]="'16'" [iconWidth]="'1'" [isProposing]="true"></app-voting-basic-card>
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
+        <app-voting-basic-card class="flex-[1_1_500px] max-w-full" [rank]="'1'" [user]="'edtarsz'"
             [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Medium'"
             [size]="'16'" [iconWidth]="'1'" [isProposing]="true"></app-voting-basic-card>
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
+        <app-voting-basic-card class="flex-[1_1_500px] max-w-full" [rank]="'1'" [user]="'edtarsz'"
             [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Medium'"
             [size]="'16'" [iconWidth]="'1'" [isProposing]="true"></app-voting-basic-card>
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
+        <app-voting-basic-card class="flex-[1_1_500px] max-w-full" [rank]="'1'" [user]="'edtarsz'"
             [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Medium'"
             [size]="'16'" [iconWidth]="'1'" [isProposing]="true"></app-voting-basic-card>
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
-            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Medium'"
-            [size]="'16'" [iconWidth]="'1'" [isProposing]="true"></app-voting-basic-card>
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
-            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Medium'"
-            [size]="'16'" [iconWidth]="'1'" [isProposing]="true"></app-voting-basic-card>
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
-            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Medium'"
-            [size]="'16'" [iconWidth]="'1'" [isProposing]="true"></app-voting-basic-card>
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
-            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Medium'"
-            [size]="'16'" [iconWidth]="'1'" [isProposing]="true"></app-voting-basic-card>
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
-            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Medium'"
-            [size]="'16'" [iconWidth]="'1'" [isProposing]="true"></app-voting-basic-card>
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
-            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Medium'"
-            [size]="'16'" [iconWidth]="'1'" [isProposing]="true"></app-voting-basic-card>
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
-            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Medium'"
-            [size]="'16'" [iconWidth]="'1'" [isProposing]="true"></app-voting-basic-card>
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
-            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Medium'"
-            [size]="'16'" [iconWidth]="'1'" [isProposing]="true"></app-voting-basic-card>
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
-            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Medium'"
-            [size]="'16'" [iconWidth]="'1'" [isProposing]="true"></app-voting-basic-card>
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
-            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Medium'"
-            [size]="'16'" [iconWidth]="'1'" [isProposing]="true"></app-voting-basic-card>
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
-            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Medium'"
-            [size]="'16'" [iconWidth]="'1'" [isProposing]="true"></app-voting-basic-card>
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
-            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Medium'"
-            [size]="'16'" [iconWidth]="'1'" [isProposing]="true"></app-voting-basic-card>
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
-            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Medium'"
-            [size]="'16'" [iconWidth]="'1'" [isProposing]="true"></app-voting-basic-card>
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
-            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Medium'"
-            [size]="'16'" [iconWidth]="'1'" [isProposing]="true"></app-voting-basic-card>
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
-            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Medium'"
-            [size]="'16'" [iconWidth]="'1'" [isProposing]="true"></app-voting-basic-card>
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
-            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Medium'"
-            [size]="'16'" [iconWidth]="'1'" [isProposing]="true"></app-voting-basic-card>
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
-            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Medium'"
-            [size]="'16'" [iconWidth]="'1'" [isProposing]="true"></app-voting-basic-card>
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
-            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Medium'"
-            [size]="'16'" [iconWidth]="'1'" [isProposing]="true"></app-voting-basic-card>
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
-            [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Medium'"
-            [size]="'16'" [iconWidth]="'1'" [isProposing]="true"></app-voting-basic-card>
-        <app-voting-basic-card [rank]="'1'" [user]="'edtarsz'"
+        <app-voting-basic-card class="flex-[1_1_500px] max-w-full" [rank]="'1'" [user]="'edtarsz'"
             [problem]="'Longest Substring Without Repeating Characters'" [number]="'4'" [difficulty]="'Medium'"
             [size]="'16'" [iconWidth]="'1'" [isProposing]="true"></app-voting-basic-card>
     </div>

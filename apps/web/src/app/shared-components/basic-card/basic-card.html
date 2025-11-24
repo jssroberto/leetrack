@@ -15,6 +15,14 @@
     <span class="text-[var(--gray)]">{{ number }}.</span>
     }
 
+    @if (image) {
+    <!-- <img src="" alt=""> -->
+    <div class="rounded-full bg-[var(--gray)] aspect-square w-6 flex items-center justify-center">
+        <lucide-icon [img]="user" class="my-icon" [size]="'15'" [color]="'var(--light)'"
+            [strokeWidth]="'3'"></lucide-icon>
+    </div>
+    }
+
     @if(title){
     <span [ngStyle]="{ color: color || 'var(--light)' }" class="whitespace-nowrap overflow-hidden text-ellipsis">{{
         title }}</span>

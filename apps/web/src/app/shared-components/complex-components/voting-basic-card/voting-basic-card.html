@@ -1,16 +1,26 @@
 <div class="flex gap-3 flex-1">
-    @if(!isProposing){
-    <app-basic-card [number]="rank"></app-basic-card>
-    <app-basic-card [title]="`Proposed by: ${user}`" [color]="'var(--gray)'"></app-basic-card>
+    @if(!isProposing) {
+        <app-basic-card [number]="rank"></app-basic-card>
+
+        @if (user) {
+        <app-basic-card [title]="`Proposed by: ${user}`" [color]="'var(--gray)'"></app-basic-card>
+        }
     }
     <app-basic-card [title]="problem" [number]="number" class="w-full"></app-basic-card>
     <app-basic-card [title]="difficulty" [color]="difficultyColor"></app-basic-card>
 
-    @if(!isProposing){
-    <app-basic-card [iconName]="'check'" [color]="'var(--light)'" [title]="votes" [size]="size"
-        [iconWidth]="iconWidth"></app-basic-card>
+    <!-- Should i do it with basic card?, debería poner un input para el bg, no es necesario por lo pronto -->
+    @if(!isProposing && !user){
+        <div
+            class="aspect-square min-w-10 flex bg-[var(--red)] rounded-md gap-2 shadow-[0_6px_6px_var(--shadow)] items-center cursor-pointer hover:bg-[var(--red-hover)] justify-center">
+            <lucide-icon [img]="iconX" class="my-icon" [size]="size" [color]="'var(--light)'"
+                [strokeWidth]="iconWidth"></lucide-icon>
+        </div>
+    } @else if(!isProposing){
+        <app-basic-card [iconName]="'check'" [color]="'var(--light)'" [title]="votes" [size]="size"
+            [iconWidth]="iconWidth"></app-basic-card>
     } @else {
-    <app-basic-card [iconName]="'send'" [color]="'var(--light)'" [title]="votes" [size]="size"
-        [iconWidth]="iconWidth"></app-basic-card>
+        <app-basic-card [iconName]="'send'" [color]="'var(--light)'" [title]="votes" [size]="size"
+            [iconWidth]="iconWidth"></app-basic-card>
     }
 </div>

@@ -41,6 +41,10 @@ export const routes: Routes = [
         loadComponent: () => import('./main/operations/polling/polling').then((m) => m.Polling)
       },
       {
+        path: 'log',
+        loadComponent: () => import('./main/operations/log/log').then((m) => m.Log)
+      },
+      {
         path: '**',
         redirectTo: 'index',
       },

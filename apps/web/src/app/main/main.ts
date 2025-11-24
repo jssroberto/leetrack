@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 
 @Component({
@@ -9,18 +9,22 @@ import { Router, RouterOutlet } from '@angular/router';
   styleUrl: './main.css'
 })
 export class Main {
-  currentRoute = signal('');
-  showMenuOptions = computed(() => this.currentRoute() === '/main/dashboard' || this.currentRoute() === '/main/polling');
+  private router = inject(Router);
 
-  constructor(private router: Router) {
+  currentRoute = signal('');
+  showMenuOptions = computed(() => this.currentRoute().startsWith('/main/dashboard') || this.currentRoute().startsWith('/main/polling') || this.currentRoute().startsWith('/main/log'));
+
+  constructor() {
     this.router.events.subscribe(() => {
       this.currentRoute.set(this.router.url);
     });
   }
 
-  navigateTo(destination: string): void {
+  navigateTo(destination: string, queryParams?: Record<string, any>): void {
     const route = destination.toLowerCase();
-    this.router.navigate([`/main/${route}`]);
+    this.router.navigate([`/main/${route}`], {
+      queryParams: queryParams
+    });
   }
 
   get currentRouteValue(): string {

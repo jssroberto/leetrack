@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { LucideAngularModule } from 'lucide-angular';
 import { BasicCard } from "../../basic-card/basic-card";
+import { IconService } from '@web/src/app/services/icon.service';
 
 @Component({
   selector: 'app-voting-basic-card',
@@ -11,6 +12,8 @@ import { BasicCard } from "../../basic-card/basic-card";
   styleUrls: ['./voting-basic-card.css']
 })
 export class VotingBasicCard {
+  private iconService = inject(IconService);
+
   @Input() rank!: string;
   @Input() user!: string;
   @Input() problem!: string;
@@ -23,20 +26,21 @@ export class VotingBasicCard {
 
   @Input() isProposing: boolean = false;
 
-  get difficultyColor(){
+  get difficultyColor() {
     switch (this.difficulty) {
       case 'Easy':
         return 'var(--green)';
-        break;
       case 'Medium':
         return 'var(--yellow)';
-        break;
       case 'Hard':
         return 'var(--red)';
-        break;
       default:
         return 'var(--light)';
-        break;
     }
+  }
+
+  // provisional o no
+  get iconX() {
+    return this.iconService.iconsMap['x'];
   }
 }

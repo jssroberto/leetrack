@@ -5,18 +5,26 @@
         <app-sub-title [subTitle]="'This week problems'"></app-sub-title>
     </div>
 
-    <!-- Kind of looks good -->
-    <!-- <div class="grid grid-cols-[repeat(auto-fit,minmax(500px,1fr))] gap-3 overflow-auto scrollbar-hide h-full"></div> -->
-    <div class="grid grid-cols-[repeat(auto-fit,minmax(500px,1fr))] gap-3">
+    <!-- naah hermano super cocine con el flex flex-wrap y el flex 1_1_500px-->
+     <!-- empieza en 500 pero puede encogerse si es necesario y crecer si es posible -->
+    <!-- <div class="grid grid-cols-[repeat(auto-fit,minmax(500px,1fr))] gap-3"> -->
+    <div class="flex flex-wrap gap-3 overflow-auto scrollbar-hide h-auto justify-start items-start content-start">
         <app-info-basic-card [problem]="'Longest Substring Without Repeating Characters'" [number]="'1'"
-            [completedIn]="'54:43:10'" [xp]="'50'" [difficulty]="'Hard'"></app-info-basic-card>
+            [completedIn]="'54:43:10'" [xp]="'50'" [difficulty]="'Hard'"
+            class="flex-[1_1_500px] max-w-full"></app-info-basic-card>
         <app-info-basic-card [problem]="'Longest Substring Without Repeating Characters'" [number]="'1'"
-            [completedIn]="'54:43:10'" [xp]="'50'" [difficulty]="'Easy'"></app-info-basic-card>
+            [completedIn]="'54:43:10'" [xp]="'50'" [difficulty]="'Easy'"
+            class="flex-[1_1_500px] max-w-full"></app-info-basic-card>
         <app-info-basic-card [problem]="'Longest Substring Without Repeating Characters'" [number]="'1'"
-            [completedIn]="'54:43:10'" [xp]="'50'" [difficulty]="'Hard'"></app-info-basic-card>
+            [completedIn]="'54:43:10'" [xp]="'50'" [difficulty]="'Hard'"
+            class="flex-[1_1_500px] max-w-full"></app-info-basic-card>
         <app-info-basic-card [problem]="'Longest Substring Without Repeating Characters'" [number]="'1'"
-            [completedIn]="'54:43:10'" [xp]="'50'" [difficulty]="'Medium'"></app-info-basic-card>
+            [completedIn]="'54:43:10'" [xp]="'50'" [difficulty]="'Medium'"
+            class="flex-[1_1_500px] max-w-full"></app-info-basic-card>
+        <app-info-basic-card [problem]="'Longest Substring Without Repeating Characters'" [number]="'1'"
+            [completedIn]="'54:43:10'" [xp]="'50'" [difficulty]="'Medium'"
+            class="flex-[1_1_500px] max-w-full"></app-info-basic-card>
     </div>
 
-    <div class="w-full h-full bg-[var(--dark)] rounded-md"></div>
+    <div class="w-full h-[70%] bg-[var(--dark)] rounded-md"></div>
 </main>

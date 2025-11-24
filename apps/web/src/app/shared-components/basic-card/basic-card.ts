@@ -21,7 +21,14 @@ export class BasicCard {
   @Input() size: string = '22';
   @Input() iconWidth: string = '2';
 
+  // change later
+  @Input() image: boolean = false;
+
   get icon() {
     return this.iconService.iconsMap[this.iconName];
+  }
+
+  get user() {
+    return this.iconService.iconsMap['user']
   }
 }

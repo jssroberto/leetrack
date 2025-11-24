@@ -2,8 +2,10 @@
     <app-basic-card [color]="'var(--secondary-color)'" [title]="problem" [number]="number"
         class="flex-1 min-w-0"></app-basic-card>
     <app-basic-card [color]="'var(--secondary-color)'" [title]="'Completed in ' + completedIn"></app-basic-card>
-    <app-basic-card [title]="difficulty" [color]="'var(--red)'"></app-basic-card>
+
+    <app-basic-card [title]="difficulty" [color]="difficultyColor"></app-basic-card>
+
     <app-basic-card [title]="'+' + xp + ' XP'" [color]="'var(--pink)'"></app-basic-card>
-    <app-basic-card [iconName]="'squareArrowOutUpRight'" [size]="'18'" [color]="'var(--gray)'" class="w-10">
+    <app-basic-card [iconName]="'squareArrowOutUpRight'" [size]="'18'" [color]="'var(--gray)'">
     </app-basic-card>
 </div>

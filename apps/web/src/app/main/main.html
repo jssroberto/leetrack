@@ -13,27 +13,27 @@
                         'underline text-[var(--secondary-color)]': currentRouteValue === '/main/dashboard'
                      }">
                     Dashboard</li>
-                <li class="hover:underline-offset-4 hover:underline hover:text-[var(--secondary-color)] cursor-pointer"
+                <li class="underline-offset-4 hover:underline hover:text-[var(--secondary-color)] cursor-pointer"
                     (click)="navigateTo('leaderboard')" [ngClass]="{
                         'underline text-[var(--secondary-color)]': currentRouteValue === '/main/leaderboard'
                      }">
                     Leaderboard</li>
-                <li class="hover:underline-offset-4 hover:underline hover:text-[var(--secondary-color)] cursor-pointer"
+                <li class="underline-offset-4 hover:underline hover:text-[var(--secondary-color)] cursor-pointer"
                     (click)="navigateTo('log')" [ngClass]="{
                         'underline text-[var(--secondary-color)]': currentRouteValue === '/main/log'
                      }">
                     Log</li>
-                <li class="hover:underline-offset-4 hover:underline hover:text-[var(--secondary-color)] cursor-pointer"
+                <li class="underline-offset-4 hover:underline hover:text-[var(--secondary-color)] cursor-pointer"
                     (click)="navigateTo('polling')" [ngClass]="{
                         'underline text-[var(--secondary-color)]': currentRouteValue === '/main/polling'
                      }">
                     Polling</li>
-                <li class="hover:underline-offset-4 hover:underline hover:text-[var(--secondary-color)] cursor-pointer"
+                <li class="underline-offset-4 hover:underline hover:text-[var(--secondary-color)] cursor-pointer"
                     (click)="navigateTo('settings')" [ngClass]="{
                         'underline text-[var(--secondary-color)]': currentRouteValue === '/main/settings'
                      }">
                     Settings</li>
-                <li class="hover:underline-offset-4 hover:underline hover:text-[var(--secondary-color)] cursor-pointer"
+                <li class="underline-offset-4 hover:underline hover:text-[var(--secondary-color)] cursor-pointer"
                     (click)="navigateTo('groups')" [ngClass]="{
                         'underline text-[var(--secondary-color)]': currentRouteValue === '/main/groups'
                      }">
@@ -60,8 +60,10 @@
             </div>
         </div>
     </nav>
+
     <!-- main content -->
-    <div class="h-full">
+    <!-- is the overflow the best practice? i suppose, looks good -->
+    <div class="h-full flex-1 overflow-hidden">
         <router-outlet></router-outlet>
     </div>
 </div>

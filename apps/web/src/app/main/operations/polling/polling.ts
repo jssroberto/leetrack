@@ -8,7 +8,7 @@ import { VotingBasicCard } from "@web/src/app/shared-components/complex-componen
 
 @Component({
   selector: 'app-polling',
-  imports: [BasicCard, MainTitle, SubTitle, LucideAngularModule, VotingBasicCard],
+  imports: [MainTitle, SubTitle, LucideAngularModule, VotingBasicCard],
   templateUrl: './polling.html',
   styleUrl: './polling.css'
 })

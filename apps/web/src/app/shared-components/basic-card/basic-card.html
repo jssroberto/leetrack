@@ -1,7 +1,7 @@
 <div class="flex bg-[var(--dark)] text-[12px] rounded-md gap-2 shadow-[0_6px_6px_var(--shadow)] w-full h-full items-center"
     [ngClass]="{
     'cursor-pointer hover:bg-[var(--dark-gray)] justify-center': (icon && title && !number) || (icon && !title && !number),
-    'aspect-square': icon && !title && !number,
+    'aspect-square min-w-10': icon && !title && !number,
     'p-3': !icon && (title || number),
     'px-3': icon && (title || number),
     'px-4': number

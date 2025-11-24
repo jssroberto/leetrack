@@ -16,4 +16,21 @@ export class InfoBasicCard {
   @Input() completedIn!: string;
   @Input() xp!: string;
   @Input() difficulty!: string;
+
+  get difficultyColor(){
+    switch (this.difficulty) {
+      case 'Easy':
+        return 'var(--green)';
+        break;
+      case 'Medium':
+        return 'var(--yellow)';
+        break;
+      case 'Hard':
+        return 'var(--red)';
+        break;
+      default:
+        return 'var(--light)';
+        break;
+    }
+  }
 }

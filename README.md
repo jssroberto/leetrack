@@ -92,18 +92,56 @@ docker compose -f compose.dev.yaml exec api pnpm add <package-name> -D
 docker compose -f compose.dev.yaml exec web pnpm lint
 ```
 
-### Local PNPM Scripts (Optional)
+### Local Development (Without Docker)
 
-If you prefer to run services directly on your machine (outside Docker), install Node.js 22 and PNPM 10+, then use:
+If you prefer to run services directly on your machine:
 
-```bash
-pnpm install
-pnpm dev            # Runs API and Web concurrently
-pnpm dev:api        # NestJS backend only
-pnpm dev:web        # Angular frontend only
-```
+1. **Install dependencies**:
+   ```bash
+   pnpm install
+   ```
 
-This path still requires PostgreSQL running locally and a proper `.env`.
+2. **Set up environment**:
+   ```bash
+   cp .env.example .env
+   ```
+   Edit `.env` and configure your local PostgreSQL:
+   ```
+   DATABASE_URL="postgresql://user:password@localhost:5432/leetrack_dev"
+   ```
+
+3. **Generate Prisma Client and run migrations**:
+   ```bash
+   cd libs/database
+   pnpm prisma:migrate
+   pnpm prisma:generate
+   cd ../..
+   ```
+
+4. **Run the backend** (in one terminal):
+   ```bash
+   cd apps/api
+   pnpm start:dev
+   ```
+   API will be available at `http://localhost:3000`
+
+5. **Run the frontend** (in another terminal):
+   ```bash
+   cd apps/web
+   ng serve
+   # or: pnpm start
+   ```
+   App will be available at `http://localhost:4200`
+
+6. **(Optional) Build the extension**:
+   ```bash
+   cd apps/extension
+   pnpm build
+   # or for watch mode: pnpm dev
+   ```
+   Load `apps/extension/dist` in Chrome via `chrome://extensions/`
+
+**Note:** This requires Node.js 22+, PNPM 10+, and PostgreSQL 18 running locally.
 
 ## Environment Variables
 

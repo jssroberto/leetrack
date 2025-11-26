@@ -2,8 +2,33 @@ import { ConfidenceLevel } from '@extension/types/leetcode';
 
 export class ConfidenceModal {
   private static readonly CONTAINER_ID = 'leetrack-confidence-modal';
+  private static readonly FONTS_ID = 'leetrack-fonts';
+
+  private static injectFonts(): void {
+    if (document.getElementById(this.FONTS_ID)) return;
+
+    const style = document.createElement('style');
+    style.id = this.FONTS_ID;
+    style.textContent = `
+      @font-face {
+        font-family: 'RobotoSlabRegular';
+        src: url('${chrome.runtime.getURL('assets/fonts/RobotoSlab-Regular.woff2')}') format('woff2');
+        font-weight: normal;
+        font-style: normal;
+      }
+      @font-face {
+        font-family: 'RobotoSlabBold';
+        src: url('${chrome.runtime.getURL('assets/fonts/RobotoSlab-Bold.woff2')}') format('woff2');
+        font-weight: bold;
+        font-style: normal;
+      }
+    `;
+    document.head.appendChild(style);
+  }
 
   static async show(): Promise<ConfidenceLevel | null> {
+    this.injectFonts();
+
     return new Promise((resolve) => {
       // Remove existing modal if any
       const existing = document.getElementById(this.CONTAINER_ID);
@@ -16,17 +41,6 @@ export class ConfidenceModal {
       // Styles
       const style = document.createElement('style');
       style.textContent = `
-        @font-face {
-          font-family: 'RobotoSlabRegular';
-          src: url('${chrome.runtime.getURL('assets/fonts/RobotoSlab-Regular.woff2')}') format('woff2');
-          font-weight: normal;
-        }
-        @font-face {
-          font-family: 'RobotoSlabBold';
-          src: url('${chrome.runtime.getURL('assets/fonts/RobotoSlab-Bold.woff2')}') format('woff2');
-          font-weight: bold;
-        }
-
         :host {
           --color-bg: #1F1F1F;
           --color-surface: #2F2F2F;

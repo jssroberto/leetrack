@@ -1,7 +1,13 @@
 import { Role } from '@leetrack/database';
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateChallengeDto } from './dto/create-challenge.dto';
+import { CreateProposalDto } from './dto/create-proposal.dto';
 
 export interface UserProgressData {
   user: { id: string; email: string };
@@ -243,6 +249,99 @@ export class ChallengesService {
 
     if (!membership || membership.role !== Role.ADMIN) {
       throw new ForbiddenException('Only group admins can perform this action');
+    }
+  }
+
+  async createProposal(groupId: string, dto: CreateProposalDto, userId: string) {
+    // Verify user is member of the group
+    await this.verifyGroupMember(groupId, userId);
+
+    const targetDate = new Date(dto.targetDate);
+
+    // Simple validation: target date must be in the future
+    if (targetDate < new Date()) {
+      throw new BadRequestException('Target date must be in the future');
+    }
+
+    return this.prisma.challengeProposal.create({
+      data: {
+        groupId,
+        createdById: userId,
+        title: dto.title,
+        description: dto.description,
+        targetDate,
+      },
+    });
+  }
+
+  async findAllProposals(groupId: string, userId: string) {
+    // Verify user is member
+    await this.verifyGroupMember(groupId, userId);
+
+    const proposals = await this.prisma.challengeProposal.findMany({
+      where: { groupId },
+      include: {
+        _count: {
+          select: { votes: true },
+        },
+        votes: {
+          where: { userId },
+          select: { id: true },
+        },
+        createdBy: {
+          select: { id: true, email: true },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    return proposals.map((p) => ({
+      ...p,
+      voteCount: p._count.votes,
+      hasVoted: p.votes.length > 0,
+      votes: undefined, // Remove raw votes array
+      _count: undefined, // Remove count object
+    }));
+  }
+
+  async toggleVote(groupId: string, proposalId: string, userId: string) {
+    // Verify user is member
+    await this.verifyGroupMember(groupId, userId);
+
+    // Check if proposal exists and belongs to group
+    const proposal = await this.prisma.challengeProposal.findUnique({
+      where: { id: proposalId },
+    });
+
+    if (!proposal || proposal.groupId !== groupId) {
+      throw new NotFoundException('Proposal not found');
+    }
+
+    // Check if vote exists
+    const existingVote = await this.prisma.proposalVote.findUnique({
+      where: {
+        proposalId_userId: {
+          proposalId,
+          userId,
+        },
+      },
+    });
+
+    if (existingVote) {
+      // Remove vote
+      await this.prisma.proposalVote.delete({
+        where: { id: existingVote.id },
+      });
+      return { voted: false };
+    } else {
+      // Add vote
+      await this.prisma.proposalVote.create({
+        data: {
+          proposalId,
+          userId,
+        },
+      });
+      return { voted: true };
     }
   }
 }

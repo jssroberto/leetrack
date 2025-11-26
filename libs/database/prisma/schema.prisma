@@ -13,28 +13,31 @@ datasource db {
 }
 
 model User {
-  id                String              @id @default(uuid()) @db.Uuid
-  email             String              @unique
-  passwordHash      String
-  leetcodeUsername  String?
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime            @updatedAt
-  groups            UserGroup[]
-  submissions       Submission[]
-  createdChallenges Challenge[]         @relation("CreatedChallenges")
-  challengeProgress ChallengeProgress[]
+  id                 String              @id @default(uuid()) @db.Uuid
+  email              String              @unique
+  passwordHash       String
+  leetcodeUsername   String?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  groups             UserGroup[]
+  submissions        Submission[]
+  createdChallenges  Challenge[]         @relation("CreatedChallenges")
+  challengeProgress  ChallengeProgress[]
+  challengeProposals ChallengeProposal[]
+  proposalVotes      ProposalVote[]
 
   @@index([email])
 }
 
 model Group {
-  id         String      @id @default(uuid()) @db.Uuid
-  name       String
-  inviteCode String      @unique @default(uuid())
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
-  members    UserGroup[]
-  challenges Challenge[]
+  id                 String              @id @default(uuid()) @db.Uuid
+  name               String
+  inviteCode         String              @unique @default(uuid())
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  members            UserGroup[]
+  challenges         Challenge[]
+  challengeProposals ChallengeProposal[]
 
   @@index([inviteCode])
 }
@@ -156,4 +159,35 @@ enum ConfidenceLevel {
   NEEDED_HINTS
   SOLVED_ALONE
   EASY
+}
+
+model ChallengeProposal {
+  id          String @id @default(uuid()) @db.Uuid
+  groupId     String @db.Uuid
+  createdById String @db.Uuid
+
+  title       String
+  description String?
+  targetDate  DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  group     Group          @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  createdBy User           @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  votes     ProposalVote[]
+
+  @@index([groupId, targetDate])
+}
+
+model ProposalVote {
+  id         String   @id @default(uuid()) @db.Uuid
+  proposalId String   @db.Uuid
+  userId     String   @db.Uuid
+  createdAt  DateTime @default(now())
+
+  proposal ChallengeProposal @relation(fields: [proposalId], references: [id], onDelete: Cascade)
+  user     User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([proposalId, userId])
 }

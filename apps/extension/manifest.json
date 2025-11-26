@@ -4,10 +4,7 @@
   "version": "1.0.0",
   "description": "Track your LeetCode progress collaboratively",
   "permissions": ["storage", "tabs", "notifications"],
-  "host_permissions": [
-    "https://leetcode.com/*",
-    "https://leetcode.cn/*"
-  ],
+  "host_permissions": ["https://leetcode.com/*", "https://leetcode.cn/*"],
   "background": {
     "service_worker": "background/service-worker.js",
     "type": "module"
@@ -21,7 +18,7 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["content/network-interceptor.js"],
+      "resources": ["content/network-interceptor.js", "assets/fonts/*.woff2"],
       "matches": ["https://leetcode.com/*", "https://leetcode.cn/*"]
     }
   ],

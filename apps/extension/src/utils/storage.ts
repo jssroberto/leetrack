@@ -60,9 +60,9 @@ export class StorageManager {
     }
   }
 
-  async markSubmissionSynced(submissionId: number): Promise<void> {
+  async markSubmissionSynced(questionId: number): Promise<void> {
     const submissions = await this.getSubmissions();
-    const submission = submissions.find((s) => s.submissionId === submissionId);
+    const submission = submissions.find((s) => s.questionId === questionId);
     if (submission) {
       submission.synced = true;
       submission.syncedAt = Date.now();
@@ -73,7 +73,7 @@ export class StorageManager {
 
     const pending = await this.getPendingSubmissions();
     await chrome.storage.local.set({
-      [this.KEYS.PENDING_SYNC]: pending.filter((s) => s.submissionId !== submissionId),
+      [this.KEYS.PENDING_SYNC]: pending.filter((s) => s.questionId !== questionId),
     });
   }
 

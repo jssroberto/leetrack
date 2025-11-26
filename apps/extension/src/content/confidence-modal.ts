@@ -16,71 +16,96 @@ export class ConfidenceModal {
       // Styles
       const style = document.createElement('style');
       style.textContent = `
+        @font-face {
+          font-family: 'RobotoSlabRegular';
+          src: url('${chrome.runtime.getURL('assets/fonts/RobotoSlab-Regular.woff2')}') format('woff2');
+          font-weight: normal;
+        }
+        @font-face {
+          font-family: 'RobotoSlabBold';
+          src: url('${chrome.runtime.getURL('assets/fonts/RobotoSlab-Bold.woff2')}') format('woff2');
+          font-weight: bold;
+        }
+
+        :host {
+          --color-bg: #1F1F1F;
+          --color-surface: #2F2F2F;
+          --color-border: #3B3B3B;
+          --color-text: #ffffff;
+          --color-primary: #E97436;
+          --color-primary-hover: #A24E21;
+          --color-muted: #979797;
+          --shadow: rgba(0, 0, 0, 0.2);
+        }
+
         .overlay {
           position: fixed;
           top: 0;
           left: 0;
           width: 100vw;
           height: 100vh;
-          background: rgba(0, 0, 0, 0.5);
+          background: rgba(0, 0, 0, 0.6);
           display: flex;
           justify-content: center;
           align-items: center;
           z-index: 99999;
-          backdrop-filter: blur(2px);
+          backdrop-filter: blur(4px);
           animation: fadeIn 0.2s ease-out;
         }
         .modal {
-          background: #1a1a1a;
-          color: #fff;
+          background: var(--color-surface);
+          color: var(--color-text);
           padding: 24px;
           border-radius: 12px;
-          width: 320px;
-          box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+          width: 340px;
+          box-shadow: 0 8px 32px var(--shadow);
           text-align: center;
-          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-          border: 1px solid #333;
+          font-family: 'RobotoSlabRegular', serif;
+          border: 1px solid var(--color-border);
           animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
         h2 {
           margin: 0 0 8px 0;
-          font-size: 18px;
-          font-weight: 600;
+          font-size: 20px;
+          font-weight: bold;
+          font-family: 'RobotoSlabBold', serif;
+          color: var(--color-text);
         }
         p {
-          margin: 0 0 20px 0;
-          color: #a0a0a0;
+          margin: 0 0 24px 0;
+          color: var(--color-muted);
           font-size: 14px;
         }
         .options {
           display: flex;
           flex-direction: column;
-          gap: 8px;
+          gap: 10px;
         }
         button {
-          background: #2a2a2a;
-          border: 1px solid #333;
-          color: #e0e0e0;
-          padding: 12px;
+          background: var(--color-bg);
+          border: 1px solid var(--color-border);
+          color: var(--color-text);
+          padding: 12px 16px;
           border-radius: 8px;
           cursor: pointer;
           font-size: 14px;
+          font-family: 'RobotoSlabRegular', serif;
           transition: all 0.2s;
           text-align: left;
           display: flex;
           align-items: center;
-          gap: 10px;
+          gap: 12px;
         }
         button:hover {
-          background: #333;
-          border-color: #444;
+          background: #383838;
+          border-color: var(--color-primary);
           transform: translateY(-1px);
         }
         button:active {
           transform: translateY(0);
         }
         .emoji {
-          font-size: 18px;
+          font-size: 20px;
         }
         @keyframes fadeIn {
           from { opacity: 0; }

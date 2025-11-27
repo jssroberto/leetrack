@@ -1,8 +1,28 @@
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import { Server } from 'http';
 import request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { CreateProposalDto } from '../src/challenges/dto/create-proposal.dto';
+
+interface ProposalResponse {
+  id: string;
+  title: string;
+  description?: string;
+  targetDate: string;
+  groupId: string;
+  voteCount: number;
+  hasVoted: boolean;
+  voted?: boolean;
+}
+
+interface LoginResponse {
+  accessToken: string;
+}
+
+interface GroupResponse {
+  id: string;
+}
 
 describe('ProposalsController (e2e)', () => {
   let app: INestApplication;
@@ -21,23 +41,26 @@ describe('ProposalsController (e2e)', () => {
     const email = `test-${Date.now()}@example.com`;
     const password = 'password123';
 
-    await request(app.getHttpServer()).post('/auth/register').send({ email, password }).expect(201);
+    await request(app.getHttpServer() as Server)
+      .post('/auth/register')
+      .send({ email, password })
+      .expect(201);
 
-    const loginRes = await request(app.getHttpServer())
+    const loginRes = await request(app.getHttpServer() as Server)
       .post('/auth/login')
       .send({ email, password })
       .expect(201);
 
-    authToken = loginRes.body.accessToken;
+    authToken = (loginRes.body as LoginResponse).accessToken;
 
     // 2. Create a group
-    const groupRes = await request(app.getHttpServer())
+    const groupRes = await request(app.getHttpServer() as Server)
       .post('/groups')
       .set('Authorization', `Bearer ${authToken}`)
       .send({ name: 'Test Group' })
       .expect(201);
 
-    groupId = groupRes.body.id;
+    groupId = (groupRes.body as GroupResponse).id;
   });
 
   afterAll(async () => {
@@ -51,14 +74,15 @@ describe('ProposalsController (e2e)', () => {
       targetDate: new Date(Date.now() + 86400000).toISOString(), // Tomorrow
     };
 
-    return request(app.getHttpServer())
+    return request(app.getHttpServer() as Server)
       .post(`/groups/${groupId}/proposals`)
       .set('Authorization', `Bearer ${authToken}`)
       .send(dto)
       .expect(201)
       .expect((res) => {
-        expect(res.body.title).toBe(dto.title);
-        expect(res.body.groupId).toBe(groupId);
+        const body = res.body as ProposalResponse;
+        expect(body.title).toBe(dto.title);
+        expect(body.groupId).toBe(groupId);
       });
   });
 
@@ -66,20 +90,22 @@ describe('ProposalsController (e2e)', () => {
     // Create another user
     const email = `other-${Date.now()}@example.com`;
     const password = 'password123';
-    await request(app.getHttpServer()).post('/auth/register').send({ email, password });
+    await request(app.getHttpServer() as Server)
+      .post('/auth/register')
+      .send({ email, password });
 
-    const loginRes = await request(app.getHttpServer())
+    const loginRes = await request(app.getHttpServer() as Server)
       .post('/auth/login')
       .send({ email, password });
 
-    const otherToken = loginRes.body.accessToken;
+    const otherToken = (loginRes.body as LoginResponse).accessToken;
 
     const dto: CreateProposalDto = {
       title: 'Hacker Proposal',
       targetDate: new Date(Date.now() + 86400000).toISOString(),
     };
 
-    return request(app.getHttpServer())
+    return request(app.getHttpServer() as Server)
       .post(`/groups/${groupId}/proposals`)
       .set('Authorization', `Bearer ${otherToken}`)
       .send(dto)
@@ -92,21 +118,22 @@ describe('ProposalsController (e2e)', () => {
       title: 'Graph Week',
       targetDate: new Date(Date.now() + 86400000 * 2).toISOString(),
     };
-    await request(app.getHttpServer())
+    await request(app.getHttpServer() as Server)
       .post(`/groups/${groupId}/proposals`)
       .set('Authorization', `Bearer ${authToken}`)
       .send(dto)
       .expect(201);
 
-    return request(app.getHttpServer())
+    return request(app.getHttpServer() as Server)
       .get(`/groups/${groupId}/proposals`)
       .set('Authorization', `Bearer ${authToken}`)
       .expect(200)
       .expect((res) => {
-        expect(Array.isArray(res.body)).toBe(true);
-        expect(res.body.length).toBeGreaterThan(0);
-        expect(res.body[0].voteCount).toBeDefined();
-        expect(res.body[0].hasVoted).toBeDefined();
+        const body = res.body as ProposalResponse[];
+        expect(Array.isArray(body)).toBe(true);
+        expect(body.length).toBeGreaterThan(0);
+        expect(body[0].voteCount).toBeDefined();
+        expect(body[0].hasVoted).toBeDefined();
       });
   });
 
@@ -116,50 +143,56 @@ describe('ProposalsController (e2e)', () => {
       title: 'Vote Me',
       targetDate: new Date(Date.now() + 86400000 * 3).toISOString(),
     };
-    const createRes = await request(app.getHttpServer())
+    const createRes = await request(app.getHttpServer() as Server)
       .post(`/groups/${groupId}/proposals`)
       .set('Authorization', `Bearer ${authToken}`)
       .send(dto)
       .expect(201);
 
-    const proposalId = createRes.body.id;
+    const proposalId = (createRes.body as ProposalResponse).id;
 
     // 2. Vote (Toggle On)
-    await request(app.getHttpServer())
+    await request(app.getHttpServer() as Server)
       .post(`/groups/${groupId}/proposals/${proposalId}/vote`)
       .set('Authorization', `Bearer ${authToken}`)
       .expect(200)
       .expect((res) => {
-        expect(res.body.voted).toBe(true);
+        const body = res.body as ProposalResponse;
+        expect(body.voted).toBe(true);
       });
 
     // 3. Verify count = 1
-    await request(app.getHttpServer())
+    await request(app.getHttpServer() as Server)
       .get(`/groups/${groupId}/proposals`)
       .set('Authorization', `Bearer ${authToken}`)
       .expect(200)
       .expect((res) => {
-        const p = res.body.find((x: any) => x.id === proposalId);
+        const body = res.body as ProposalResponse[];
+        const p = body.find((x) => x.id === proposalId);
+        if (!p) throw new Error('Proposal not found');
         expect(p.voteCount).toBe(1);
         expect(p.hasVoted).toBe(true);
       });
 
     // 4. Vote again (Toggle Off)
-    await request(app.getHttpServer())
+    await request(app.getHttpServer() as Server)
       .post(`/groups/${groupId}/proposals/${proposalId}/vote`)
       .set('Authorization', `Bearer ${authToken}`)
       .expect(200)
       .expect((res) => {
-        expect(res.body.voted).toBe(false);
+        const body = res.body as ProposalResponse;
+        expect(body.voted).toBe(false);
       });
 
     // 5. Verify count = 0
-    await request(app.getHttpServer())
+    await request(app.getHttpServer() as Server)
       .get(`/groups/${groupId}/proposals`)
       .set('Authorization', `Bearer ${authToken}`)
       .expect(200)
       .expect((res) => {
-        const p = res.body.find((x: any) => x.id === proposalId);
+        const body = res.body as ProposalResponse[];
+        const p = body.find((x) => x.id === proposalId);
+        if (!p) throw new Error('Proposal not found');
         expect(p.voteCount).toBe(0);
         expect(p.hasVoted).toBe(false);
       });

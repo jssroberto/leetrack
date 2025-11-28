@@ -6,6 +6,8 @@ import { LucideAngularModule } from "lucide-angular";
 import { VotingBasicCard } from "@web/src/app/shared-components/complex-components/voting-basic-card/voting-basic-card";
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { ProblemsService } from '@web/src/app/services/problem.service'; // <--- Importar servicio
+import { toSignal } from '@angular/core/rxjs-interop'; // <--- Importar toSignal
 
 @Component({
   selector: 'app-polling',
@@ -17,12 +19,19 @@ export class Polling {
   private iconService = inject(IconService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private problemsService = inject(ProblemsService); // <--- Inyectar
 
   currentRoute = signal('');
   currentFilter = signal<string>('all');
 
-  // Se suscribe a los cambios en los query params
+  // Convertimos el observable del servicio en una Signal para usarla fácil en el HTML
+  // initialValue: [] evita errores mientras cargan los datos
+  problems = toSignal(this.problemsService.problems$, { initialValue: [] });
+
   constructor() {
+    // Cargar los problemas al iniciar el componente
+    this.problemsService.loadProblems();
+
     this.route.queryParams.subscribe(params => {
       this.currentFilter.set(params['filter'] || 'all');
     });

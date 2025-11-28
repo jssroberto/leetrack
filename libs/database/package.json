@@ -11,7 +11,7 @@
     "prisma:reset": "dotenv -e ../../.env -- prisma migrate reset",
     "prisma:studio": "dotenv -e ../../.env -- prisma studio",
     "prisma:push": "dotenv -e ../../.env -- prisma db push",
-    "prisma:seed": "dotenv -e ../../.env -- tsx prisma/seed.ts"
+    "prisma:seed": "dotenv -e ../../.env -- tsx src/seeds/seed-neetcode.ts"
   },
   "keywords": [],
   "author": "",

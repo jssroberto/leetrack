@@ -39,6 +39,7 @@ All development services are containerised. You only need Docker; Node.js, PNPM,
     cd libs/database
     pnpm prisma:migrate
     pnpm prisma:generate
+    pnpm prisma:seed
     cd ../..
    ```
 

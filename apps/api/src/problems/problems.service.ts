@@ -7,6 +7,14 @@ import { CreateProblemDto } from './dto/create-problem.dto';
 export class ProblemsService {
   constructor(private prisma: PrismaService) {}
 
+  async findAll() {
+    return this.prisma.problem.findMany({
+      orderBy: {
+        leetcodeId: 'asc', // Ordenar por el ID oficial de LeetCode (1, 2, 3...)
+      },
+    });
+  }
+
   async upsertProblem(data: CreateProblemDto) {
     const { leetcodeId, slug, title, difficulty, tags } = data;
 

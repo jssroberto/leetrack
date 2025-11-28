@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "description": "Track your LeetCode progress collaboratively",
   "permissions": ["storage", "tabs", "notifications"],
-  "host_permissions": ["https://leetcode.com/*", "https://leetcode.cn/*"],
+  "host_permissions": ["https://leetcode.com/*", "https://leetcode.cn/*", "http://localhost:3000/*","http://127.0.0.1:3000/*"],
   "background": {
     "service_worker": "background/service-worker.js",
     "type": "module"

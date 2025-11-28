@@ -9,7 +9,7 @@ export class ApiClient {
   private baseURL: string;
 
   constructor(baseURL?: string) {
-    this.baseURL = baseURL || (__LEETRACK_API_URL__ ?? 'http://localhost:3002');
+    this.baseURL = baseURL || (__LEETRACK_API_URL__ ?? 'http://127.0.0.1:3000/api/v1');
   }
 
   async submitProblem(
@@ -30,7 +30,7 @@ export class ApiClient {
     };
 
     try {
-      const response = await fetch(`${this.baseURL}/api/v1/submissions`, {
+      const response = await fetch(`${this.baseURL}/submissions`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -52,7 +52,7 @@ export class ApiClient {
 
   async login(email: string, password: string): Promise<AuthToken> {
     try {
-      const response = await fetch(`${this.baseURL}/api/v1/auth/login`, {
+      const response = await fetch(`${this.baseURL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

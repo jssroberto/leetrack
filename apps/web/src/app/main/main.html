@@ -44,7 +44,7 @@
         }
         <div class="flex text-[var(--light)] cursor-pointer items-center">
             <div class="flex gap-2 items-center relative left-3">
-                <span class="font-family-roboto-slab">User</span>
+                <span class="font-family-roboto-slab">{{ user()?.leetcodeUsername || user()?.email || 'Guest' }}</span>
                 <div class="bg-[var(--secondary-color)] rounded-4xl flex justify-center items-center size-8 z-1">
                     <!-- Margin right depends on level digits -->
                     <img src="/assets/svgs/user-icon.svg" alt="" draggable="false" />

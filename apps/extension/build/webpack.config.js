@@ -36,7 +36,7 @@ export default {
   },
   plugins: [
     new webpack.DefinePlugin({
-      __LEETRACK_API_URL__: JSON.stringify(process.env.LEETRACK_API_URL || 'http://localhost:3002'),
+      __LEETRACK_API_URL__: JSON.stringify(process.env.LEETRACK_API_URL || 'http://localhost:3000/api/v1'),
       __LEETRACK_WEB_PORT__: JSON.stringify(
         process.env.WEB_PORT ||
           (() => {

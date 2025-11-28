@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop'; // <--- IMPORTANTE
+import { AuthService } from '../services/auth.service'; // <--- Importa tu servicio
 
 @Component({
   selector: 'app-main',
@@ -10,9 +12,19 @@ import { Router, RouterOutlet } from '@angular/router';
 })
 export class Main {
   private router = inject(Router);
+  private authService = inject(AuthService); // <--- Inyectar servicio
+
+  // Convertimos el Observable currentUser$ en una Signal de lectura
+  user = toSignal(this.authService.currentUser$); 
 
   currentRoute = signal('');
-  showMenuOptions = computed(() => this.currentRoute().startsWith('/main/dashboard') || this.currentRoute().startsWith('/main/polling') || this.currentRoute().startsWith('/main/log'));
+  
+  // Tu lógica existente...
+  showMenuOptions = computed(() => 
+    this.currentRoute().startsWith('/main/dashboard') || 
+    this.currentRoute().startsWith('/main/polling') || 
+    this.currentRoute().startsWith('/main/log')
+  );
 
   constructor() {
     this.router.events.subscribe(() => {

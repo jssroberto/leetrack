@@ -13,6 +13,16 @@ import { ProblemsService } from './problems.service';
 export class ProblemsController {
   constructor(private readonly problemsService: ProblemsService) {}
 
+  @Get()
+  @ApiOperation({
+    summary: 'Get all problems',
+    description: 'Returns a list of all available problems',
+  })
+  @ApiOkResponse({ description: 'List of problems retrieved successfully' })
+  findAll() {
+    return this.problemsService.findAll();
+  }
+
   @Get(':id')
   @ApiOperation({
     summary: 'Get problem by ID',

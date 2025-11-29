@@ -21,7 +21,9 @@ async function seedNeetCodeProblems() {
 
   // 1. Extract and seed categories
   console.log('📦 Seeding Categories...');
-  const uniqueCategories = [...new Set(problems.map((p) => p.category))].filter(Boolean);
+  const uniqueCategories = [...new Set(problems.map((p) => p.category))]
+    .filter(Boolean)
+    .filter((c) => c !== 'JavaScript'); // Exclude non-DSA categories
   const categoryMap = new Map<string, string>(); // Name -> ID
 
   for (const categoryName of uniqueCategories) {

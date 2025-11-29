@@ -53,7 +53,15 @@ export class ChallengesService {
         ),
       );
 
-      return challenge;
+      return tx.challenge.findUnique({
+        where: { id: challenge.id },
+        include: {
+          problems: {
+            include: { problem: true },
+            orderBy: { order: 'asc' },
+          },
+        },
+      });
     });
   }
 
@@ -267,7 +275,8 @@ export class ChallengesService {
       data: {
         groupId,
         createdById: userId,
-        title: dto.title,
+        title: dto.title || dto.category,
+        category: dto.category,
         description: dto.description,
         targetDate,
       },
@@ -343,5 +352,68 @@ export class ChallengesService {
       });
       return { voted: true };
     }
+  }
+
+  async convertProposalToChallenge(groupId: string, proposalId: string, userId: string) {
+    // Verify user is admin
+    await this.verifyGroupAdmin(groupId, userId);
+
+    const proposal = await this.prisma.challengeProposal.findUnique({
+      where: { id: proposalId },
+    });
+
+    if (!proposal || proposal.groupId !== groupId) {
+      throw new NotFoundException('Proposal not found');
+    }
+
+    if (!proposal.category) {
+      throw new BadRequestException('Proposal does not have a category to generate problems from');
+    }
+
+    // Fetch all problems in the category
+    const problems = await this.prisma.problem.findMany({
+      where: { neetCodeCategory: proposal.category },
+      select: { id: true, difficulty: true },
+    });
+
+    const easyProblems = problems.filter((p) => p.difficulty === 'EASY');
+    const mediumProblems = problems.filter((p) => p.difficulty === 'MEDIUM');
+    const hardProblems = problems.filter((p) => p.difficulty === 'HARD');
+
+    // Selection logic: 1 Easy, 2 Mediums (fallback to Hard if not enough Mediums, or more Easy)
+    const selectedProblems: typeof problems = [];
+
+    // Helper to pick random
+    const pickRandom = (pool: typeof problems, count: number) => {
+      const shuffled = [...pool].sort(() => 0.5 - Math.random());
+      return shuffled.slice(0, count);
+    };
+
+    selectedProblems.push(...pickRandom(easyProblems, 1));
+    selectedProblems.push(...pickRandom(mediumProblems, 2));
+
+    // If we don't have enough, fill with whatever is left from other difficulties
+    if (selectedProblems.length < 3) {
+      const remaining = problems.filter((p) => !selectedProblems.find((sp) => sp.id === p.id));
+      selectedProblems.push(...pickRandom(remaining, 3 - selectedProblems.length));
+    }
+
+    if (selectedProblems.length === 0) {
+      throw new BadRequestException(
+        `No problems found for category "${proposal.category}" to generate a challenge`,
+      );
+    }
+
+    // Create Challenge
+    return this.create(
+      groupId,
+      {
+        name: proposal.title || `${proposal.category} Challenge`,
+        description: proposal.description || `Generated from proposal for ${proposal.category}`,
+        dueDate: proposal.targetDate.toISOString(),
+        problemIds: selectedProblems.map((p) => p.id),
+      },
+      userId,
+    );
   }
 }

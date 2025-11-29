@@ -65,4 +65,17 @@ export class ProposalsController {
   ) {
     return this.challengesService.toggleVote(groupId, proposalId, req.user.userId);
   }
+
+  @Post(':proposalId/convert')
+  @ApiOperation({ summary: 'Convert a proposal into a challenge (Admin only)' })
+  @ApiParam({ name: 'groupId', description: 'Group ID' })
+  @ApiParam({ name: 'proposalId', description: 'Proposal ID' })
+  @ApiCreatedResponse({ description: 'Challenge created successfully from proposal' })
+  convert(
+    @Param('groupId', ParseUUIDPipe) groupId: string,
+    @Param('proposalId', ParseUUIDPipe) proposalId: string,
+    @Request() req: AuthenticatedRequest,
+  ) {
+    return this.challengesService.convertProposalToChallenge(groupId, proposalId, req.user.userId);
+  }
 }

@@ -23,6 +23,17 @@ export class ProblemsController {
     return this.problemsService.findAll();
   }
 
+  @Get('categories')
+  @ApiOperation({
+    summary: 'Get all problem categories',
+    description:
+      'Returns a list of unique problem categories (e.g. Arrays & Hashing, Two Pointers)',
+  })
+  @ApiOkResponse({ description: 'List of categories retrieved successfully' })
+  getCategories() {
+    return this.problemsService.findAllCategories();
+  }
+
   @Get(':id')
   @ApiOperation({
     summary: 'Get problem by ID',

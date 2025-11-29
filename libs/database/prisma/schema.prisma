@@ -166,7 +166,8 @@ model ChallengeProposal {
   groupId     String @db.Uuid
   createdById String @db.Uuid
 
-  title       String
+  title       String?
+  category    String?
   description String?
   targetDate  DateTime
 

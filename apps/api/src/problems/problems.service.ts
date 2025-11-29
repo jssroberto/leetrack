@@ -47,4 +47,16 @@ export class ProblemsService {
   async findOne(id: string) {
     return this.prisma.problem.findUnique({ where: { id } });
   }
+
+  async findAllCategories() {
+    const categories = await this.prisma.problem.findMany({
+      select: { neetCodeCategory: true },
+      distinct: ['neetCodeCategory'],
+      where: { neetCodeCategory: { not: null } },
+    });
+    return categories
+      .map((c) => c.neetCodeCategory)
+      .filter((c): c is string => c !== null)
+      .sort();
+  }
 }

@@ -2,10 +2,15 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsDateString, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateProposalDto {
-  @ApiProperty({ example: 'Dynamic Programming Week' })
+  @ApiProperty({ example: 'Dynamic Programming Week', required: false })
+  @IsString()
+  @IsOptional()
+  title?: string;
+
+  @ApiProperty({ example: 'Arrays & Hashing' })
   @IsString()
   @IsNotEmpty()
-  title: string;
+  category: string;
 
   @ApiProperty({ example: 'Focus on 1D DP problems', required: false })
   @IsString()

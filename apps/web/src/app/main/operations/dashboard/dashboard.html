@@ -14,7 +14,7 @@
     <div class="flex flex-wrap gap-3 overflow-auto scrollbar-hide h-auto justify-start items-start content-start">
         @if (isLoading$ | async) {
             <div class="w-full text-center p-4 text-gray-400">
-            Cargando tus envíos...
+            Loading submissions...
             </div>
         } @else {
 
@@ -35,7 +35,7 @@
                 </app-info-basic-card>
             } @empty {
                 <div class="w-full text-center p-4 text-gray-400">
-                No has realizado ningún envío todavía.
+                You haven´t submitted yet.
                 </div>
             }
 

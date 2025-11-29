@@ -23,6 +23,7 @@ export class Main {
   showMenuOptions = computed(() => 
     this.currentRoute().startsWith('/main/dashboard') || 
     this.currentRoute().startsWith('/main/polling') || 
+    this.currentRoute().startsWith('/main/group') || 
     this.currentRoute().startsWith('/main/log')
   );
 

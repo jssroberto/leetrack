@@ -36,6 +36,11 @@ export const routes: Routes = [
         path: 'dashboard',
         loadComponent: () => import('./main/operations/dashboard/dashboard').then((m) => m.Dashboard)
       },
+      
+      {
+        path: 'group',
+        loadComponent: () => import('./main/operations/group/group').then((m) => m.Group)
+      },
       {
         path: 'polling',
         loadComponent: () => import('./main/operations/polling/polling').then((m) => m.Polling)

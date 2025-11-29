@@ -25,6 +25,18 @@ interface GroupResponse {
   id: string;
 }
 
+interface ChallengeResponse {
+  id: string;
+  name: string;
+  problems: any[];
+}
+
+interface CategoryResponse {
+  id: string;
+  name: string;
+  slug: string;
+}
+
 describe('ProposalsController (e2e)', () => {
   let app: INestApplication;
   let authToken: string;
@@ -65,6 +77,16 @@ describe('ProposalsController (e2e)', () => {
 
     // 3. Seed some problems for "Arrays & Hashing"
     const prisma = app.get(PrismaService);
+
+    const category = await prisma.category.upsert({
+      where: { slug: 'arrays-hashing' },
+      update: {},
+      create: {
+        name: 'Arrays & Hashing',
+        slug: 'arrays-hashing',
+      },
+    });
+
     await prisma.problem.createMany({
       data: [
         {
@@ -72,21 +94,21 @@ describe('ProposalsController (e2e)', () => {
           slug: 'test-problem-1',
           title: 'Test Problem 1',
           difficulty: 'EASY',
-          neetCodeCategory: 'Arrays & Hashing',
+          categoryId: category.id,
         },
         {
           leetcodeId: 1002,
           slug: 'test-problem-2',
           title: 'Test Problem 2',
           difficulty: 'MEDIUM',
-          neetCodeCategory: 'Arrays & Hashing',
+          categoryId: category.id,
         },
         {
           leetcodeId: 1003,
           slug: 'test-problem-3',
           title: 'Test Problem 3',
           difficulty: 'MEDIUM',
-          neetCodeCategory: 'Arrays & Hashing',
+          categoryId: category.id,
         },
       ],
       skipDuplicates: true,
@@ -97,10 +119,16 @@ describe('ProposalsController (e2e)', () => {
     await app.close();
   });
 
-  it('/groups/:groupId/proposals (POST) - should create a proposal', () => {
+  it('/groups/:groupId/proposals (POST) - should create a proposal', async () => {
+    // Fetch categories first
+    const categoriesRes = await request(app.getHttpServer() as Server)
+      .get('/problems/categories')
+      .expect(200);
+    const categoryId = (categoriesRes.body as CategoryResponse[])[0].id;
+
     const dto: CreateProposalDto = {
       title: 'Dynamic Programming Week',
-      category: '1-D Dynamic Programming',
+      categoryId,
       description: 'Focus on 1D DP',
       targetDate: new Date(Date.now() + 86400000).toISOString(), // Tomorrow
     };
@@ -131,9 +159,15 @@ describe('ProposalsController (e2e)', () => {
 
     const otherToken = (loginRes.body as LoginResponse).accessToken;
 
+    // Fetch categories first
+    const categoriesRes = await request(app.getHttpServer() as Server)
+      .get('/problems/categories')
+      .expect(200);
+    const categoryId = (categoriesRes.body as CategoryResponse[])[0].id;
+
     const dto: CreateProposalDto = {
       title: 'Hacker Proposal',
-      category: 'Arrays & Hashing',
+      categoryId,
       targetDate: new Date(Date.now() + 86400000).toISOString(),
     };
 
@@ -145,10 +179,16 @@ describe('ProposalsController (e2e)', () => {
   });
 
   it('/groups/:groupId/proposals (GET) - should list proposals', async () => {
+    // Fetch categories first
+    const categoriesRes = await request(app.getHttpServer() as Server)
+      .get('/problems/categories')
+      .expect(200);
+    const categoryId = (categoriesRes.body as CategoryResponse[])[0].id;
+
     // Create a proposal first
     const dto: CreateProposalDto = {
       title: 'Graph Week',
-      category: 'Graphs',
+      categoryId,
       targetDate: new Date(Date.now() + 86400000 * 2).toISOString(),
     };
     await request(app.getHttpServer() as Server)
@@ -171,10 +211,16 @@ describe('ProposalsController (e2e)', () => {
   });
 
   it('/groups/:groupId/proposals/:id/vote (POST) - should toggle vote', async () => {
+    // Fetch categories first
+    const categoriesRes = await request(app.getHttpServer() as Server)
+      .get('/problems/categories')
+      .expect(200);
+    const categoryId = (categoriesRes.body as CategoryResponse[])[0].id;
+
     // 1. Create proposal
     const dto: CreateProposalDto = {
       title: 'Vote Me',
-      category: 'Two Pointers',
+      categoryId,
       targetDate: new Date(Date.now() + 86400000 * 3).toISOString(),
     };
     const createRes = await request(app.getHttpServer() as Server)
@@ -233,10 +279,16 @@ describe('ProposalsController (e2e)', () => {
   });
 
   it('/groups/:groupId/proposals/:id/convert (POST) - should convert proposal to challenge', async () => {
+    // Fetch categories first
+    const categoriesRes = await request(app.getHttpServer() as Server)
+      .get('/problems/categories')
+      .expect(200);
+    const categoryId = (categoriesRes.body as CategoryResponse[])[0].id;
+
     // 1. Create proposal
     const dto: CreateProposalDto = {
       title: 'Conversion Test',
-      category: 'Arrays & Hashing',
+      categoryId,
       targetDate: new Date(Date.now() + 86400000 * 4).toISOString(),
     };
     const createRes = await request(app.getHttpServer() as Server)
@@ -253,7 +305,7 @@ describe('ProposalsController (e2e)', () => {
       .set('Authorization', `Bearer ${authToken}`)
       .expect(201)
       .expect((res) => {
-        const body = res.body;
+        const body = res.body as ChallengeResponse;
         expect(body.id).toBeDefined();
         expect(body.name).toBe(dto.title);
         expect(body.problems).toBeDefined();

@@ -49,14 +49,8 @@ export class ProblemsService {
   }
 
   async findAllCategories() {
-    const categories = await this.prisma.problem.findMany({
-      select: { neetCodeCategory: true },
-      distinct: ['neetCodeCategory'],
-      where: { neetCodeCategory: { not: null } },
+    return this.prisma.category.findMany({
+      orderBy: { name: 'asc' },
     });
-    return categories
-      .map((c) => c.neetCodeCategory)
-      .filter((c): c is string => c !== null)
-      .sort();
   }
 }

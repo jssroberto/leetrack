@@ -275,8 +275,8 @@ export class ChallengesService {
       data: {
         groupId,
         createdById: userId,
-        title: dto.title || dto.category,
-        category: dto.category,
+        title: dto.title,
+        categoryId: dto.categoryId,
         description: dto.description,
         targetDate,
       },
@@ -358,8 +358,10 @@ export class ChallengesService {
     // Verify user is admin
     await this.verifyGroupAdmin(groupId, userId);
 
+    // 2. Get proposal with category
     const proposal = await this.prisma.challengeProposal.findUnique({
       where: { id: proposalId },
+      include: { category: true },
     });
 
     if (!proposal || proposal.groupId !== groupId) {
@@ -367,18 +369,17 @@ export class ChallengesService {
     }
 
     if (!proposal.category) {
-      throw new BadRequestException('Proposal does not have a category to generate problems from');
+      throw new BadRequestException('Proposal not found or has no category');
     }
 
-    // Fetch all problems in the category
+    // 3. Get problems from the category
     const problems = await this.prisma.problem.findMany({
-      where: { neetCodeCategory: proposal.category },
+      where: { categoryId: proposal.categoryId },
       select: { id: true, difficulty: true },
     });
 
     const easyProblems = problems.filter((p) => p.difficulty === 'EASY');
     const mediumProblems = problems.filter((p) => p.difficulty === 'MEDIUM');
-    const hardProblems = problems.filter((p) => p.difficulty === 'HARD');
 
     // Selection logic: 1 Easy, 2 Mediums (fallback to Hard if not enough Mediums, or more Easy)
     const selectedProblems: typeof problems = [];
@@ -400,7 +401,7 @@ export class ChallengesService {
 
     if (selectedProblems.length === 0) {
       throw new BadRequestException(
-        `No problems found for category "${proposal.category}" to generate a challenge`,
+        `No problems found for category "${proposal.category.name}" to generate a challenge`,
       );
     }
 
@@ -408,8 +409,9 @@ export class ChallengesService {
     return this.create(
       groupId,
       {
-        name: proposal.title || `${proposal.category} Challenge`,
-        description: proposal.description || `Generated from proposal for ${proposal.category}`,
+        name: proposal.title || `${proposal.category.name} Challenge`,
+        description:
+          proposal.description || `Generated from proposal for ${proposal.category.name}`,
         dueDate: proposal.targetDate.toISOString(),
         problemIds: selectedProblems.map((p) => p.id),
       },

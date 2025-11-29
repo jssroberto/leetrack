@@ -10,7 +10,7 @@ export class CreateProposalDto {
   @ApiProperty({ example: 'Arrays & Hashing' })
   @IsString()
   @IsNotEmpty()
-  category: string;
+  categoryId: string;
 
   @ApiProperty({ example: 'Focus on 1D DP problems', required: false })
   @IsString()

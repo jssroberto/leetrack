@@ -65,7 +65,8 @@ model Problem {
   isPremium         Boolean             @default(false)
   isNeetCode150     Boolean             @default(false)
   isBlind75         Boolean             @default(false)
-  neetCodeCategory  String?
+  categoryId        String?             @db.Uuid
+  category          Category?           @relation(fields: [categoryId], references: [id])
   createdAt         DateTime            @default(now())
   updatedAt         DateTime            @updatedAt
   submissions       Submission[]
@@ -77,6 +78,17 @@ model Problem {
   @@index([slug])
   @@index([isNeetCode150])
   @@index([isBlind75])
+  @@index([categoryId])
+}
+
+model Category {
+  id        String              @id @default(uuid()) @db.Uuid
+  name      String              @unique
+  slug      String              @unique
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
+  problems  Problem[]
+  proposals ChallengeProposal[]
 }
 
 model Submission {
@@ -167,7 +179,7 @@ model ChallengeProposal {
   createdById String @db.Uuid
 
   title       String?
-  category    String?
+  categoryId  String?  @db.Uuid
   description String?
   targetDate  DateTime
 
@@ -176,9 +188,11 @@ model ChallengeProposal {
 
   group     Group          @relation(fields: [groupId], references: [id], onDelete: Cascade)
   createdBy User           @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  category  Category?      @relation(fields: [categoryId], references: [id])
   votes     ProposalVote[]
 
   @@index([groupId, targetDate])
+  @@index([categoryId])
 }
 
 model ProposalVote {

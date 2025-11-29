@@ -18,12 +18,38 @@ async function seedNeetCodeProblems() {
   console.log('🌱 Seeding NeetCode problems...\n');
 
   const problems = neetcodeData.problems as SeedProblem[];
+
+  // 1. Extract and seed categories
+  console.log('📦 Seeding Categories...');
+  const uniqueCategories = [...new Set(problems.map((p) => p.category))].filter(Boolean);
+  const categoryMap = new Map<string, string>(); // Name -> ID
+
+  for (const categoryName of uniqueCategories) {
+    const slug = categoryName
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '');
+
+    const category = await prisma.category.upsert({
+      where: { name: categoryName },
+      create: {
+        name: categoryName,
+        slug,
+      },
+      update: {},
+    });
+    categoryMap.set(categoryName, category.id);
+  }
+  console.log(`   Processed ${uniqueCategories.length} categories\n`);
+
   let created = 0;
   let updated = 0;
   let skipped = 0;
 
   for (const problem of problems) {
     try {
+      const categoryId = problem.category ? categoryMap.get(problem.category) : null;
+
       const result = await prisma.problem.upsert({
         where: { leetcodeId: problem.leetcodeId },
         create: {
@@ -35,7 +61,7 @@ async function seedNeetCodeProblems() {
           isPremium: problem.isPremium,
           isNeetCode150: problem.isNeetCode150,
           isBlind75: problem.isBlind75,
-          neetCodeCategory: problem.category,
+          categoryId,
         },
         update: {
           title: problem.title,
@@ -43,7 +69,7 @@ async function seedNeetCodeProblems() {
           isPremium: problem.isPremium,
           isNeetCode150: problem.isNeetCode150,
           isBlind75: problem.isBlind75,
-          neetCodeCategory: problem.category,
+          categoryId,
         },
       });
 

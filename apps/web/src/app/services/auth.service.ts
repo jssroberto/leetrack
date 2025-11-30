@@ -9,12 +9,18 @@ interface LoginResponse {
   expiresIn: number;
 }
 
-interface User {
+export interface User {
   id: string;
   email: string;
   leetcodeUsername?: string;
   createdAt: string;
   updatedAt: string;
+  role: Role;
+}
+
+export enum Role {
+  ADMIN, 
+  MEMBER
 }
 
 @Injectable({

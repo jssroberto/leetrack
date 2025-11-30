@@ -1,13 +1,13 @@
 <!-- Flex flex-col to use flex-1 -->
 <div class="w-screen h-screen flex flex-col p-[3vw] overflow-hidden gap-8">
     <nav class="flex justify-between w-full h-auto items-center">
-        <div class="flex gap-1 items-center text-[var(--secondary-color)] cursor-pointer">
+        <div class="flex gap-1 items-center text-[var(--secondary-color)] cursor-pointer" (click)="navigateTo('index')">
             <span class="font-family-roboto-slab-bold">Leetrack</span>
             <img src="/assets/icon/logo.svg" alt="" draggable="false" />
         </div>
-        @if (showMenuOptions()) {
         <div class="text-[var(--light)] flex items-center h-full">
             <ul class="flex gap-[3vw] items-center text-sm">
+                @if (showMenuOptions()) {
                 <li class="underline-offset-4 hover:underline hover:text-[var(--secondary-color)] cursor-pointer"
                     (click)="navigateTo('dashboard')" [ngClass]="{
                         'underline text-[var(--secondary-color)]': currentRouteValue === ('/main/dashboard')
@@ -34,17 +34,15 @@
                         'underline text-[var(--secondary-color)]': currentRouteValue === '/main/settings'
                      }">
                     Settings</li>
+                }
                 <li class="underline-offset-4 hover:underline hover:text-[var(--secondary-color)] cursor-pointer"
-                    (click)="navigateTo('group')" [ngClass]="{
-                        'underline text-[var(--secondary-color)]': currentRouteValue === '/main/group'
-                     }">
-                    Group</li>
+                    (click)="logout()">
+                    Log Out</li>
             </ul>
         </div>
-        }
         <div class="flex text-[var(--light)] cursor-pointer items-center">
             <div class="flex gap-2 items-center relative left-3">
-                <span class="font-family-roboto-slab">{{ user()?.leetcodeUsername || user()?.email || 'Guest' }}</span>
+                <span class="font-family-roboto-slab">{{ user?.leetcodeUsername || user?.email || 'Guest' }}</span>
                 <div class="bg-[var(--secondary-color)] rounded-4xl flex justify-center items-center size-8 z-1">
                     <!-- Margin right depends on level digits -->
                     <img src="/assets/svgs/user-icon.svg" alt="" draggable="false" />

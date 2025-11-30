@@ -1,0 +1,68 @@
+@if (currentGroup) {
+<main class="w-full h-full text-[var(--light)] flex flex-col gap-4">
+    <div class="w-full flex justify-between">
+        <div class="flex flex-col gap-2 justify-between">
+            <h1
+                class="text-center sm:text-start text-[var(--light)] text-[clamp(2rem,2vw,3rem)] font-family-roboto-slab-bold">
+                {{ currentGroup.name }}</h1>
+
+            <h2 class="text-[var(--gray)] text-sm flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                Creado el {{ currentGroup.createdAt | date:'longDate' }}
+            </h2>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <div
+                class="md:w-auto bg-[var(--surface)] px-4 py-4 rounded-md border border-[var(--dark-gray)] shadow-lg flex flex-col gap-2">
+                <span class="text-[var(--gray)] text-xs font-bold uppercase tracking-wider">Invite Code</span>
+                <div class="flex items-center gap-2">
+                    <code
+                        class="cursor-pointer text-[var(--secondary-color)] text-nowrap whitespace-nowrap font-mono text-xl font-bold tracking-widest bg-[rgba(0,0,0,0.2)] px-4 py-1 rounded-md select-all">
+                                {{ currentGroup.inviteCode }}
+                            </code>
+                    <button
+                        class="text-[var(--light)] cursor-pointer hover:text-white hover:bg-[var(--dark-gray)] p-2 rounded-md transition-all"
+                        title="Copiar código">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <app-basic-card [iconName]="'settings'" [color]="'var(--light)'" class="w-full h-full"
+                [size]="'36'"></app-basic-card>
+        </div>
+    </div>
+
+    <hr class="text-[var(--gray)]">
+
+    <div class="flex flex-col gap-6">
+        <h2 class="text-[var(--light)] text-2xl font-family-roboto-slab-bold flex items-center gap-3">
+            Team Members
+            <div
+                class="flex items-center justify-center bg-[var(--dark-gray)] text-[var(--gray)] text-sm rounded-full w-6 text-center aspect-square">
+                <span>
+                    {{ currentGroup.members.length }}
+                </span>
+            </div>
+        </h2>
+
+        <div class="flex flex-wrap gap-3">
+            <app-user-info [user]="admin" class="flex-[1_1_400px] "></app-user-info>
+
+            @for (member of currentGroup.members; track member.userId) {
+            <app-user-info [user]="member" class="flex-[1_1_400px] "></app-user-info>
+            }
+        </div>
+    </div>
+</main>
+}

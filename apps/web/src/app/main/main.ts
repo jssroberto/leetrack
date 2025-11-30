@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
-import { toSignal } from '@angular/core/rxjs-interop'; // <--- IMPORTANTE
-import { AuthService } from '../services/auth.service'; // <--- Importa tu servicio
+import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-main',
@@ -12,20 +12,23 @@ import { AuthService } from '../services/auth.service'; // <--- Importa tu servi
 })
 export class Main {
   private router = inject(Router);
-  private authService = inject(AuthService); // <--- Inyectar servicio
-
-  // Convertimos el Observable currentUser$ en una Signal de lectura
-  user = toSignal(this.authService.currentUser$); 
+  private authService = inject(AuthService);
 
   currentRoute = signal('');
-  
-  // Tu lógica existente...
-  showMenuOptions = computed(() => 
-    this.currentRoute().startsWith('/main/dashboard') || 
-    this.currentRoute().startsWith('/main/polling') || 
-    this.currentRoute().startsWith('/main/group') || 
-    this.currentRoute().startsWith('/main/log')
-  );
+
+  // falta validar con redirect, muchas rutas
+  showMenuOptions = computed(() => {
+    const route = this.currentRoute();
+
+    if (route.startsWith('/main/group') && route.includes('?')) {
+      return false;
+    }
+
+    return route.startsWith('/main/dashboard') ||
+      route.startsWith('/main/polling') ||
+      route.startsWith('/main/log') ||
+      route.startsWith('/main/group');
+  });
 
   constructor() {
     this.router.events.subscribe(() => {
@@ -42,5 +45,14 @@ export class Main {
 
   get currentRouteValue(): string {
     return this.currentRoute();
+  }
+
+  get user() {
+    return this.authService.getCurrentUser();
+  }
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }

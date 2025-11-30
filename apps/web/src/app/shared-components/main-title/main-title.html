@@ -2,11 +2,9 @@
     <h1 class="text-center sm:text-start text-[var(--light)] text-[clamp(2rem,2vw,3rem)] font-family-roboto-slab-bold">
         {{ title }}</h1>
     <div class="flex items-center gap-3">
-        <div
+        <div routerLink="/main/group/id"
             class="cursor-pointer hover:bg-[var(--dark-gray)] w-auto bg-[var(--dark)] whitespace-nowrap rounded-md shadow-[0_6px_6px_var(--shadow)] h-auto px-4">
             <h2 class="text-[clamp(2rem,2vw,3rem)] font-family-roboto-slab-bold">ITSON</h2>
         </div>
-        <app-basic-card [iconName]="'chevronDown'" [color]="'var(--light)'" class="w-full h-full"
-            [size]="'32'"></app-basic-card>
     </div>
 </div>

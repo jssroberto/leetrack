@@ -81,7 +81,7 @@ export class Login {
     this.authService.login(email, password).subscribe({
       next: () => {
         this.isLoading = false;
-        this.router.navigate(['/main/dashboard']);
+        this.router.navigate(['/main/index']);
       },
       error: (error) => {
         this.isLoading = false; 

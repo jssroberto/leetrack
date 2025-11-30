@@ -1,8 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject, tap } from 'rxjs';
+import { Observable, BehaviorSubject, tap, switchMap, map } from 'rxjs'; // <--- Importante: switchMap y map
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
+import { GroupsService, Group } from '@web/src/app/services/group.service'; // Asegúrate de importar Group interface
 
 interface LoginResponse {
   accessToken: string;
@@ -19,7 +20,7 @@ export interface User {
 }
 
 export enum Role {
-  ADMIN, 
+  ADMIN,
   MEMBER
 }
 
@@ -35,12 +36,13 @@ export class AuthService {
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasToken());
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
-  private httpClient = inject(HttpClient)
-  private router = inject(Router)
+  private httpClient = inject(HttpClient);
+  private router = inject(Router);
 
-  constructor() { }
+  constructor(
+    private groupsService: GroupsService
+  ) { }
 
-  // Se ejecuta al iniciar la aplicación
   async initialize(): Promise<void> {
     if (this.hasToken()) {
       this.loadCurrentUser();
@@ -54,7 +56,7 @@ export class AuthService {
     });
   }
 
-  login(email: string, password: string): Observable<LoginResponse> {
+  login(email: string, password: string): Observable<boolean> {
     return this.httpClient.post<LoginResponse>(`${this.authBaseUrl}/login`, {
       email,
       password
@@ -62,13 +64,20 @@ export class AuthService {
       tap(response => {
         this.setToken(response.accessToken);
         this.isAuthenticatedSubject.next(true);
-        this.loadCurrentUser();
+      }),
+      switchMap(() => this.httpClient.get<User>(`${this.authBaseUrl}/me`)),
+      tap(user => this.currentUserSubject.next(user)),
+      switchMap(() => this.groupsService.getMyGroups()),
+      map(groups => {
+        this.handleGroupSelection(groups);
+        return true; 
       })
     );
   }
 
   logout(): void {
     this.removeToken();
+    this.groupsService.clearSelectedGroup();
     this.currentUserSubject.next(null);
     this.isAuthenticatedSubject.next(false);
     this.router.navigate(['/login']);
@@ -78,17 +87,39 @@ export class AuthService {
     this.httpClient.get<User>(`${this.authBaseUrl}/me`).subscribe({
       next: (user) => {
         this.currentUserSubject.next(user);
+        this.autoSelectGroup();
       },
       error: (error) => {
-        // Solo cerrar sesión si el token es realmente inválido o expiró
         if (error.status === 401) {
           this.logout();
         }
-
-        // Si es error de conexión (0) o servidor (500), mantenemos la sesión local
         console.error('Error loading user:', error);
       }
     });
+  }
+
+  private autoSelectGroup(): void {
+    this.groupsService.getMyGroups().subscribe({
+      next: (groups) => this.handleGroupSelection(groups),
+      error: (err) => console.error('Error fetching groups for auto-select', err)
+    });
+  }
+
+  private handleGroupSelection(groups: any[]): void {
+    if (!groups || groups.length === 0) {
+      this.groupsService.clearSelectedGroup();
+      return;
+    }
+
+    const storedId = this.groupsService.getStoredGroupId();
+    
+    const isStoredValid = storedId && groups.some(g => g.id === storedId);
+
+    if (isStoredValid && storedId) {
+      this.groupsService.selectGroup(storedId);
+    } else {
+      this.groupsService.selectGroup(groups[0].id);
+    }
   }
 
   getCurrentUser(): User | null {

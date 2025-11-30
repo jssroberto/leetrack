@@ -1,4 +1,13 @@
-@if (currentGroup) {
+@if (isLoading()) {
+<div class="w-full h-full flex flex-col justify-center items-center gap-3 text-[var(--gray)] animate-pulse">
+    <!-- Puedes poner un spinner aquí si tienes uno -->
+    <svg class="animate-spin h-8 w-8 text-[var(--secondary-color)]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+    </svg>
+    <p class="text-lg font-family-roboto-slab">Loading group details...</p>
+</div>
+}@else if (currentGroup) {
 <main class="w-full h-full text-[var(--light)] flex flex-col gap-4">
     <div class="w-full flex justify-between">
         <div class="flex flex-col gap-2 justify-between">
@@ -45,22 +54,32 @@
 
     <hr class="text-[var(--gray)]">
 
+    <button (click)="copyInviteCode()"
+        class="text-[var(--light)] cursor-pointer hover:text-white hover:bg-[var(--dark-gray)] p-2 rounded-md transition-all"
+        title="Copiar código">
+        </button>
+
     <div class="flex flex-col gap-6">
         <h2 class="text-[var(--light)] text-2xl font-family-roboto-slab-bold flex items-center gap-3">
             Team Members
-            <div
-                class="flex items-center justify-center bg-[var(--dark-gray)] text-[var(--gray)] text-sm rounded-full w-6 text-center aspect-square">
+            <div class="flex items-center justify-center bg-[var(--dark-gray)] text-[var(--gray)] text-sm rounded-full w-6 text-center aspect-square">
                 <span>
-                    {{ currentGroup.members.length }}
+                    {{ (currentGroup?.members?.length || 0) }}
                 </span>
             </div>
         </h2>
 
-        <div class="flex flex-wrap gap-3">
-            <app-user-info [user]="admin" class="flex-[1_1_400px] "></app-user-info>
+        @if (isLoading()) {
+            <p class="text-[var(--gray)]">Loading members...</p>
+        }
 
-            @for (member of currentGroup.members; track member.userId) {
-            <app-user-info [user]="member" class="flex-[1_1_400px] "></app-user-info>
+        <div class="flex flex-wrap gap-3">
+            @if (adminMember) {
+                <app-user-info [user]="adminMember" class="flex-[1_1_400px] border border-[var(--secondary-color)]/50 rounded-lg"></app-user-info>
+            }
+
+            @for (member of otherMembers; track member.userId) {
+                <app-user-info [user]="member" class="flex-[1_1_400px]"></app-user-info>
             }
         </div>
     </div>

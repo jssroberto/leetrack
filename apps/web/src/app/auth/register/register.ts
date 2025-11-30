@@ -70,7 +70,7 @@ export class Register {
         this.authService.login(email, password).subscribe({
           next: () => {
             this.isLoading = false;
-            this.router.navigate(['/main/dashboard']);
+            this.router.navigate(['/main/index']);
           },
           error: (loginError) => {
             this.isLoading = false;

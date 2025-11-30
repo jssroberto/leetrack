@@ -9,11 +9,6 @@
             <ul class="flex gap-[3vw] items-center text-sm">
                 @if (showMenuOptions()) {
                 <li class="underline-offset-4 hover:underline hover:text-[var(--secondary-color)] cursor-pointer"
-                    (click)="navigateTo('dashboard')" [ngClass]="{
-                        'underline text-[var(--secondary-color)]': currentRouteValue === ('/main/dashboard')
-                     }">
-                    Dashboard</li>
-                <li class="underline-offset-4 hover:underline hover:text-[var(--secondary-color)] cursor-pointer"
                     (click)="navigateTo('leaderboard')" [ngClass]="{
                         'underline text-[var(--secondary-color)]': currentRouteValue === ('/main/leaderboard')
                      }">
@@ -42,7 +37,7 @@
         </div>
         <div class="flex text-[var(--light)] cursor-pointer items-center">
             <div class="flex gap-2 items-center relative left-3">
-                <span class="font-family-roboto-slab">{{ user?.leetcodeUsername || user?.email || 'Guest' }}</span>
+                <span class="font-family-roboto-slab">{{ user()?.leetcodeUsername || user()?.email }}</span>
                 <div class="bg-[var(--secondary-color)] rounded-4xl flex justify-center items-center size-8 z-1">
                     <!-- Margin right depends on level digits -->
                     <img src="/assets/svgs/user-icon.svg" alt="" draggable="false" />

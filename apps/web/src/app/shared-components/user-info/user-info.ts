@@ -1,7 +1,7 @@
 import { Component, inject, Input } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
-import { GroupData } from '../../main/operations/group/group-content/group-content';
+import { GroupData } from '../../main/operations/group-content/group-content';
 import { IconService } from '../../services/icon.service';
 import { LucideAngularModule } from "lucide-angular";
 

@@ -1,5 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard, publicGuard } from './guards/auth.guard';
+// Importa tus nuevos guards
+import { requireGroupGuard, alreadyHasGroupGuard } from './guards/group.guard'; 
 
 export const routes: Routes = [
   {
@@ -7,19 +9,9 @@ export const routes: Routes = [
     loadComponent: () => import('./auth/auth').then((m) => m.Auth),
     canActivate: [publicGuard],
     children: [
-      {
-        path: 'login',
-        loadComponent: () => import('./auth/login/login').then((m) => m.Login),
-      },
-      {
-        path: 'register',
-        loadComponent: () => import('./auth/register/register').then((m) => m.Register),
-      },
-      {
-        path: '',
-        redirectTo: 'login',
-        pathMatch: 'full',
-      },
+      { path: 'login', loadComponent: () => import('./auth/login/login').then((m) => m.Login) },
+      { path: 'register', loadComponent: () => import('./auth/register/register').then((m) => m.Register) },
+      { path: '', redirectTo: 'login', pathMatch: 'full' },
     ],
   },
   {
@@ -27,30 +19,29 @@ export const routes: Routes = [
     loadComponent: () => import('./main/main').then((m) => m.Main),
     canActivate: [authGuard],
     children: [
-      // Si ya tiene grupo te redirige a dashboard, a ver como se mete la condición aquí
       {
         path: 'index',
-        loadComponent: () => import('./main/index').then((m) => m.Index)
-      },
-      {
-        path: 'dashboard',
-        loadComponent: () => import('./main/operations/dashboard/dashboard').then((m) => m.Dashboard)
+        loadComponent: () => import('./main/index').then((m) => m.Index),
+        canActivate: [alreadyHasGroupGuard] 
       },
       {
         path: 'group',
         loadComponent: () => import('./main/operations/group/group').then((m) => m.Group),
       },
       {
-        path: 'group/:id',
-        loadComponent: () => import('./main/operations/group/group-content/group-content').then((m) => m.GroupContent)
+        path: 'group-content',
+        loadComponent: () => import('./main/operations/group-content/group-content').then((m) => m.GroupContent),
+        canActivate: [requireGroupGuard]
       },
       {
         path: 'polling',
-        loadComponent: () => import('./main/operations/polling/polling').then((m) => m.Polling)
+        loadComponent: () => import('./main/operations/polling/polling').then((m) => m.Polling),
+        canActivate: [requireGroupGuard] 
       },
       {
         path: 'log',
-        loadComponent: () => import('./main/operations/log/log').then((m) => m.Log)
+        loadComponent: () => import('./main/operations/log/log').then((m) => m.Log),
+        canActivate: [requireGroupGuard]
       },
       {
         path: '**',

@@ -6,52 +6,54 @@
 
 <main class="w-full h-full text-[var(--light)] flex flex-col gap-4">
     <div class="w-full flex justify-between flex-col">
-        <div class="w-full flex justify-between">
-            <h1
-                class="text-center sm:text-start text-[var(--light)] text-[clamp(2rem,2vw,3rem)] font-family-roboto-slab-bold">
-                {{ title }}</h1>
         </div>
-        <app-sub-title [subTitle]="subtitle">
-            <div></div>
-            <h4 class="text-sm">
-                or <span routerLink="/main/group" [queryParams]="{ operation: operation }"
-                    class="hover:text-[var(--secondary-color)] cursor-pointer font-family-roboto-slab-bold underline">{{
-                    decition }}</span>
-            </h4>
-        </app-sub-title>
-    </div>
+
+    @if (errorMessage) {
+        <div class="p-3 bg-red-500/20 border border-red-500 rounded text-red-200 text-sm">
+            {{ errorMessage }}
+        </div>
+    }
+
     <div class="flex flex-col gap-6 h-full w-full">
 
-        <!-- if params equal create -->
-        @if (currentFilterValue === 'create') {
+        @if (currentFilter() === 'create') {
         <div class="flex flex-col gap-5">
             <div class="flex gap-3">
-                <input type="text" placeholder="Ex: Python Wizards"
+                <input type="text" 
+                    placeholder="Ex: Python Wizards"
+                    [(ngModel)]="groupNameInput" 
+                    [disabled]="isLoading"
                     class="w-full focus:border-[var(--secondary-color)] border-1 border-transparent transition-all duration-200 outline-none shadow-[0_6px_6px_var(--shadow)] bg-[var(--dark)] placeholder:text-[var(--gray)] text-[var(--gray)] rounded-md px-5 py-4 text-sm">
+                
                 <div class="flex w-[20%] min-w-[120px] gap-2">
-                    <button routerLink="id"
-                        class="cursor-pointer w-full bg-[var(--secondary-color)] hover:bg-[var(--secondary-hover)] text-white py-3 rounded-md font-bold transition-colors shadow-lg">
-                        Create
+                    <button (click)="handleCreate()"
+                        [disabled]="isLoading || !groupNameInput"
+                        class="cursor-pointer w-full bg-[var(--secondary-color)] hover:bg-[var(--secondary-hover)] text-white py-3 rounded-md font-bold transition-colors shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
+                        {{ isLoading ? '...' : 'Create' }}
                     </button>
                     <button routerLink="/main/index"
                         class="cursor-pointer w-full px-4 py-3 rounded-md text-[var(--gray)] hover:bg-[var(--dark-gray)] hover:text-white transition-colors">
                         Cancel
                     </button>
-                </div>
+                    </div>
             </div>
         </div>
         }
 
-        @if (currentFilterValue === 'join') {
+        @if (currentFilter() === 'join') {
         <div class="flex flex-col gap-3">
             <div class="flex gap-3">
-                <input type="text" placeholder="Ex: A8F-9K2"
+                <input type="text" 
+                    placeholder="Ex: A8F-9K2"
+                    [(ngModel)]="inviteCodeInput"
+                    [disabled]="isLoading"
                     class="w-full focus:border-[var(--secondary-color)] border-1 border-transparent transition-all duration-200 outline-none shadow-[0_6px_6px_var(--shadow)] bg-[var(--dark)] placeholder:text-[var(--gray)] text-[var(--gray)] rounded-md px-5 py-4 text-sm">
 
                 <div class="flex w-[20%] min-w-[120px] gap-2">
-                    <button routerLink="id"
+                    <button (click)="handleJoin()"
+                        [disabled]="isLoading || !inviteCodeInput"
                         class="cursor-pointer w-full bg-[var(--secondary-color)] hover:bg-[var(--secondary-hover)] text-white py-3 rounded-md font-bold transition-colors shadow-lg">
-                        Join
+                        {{ isLoading ? '...' : 'Join' }}
                     </button>
                     <button routerLink="/main/index"
                         class="cursor-pointer w-full px-4 py-3 rounded-md text-[var(--gray)] hover:bg-[var(--dark-gray)] hover:text-white transition-colors">

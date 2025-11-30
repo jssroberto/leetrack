@@ -16,9 +16,12 @@ export class GroupsService {
   // Crea el grupo y asigna al creador como ADMIN en una sola operación atómica.
   // Además, devuelve la estructura completa con los miembros.
   async create(createGroupDto: CreateGroupDto, userId: string) {
+    const inviteCode = await this.generateUniqueInviteCode();
+
     return this.prisma.group.create({
       data: {
         name: createGroupDto.name,
+        inviteCode,
         // Aquí ocurre la magia de la relación:
         members: {
           create: {
@@ -43,6 +46,36 @@ export class GroupsService {
         },
       },
     });
+  }
+
+  private async generateUniqueInviteCode(): Promise<string> {
+    const maxRetries = 5;
+    let retries = 0;
+
+    while (retries < maxRetries) {
+      const part1 = this.generateRandomString(4);
+      const part2 = this.generateRandomString(4);
+      const code = `${part1}-${part2}`;
+
+      const existing = await this.prisma.group.findUnique({
+        where: { inviteCode: code },
+      });
+
+      if (!existing) {
+        return code;
+      }
+      retries++;
+    }
+    throw new BadRequestException('Failed to generate a unique invite code. Please try again.');
+  }
+
+  private generateRandomString(length: number): string {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
   }
 
   async findAll(userId: string) {

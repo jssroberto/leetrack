@@ -12,25 +12,36 @@ import { CreateGroupDto } from './dto/create-group.dto';
 export class GroupsService {
   constructor(private prisma: PrismaService) {}
 
-  // 1. CREATE: Optimizado con "Nested Write"
-  // Crea el grupo y asigna al creador como ADMIN en una sola operación atómica.
-  // Además, devuelve la estructura completa con los miembros.
   async create(createGroupDto: CreateGroupDto, userId: string) {
+    const existingGroup = await this.prisma.group.findFirst({
+      where: {
+        name: createGroupDto.name,
+        members: {
+          some: {
+            userId,
+            role: Role.ADMIN,
+          },
+        },
+      },
+    });
+
+    if (existingGroup) {
+      throw new BadRequestException('You already have a group with this name');
+    }
+
     const inviteCode = await this.generateUniqueInviteCode();
 
     return this.prisma.group.create({
       data: {
         name: createGroupDto.name,
         inviteCode,
-        // Aquí ocurre la magia de la relación:
         members: {
           create: {
             userId: userId,
-            role: Role.ADMIN, // El creador es Admin automáticamente
+            role: Role.ADMIN,
           },
         },
       },
-      // Importante: Incluimos los miembros en la respuesta para el Frontend
       include: {
         members: {
           include: {
@@ -39,7 +50,6 @@ export class GroupsService {
                 id: true,
                 email: true,
                 leetcodeUsername: true,
-                // NO incluimos passwordHash por seguridad
               },
             },
           },

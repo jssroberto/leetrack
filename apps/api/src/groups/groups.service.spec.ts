@@ -1,3 +1,4 @@
+import { Role } from '@leetrack/database';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '../prisma/prisma.service';
 import { GroupsService } from './groups.service';
@@ -10,6 +11,7 @@ describe('GroupsService', () => {
       create: jest.fn(),
       findUnique: jest.fn(),
       findMany: jest.fn(),
+      findFirst: jest.fn(),
     },
     userGroup: {
       create: jest.fn(),
@@ -45,6 +47,8 @@ describe('GroupsService', () => {
 
       // Mock findUnique to return null (no collision)
       mockPrismaService.group.findUnique.mockResolvedValue(null);
+      // Mock findFirst to return null (no existing group with same name)
+      mockPrismaService.group.findFirst.mockResolvedValue(null);
 
       const expectedGroup = {
         id: 'group-id',
@@ -93,6 +97,30 @@ describe('GroupsService', () => {
       await service.create(createGroupDto, userId);
 
       expect(mockPrismaService.group.findUnique).toHaveBeenCalledTimes(2);
+    });
+
+    it('should throw BadRequestException if user already has a group with the same name', async () => {
+      const createGroupDto = { name: 'Duplicate Group' };
+      const userId = 'user-id';
+
+      // Mock findFirst to return an existing group
+      mockPrismaService.group.findFirst.mockResolvedValue({ id: 'existing-group' });
+
+      await expect(service.create(createGroupDto, userId)).rejects.toThrow(
+        'You already have a group with this name',
+      );
+
+      expect(mockPrismaService.group.findFirst).toHaveBeenCalledWith({
+        where: {
+          name: createGroupDto.name,
+          members: {
+            some: {
+              userId,
+              role: Role.ADMIN,
+            },
+          },
+        },
+      });
     });
   });
 });

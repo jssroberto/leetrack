@@ -17,9 +17,7 @@ export class UserInfo {
 
   @Input() user!: GroupData['members'][0];
 
-  get currentUser() {
-    return this.authService.getCurrentUser();
-  }
+  currentUser = this.authService.currentUser;
 
   get dots() {
     return this.iconService.iconsMap['ellipsis-vertical'];

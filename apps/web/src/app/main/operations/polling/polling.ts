@@ -53,6 +53,6 @@ export class Polling {
   }
 
   get subtitleText(): string {
-    return this.currentFilterValue === 'all' ? 'Problems' : 'My Proposals';
+    return this.currentFilterValue === 'all' ? 'Proposed Problems' : 'My Proposals';
   }
 }

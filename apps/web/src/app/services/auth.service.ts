@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, tap, switchMap, map } from 'rxjs'; // <--- Importante: switchMap y map
 import { Router } from '@angular/router';
@@ -30,8 +30,8 @@ export enum Role {
 export class AuthService {
   private authBaseUrl = `${environment.apiBaseUrl}/auth`;
 
-  private currentUserSubject = new BehaviorSubject<User | null>(null);
-  public currentUser$ = this.currentUserSubject.asObservable();
+  private currentUserSubject = signal<User | null>(null);
+  public currentUser = this.currentUserSubject.asReadonly();
 
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasToken());
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
@@ -66,11 +66,11 @@ export class AuthService {
         this.isAuthenticatedSubject.next(true);
       }),
       switchMap(() => this.httpClient.get<User>(`${this.authBaseUrl}/me`)),
-      tap(user => this.currentUserSubject.next(user)),
+      tap(user => this.currentUserSubject.set(user)),
       switchMap(() => this.groupsService.getMyGroups()),
       map(groups => {
         this.handleGroupSelection(groups);
-        return true; 
+        return true;
       })
     );
   }
@@ -78,7 +78,7 @@ export class AuthService {
   logout(): void {
     this.removeToken();
     this.groupsService.clearSelectedGroup();
-    this.currentUserSubject.next(null);
+    this.currentUserSubject.set(null);
     this.isAuthenticatedSubject.next(false);
     this.router.navigate(['/login']);
   }
@@ -86,7 +86,7 @@ export class AuthService {
   loadCurrentUser(): void {
     this.httpClient.get<User>(`${this.authBaseUrl}/me`).subscribe({
       next: (user) => {
-        this.currentUserSubject.next(user);
+        this.currentUserSubject.set(user);
         this.autoSelectGroup();
       },
       error: (error) => {
@@ -112,7 +112,7 @@ export class AuthService {
     }
 
     const storedId = this.groupsService.getStoredGroupId();
-    
+
     const isStoredValid = storedId && groups.some(g => g.id === storedId);
 
     if (isStoredValid && storedId) {
@@ -120,10 +120,6 @@ export class AuthService {
     } else {
       this.groupsService.selectGroup(groups[0].id);
     }
-  }
-
-  getCurrentUser(): User | null {
-    return this.currentUserSubject.value;
   }
 
   private setToken(token: string): void {

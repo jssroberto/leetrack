@@ -10,23 +10,23 @@
                 @if (showMenuOptions()) {
                 <li class="underline-offset-4 hover:underline hover:text-[var(--secondary-color)] cursor-pointer"
                     (click)="navigateTo('leaderboard')" [ngClass]="{
-                        'underline text-[var(--secondary-color)]': currentRouteValue === ('/main/leaderboard')
+                        'underline text-[var(--secondary-color)]': currentRoute() === ('/main/leaderboard')
                      }">
                     Leaderboard</li>
                 <li class="underline-offset-4 hover:underline hover:text-[var(--secondary-color)] cursor-pointer"
                     (click)="navigateTo('log')" [ngClass]="{
-                        'underline text-[var(--secondary-color)]': currentRouteValue === ('/main/log')
+                        'underline text-[var(--secondary-color)]': currentRoute() === ('/main/log')
                      }">
                     Log</li>
                 <li class="underline-offset-4 hover:underline hover:text-[var(--secondary-color)] cursor-pointer"
                     (click)="navigateTo('polling', { filter: 'all' })" [ngClass]="{
-                    'underline text-[var(--secondary-color)]': currentRouteValue.startsWith('/main/polling')
+                    'underline text-[var(--secondary-color)]': currentRoute().startsWith('/main/polling')
                     }">
                     Polling
                 </li>
                 <li class="underline-offset-4 hover:underline hover:text-[var(--secondary-color)] cursor-pointer"
                     (click)="navigateTo('settings')" [ngClass]="{
-                        'underline text-[var(--secondary-color)]': currentRouteValue === '/main/settings'
+                        'underline text-[var(--secondary-color)]': currentRoute() === '/main/settings'
                      }">
                     Settings</li>
                 }

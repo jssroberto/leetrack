@@ -1,32 +1,28 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { Router, RouterOutlet, NavigationEnd, Event } from '@angular/router';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { AuthService } from '../services/auth.service';
-import { filter } from 'rxjs/operators';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-main',
-  standalone: true, // Asumo que es standalone por tu código anterior
+  standalone: true,
   imports: [RouterOutlet, CommonModule],
   templateUrl: './main.html',
   styleUrl: './main.css'
 })
 export class Main {
+  private destroyRef = inject(DestroyRef);
   private router = inject(Router);
   private authService = inject(AuthService);
 
-  // CORRECCIÓN 1: Usamos toSignal para reactividad inmediata.
-  // Escucha el Observable del servicio y actualiza la vista automáticamente.
-  user = toSignal(this.authService.currentUser$);
-
-  // Inicializamos con la URL actual para evitar estado vacío al recargar
   currentRoute = signal(this.router.url);
+  user = this.authService.currentUser;
 
   showMenuOptions = computed(() => {
     const route = this.currentRoute();
 
-    // Tu lógica original de ocultar menú en subrutas de 'group' con parámetros
     if (route.startsWith('/main/group') && route.includes('?')) {
       return false;
     }
@@ -38,12 +34,13 @@ export class Main {
   });
 
   constructor() {
-    // CORRECCIÓN 2: Filtrar eventos
-    // Solo actualizamos la señal cuando la navegación ha terminado exitosamente.
+    // Se suscribe al router para actualizar la ruta cuando cambia
     this.router.events
-      .pipe(filter((event: Event): event is NavigationEnd => event instanceof NavigationEnd))
-      .subscribe((event: NavigationEnd) => {
-        // Usamos urlAfterRedirects para mayor precisión si hubo redirecciones
+      .pipe(
+        filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe((event) => {
         this.currentRoute.set(event.urlAfterRedirects);
       });
   }
@@ -55,14 +52,7 @@ export class Main {
     });
   }
 
-  // Getter auxiliar para el template (opcional, pero ayuda si usas currentRouteValue en el HTML)
-  get currentRouteValue(): string {
-    return this.currentRoute();
-  }
-
   logout() {
     this.authService.logout();
-    // La redirección a /login ya la hace el servicio, pero no hace daño dejarla aquí
-    // o confiar en el servicio.
   }
 }

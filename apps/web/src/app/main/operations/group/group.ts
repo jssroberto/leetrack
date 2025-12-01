@@ -17,33 +17,30 @@ export class Group {
   private router = inject(Router);
   private groupsService = inject(GroupsService);
 
-  // Variables para los inputs (ngModel)
   groupNameInput: string = '';
   inviteCodeInput: string = '';
-  
+
   isLoading = false;
   errorMessage = '';
 
-  currentFilter = signal<string>('create'); // Valor por defecto
+  currentFilter = signal<string>('create');
 
   constructor() {
     this.route.queryParams.subscribe(params => {
-      // Si no hay params, defaults a 'create'
       this.currentFilter.set(params['operation'] || 'create');
-      this.errorMessage = ''; // Limpiar errores al cambiar de tab
+      this.errorMessage = '';
     });
   }
 
   // Lógica para Crear
   handleCreate() {
     if (!this.groupNameInput.trim()) return;
-    
+
     this.isLoading = true;
     this.groupsService.createGroup(this.groupNameInput).subscribe({
       next: (group) => {
         this.isLoading = false;
-        // Navegar al dashboard del grupo creado
-        this.router.navigate(['/main/operations/group-content/group-content', group.id]); 
+        this.router.navigate(['/main/operations/group-content/group-content', group.id]);
       },
       error: (err) => {
         this.isLoading = false;
@@ -61,7 +58,6 @@ export class Group {
     this.groupsService.joinGroup(this.inviteCodeInput).subscribe({
       next: (group) => {
         this.isLoading = false;
-        // Navegar al dashboard del grupo unido
         this.router.navigate(['/main/operations/group-content/group-content', group.id]);
       },
       error: (err) => {
@@ -72,11 +68,10 @@ export class Group {
     });
   }
 
-  // ... tus getters existentes (subtitle, title, etc.) se quedan igual
   get subtitle(): string {
     return this.currentFilter() === 'create' ? 'Create a new group to get started' : 'Join a group to get started';
   }
-  
+
   get decition(): string {
     return this.currentFilter() === 'create' ? 'Join a Group' : 'Create a Group';
   }

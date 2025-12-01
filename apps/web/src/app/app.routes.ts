@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard, publicGuard } from './guards/auth.guard';
 // Importa tus nuevos guards
-import { requireGroupGuard, alreadyHasGroupGuard } from './guards/group.guard'; 
+import { requireGroupGuard, alreadyHasGroupGuard } from './guards/group.guard';
 
 export const routes: Routes = [
   {
@@ -22,7 +22,7 @@ export const routes: Routes = [
       {
         path: 'index',
         loadComponent: () => import('./main/index').then((m) => m.Index),
-        canActivate: [alreadyHasGroupGuard] 
+        canActivate: [alreadyHasGroupGuard]
       },
       {
         path: 'group',
@@ -36,7 +36,7 @@ export const routes: Routes = [
       {
         path: 'polling',
         loadComponent: () => import('./main/operations/polling/polling').then((m) => m.Polling),
-        canActivate: [requireGroupGuard] 
+        canActivate: [requireGroupGuard]
       },
       {
         path: 'log',

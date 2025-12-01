@@ -11,6 +11,9 @@ class BackgroundService {
   async init(): Promise<void> {
     this.setupMessageListeners();
     this.startPeriodicSync();
+    this.syncActiveProblems().catch((error) => {
+      Logger.error('Initial active problems sync failed', error);
+    });
     Logger.log('Service worker initialized');
   }
 
@@ -132,9 +135,24 @@ class BackgroundService {
       this.syncPendingSubmissions().catch((error) => {
         Logger.error('Periodic sync failed', error);
       });
+      this.syncActiveProblems().catch((error) => {
+        Logger.error('Active problems sync failed', error);
+      });
     }, FIVE_MINUTES) as unknown as number;
 
     Logger.log('Periodic sync started (5 min interval)');
+  }
+
+  private async syncActiveProblems(): Promise<void> {
+    const token = await this.storage.getAuthToken();
+    if (!token) return;
+
+    const isExpired = await this.storage.isTokenExpired();
+    if (isExpired) return;
+
+    const problems = await this.apiClient.getActiveChallengeProblems(token);
+    await this.storage.saveActiveProblems(problems);
+    Logger.log(`Synced ${problems.length} active challenge problems`);
   }
 
   private async notifyUser(submission: SubmissionData, status: 'synced' | 'queued'): Promise<void> {

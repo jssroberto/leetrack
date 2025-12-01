@@ -75,3 +75,13 @@ export interface LeetCodeSubmissionDetail {
   };
   timestamp: number;
 }
+
+export interface ActiveChallengeProblem {
+  id: string;
+  leetcodeId: number;
+  slug: string;
+  title: string;
+  difficulty: string;
+  challengeId: string;
+  groupId: string;
+}

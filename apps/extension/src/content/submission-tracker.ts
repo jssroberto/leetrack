@@ -1,6 +1,7 @@
 import { injectNetworkInterceptor } from '@extension/content/injector';
 import type { ExtensionMessage, SubmissionData } from '@extension/types/leetcode';
 import { Logger } from '@extension/utils/logger';
+import { StorageManager } from '@extension/utils/storage';
 import { ConfidenceModal } from './confidence-modal';
 
 const MESSAGE_SOURCE = 'leetrack';
@@ -107,6 +108,21 @@ class SubmissionTracker {
     const age = Date.now() - submission.timestamp;
     if (age > MAX_SUBMISSION_AGE) {
       Logger.debug('Ignoring old submission', { slug, age });
+      return;
+    }
+
+    // Check if problem is part of an active challenge
+    const storage = new StorageManager();
+    const activeProblems = await storage.getActiveProblems();
+    const isActive = activeProblems.some(
+      (p: import('@extension/types/leetcode').ActiveChallengeProblem) =>
+        p.slug === submission.titleSlug ||
+        p.leetcodeId === submission.questionId ||
+        p.title === submission.questionTitle,
+    );
+
+    if (!isActive) {
+      Logger.log('Ignoring submission: not part of any active challenge', submission.titleSlug);
       return;
     }
 

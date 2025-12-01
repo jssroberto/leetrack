@@ -8,6 +8,7 @@ export class StorageManager {
     SUBMISSIONS: 'leetrack_submissions',
     PENDING_SYNC: 'leetrack_pending_sync',
     LAST_SYNC: 'leetrack_last_sync',
+    ACTIVE_PROBLEMS: 'leetrack_active_problems',
   } as const;
 
   async getAuthToken(): Promise<string | null> {
@@ -113,6 +114,23 @@ export class StorageManager {
   async setLastSync(timestamp: number): Promise<void> {
     await chrome.storage.local.set({
       [this.KEYS.LAST_SYNC]: timestamp,
+    });
+  }
+
+  async getActiveProblems(): Promise<import('@extension/types/leetcode').ActiveChallengeProblem[]> {
+    const data = await chrome.storage.local.get(this.KEYS.ACTIVE_PROBLEMS);
+    return (
+      (data[this.KEYS.ACTIVE_PROBLEMS] as
+        | import('@extension/types/leetcode').ActiveChallengeProblem[]
+        | undefined) || []
+    );
+  }
+
+  async saveActiveProblems(
+    problems: import('@extension/types/leetcode').ActiveChallengeProblem[],
+  ): Promise<void> {
+    await chrome.storage.local.set({
+      [this.KEYS.ACTIVE_PROBLEMS]: problems,
     });
   }
 }

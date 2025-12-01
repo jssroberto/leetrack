@@ -86,4 +86,27 @@ export class ApiClient {
       return false;
     }
   }
+
+  async getActiveChallengeProblems(
+    token: string,
+  ): Promise<import('@extension/types/leetcode').ActiveChallengeProblem[]> {
+    try {
+      const response = await fetch(`${this.baseURL}/users/me/active-challenge-problems`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`API error: ${response.statusText}`);
+      }
+
+      return (await response.json()) as import('@extension/types/leetcode').ActiveChallengeProblem[];
+    } catch (error) {
+      Logger.error('Failed to fetch active challenge problems', error);
+      return [];
+    }
+  }
 }

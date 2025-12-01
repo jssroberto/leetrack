@@ -22,6 +22,7 @@ apps/api/dist/
 apps/web/dist/
 apps/web/.angular/
 apps/web/tmp/
+apps/web/src/environments/environment.ts
 
 # Browser extension
 apps/extension/dist/

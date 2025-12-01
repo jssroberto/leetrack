@@ -142,8 +142,6 @@ export class GroupsService {
 
   // 2. JOIN: Optimizado para devolver el grupo actualizado
   async join(inviteCode: string, userId: string) {
-    console.log(inviteCode);
-
     const group = await this.prisma.group.findUnique({
       where: { inviteCode },
     });

@@ -1,39 +1,27 @@
-<app-auth-section
-  [title]="'Log In'"
-  [text]="`Don't have an account?`"
-  [textLink]="'Sign up'"
-  [link]="'register'"
-  [formGroup]="loginForm"
-  [onSubmit]="onSubmit"
-  [buttonText]="'Log In'"
-  [isLoading]="isLoading"
-  [errorMessage]="errorMessage"
->
-    <!-- Email -->
-    <div>
-      <input
-        type="email"
-        formControlName="email"
-        placeholder="Enter your email"
-        class="w-full focus:border-[var(--secondary-color)] border-1 border-transparent transition-all duration-200 outline-none shadow-[0_6px_6px_var(--shadow)] bg-[var(--dark)] placeholder:text-[var(--gray)] text-[var(--gray)] rounded-md px-5 py-4 text-sm"
-        [class.border-red-500]="hasError('email')"
-      />
-      <p *ngIf="hasError('email')" class="text-red-500 text-xs mt-1">
-        {{ getErrorMessage('email') }}
-      </p>
-    </div>
+<app-auth-section [title]="'Log In'" [text]="`Don't have an account?`" [textLink]="'Sign up'" [link]="'register'"
+  [formGroup]="loginForm" [onSubmit]="onSubmit" [buttonText]="'Log In'" [errorMessage]="errorMessage">
 
-    <!-- Password -->
-    <div>
-      <input
-        type="password"
-        formControlName="password"
-        placeholder="Enter your password"
-        class="w-full focus:border-[var(--secondary-color)] border-1 border-transparent transition-all duration-200 outline-none shadow-[0_6px_6px_var(--shadow)] bg-[var(--dark)] placeholder:text-[var(--gray)] text-[var(--gray)] rounded-md px-5 py-4 text-sm"
-        [class.border-red-500]="hasError('password')"
-      />
-      <p *ngIf="hasError('password')" class="text-red-500 text-xs mt-1">
-        {{ getErrorMessage('password') }}
-      </p>
-    </div>
+  <!-- Email -->
+  <div>
+    <input type="email" formControlName="email" placeholder="Enter your email"
+      class="w-full focus:border-[var(--secondary-color)] border-1 border-transparent transition-all duration-200 outline-none shadow-[0_6px_6px_var(--shadow)] bg-[var(--dark)] placeholder:text-[var(--gray)] text-[var(--gray)] rounded-md px-5 py-4 text-sm"
+      [class.border-red-500]="hasError('email')" />
+    @if (hasError('email')) {
+    <p class="text-red-500 text-xs mt-1">
+      {{ getErrorMessage('email') }}
+    </p>
+    }
+  </div>
+
+  <!-- Password -->
+  <div>
+    <input type="password" formControlName="password" placeholder="Enter your password"
+      class="w-full focus:border-[var(--secondary-color)] border-1 border-transparent transition-all duration-200 outline-none shadow-[0_6px_6px_var(--shadow)] bg-[var(--dark)] placeholder:text-[var(--gray)] text-[var(--gray)] rounded-md px-5 py-4 text-sm"
+      [class.border-red-500]="hasError('password')" />
+    @if (hasError('password')) {
+    <p class="text-red-500 text-xs mt-1">
+      {{ getErrorMessage('password') }}
+    </p>
+    }
+  </div>
 </app-auth-section>

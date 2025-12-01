@@ -15,7 +15,6 @@ import { AuthService } from '../../services/auth.service';
 export class Login {
   loginForm: FormGroup;
   errorMessage: string = '';
-  isLoading: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -75,17 +74,13 @@ export class Login {
       return;
     }
 
-    this.isLoading = true;
     const { email, password } = this.loginForm.value;
 
     this.authService.login(email, password).subscribe({
       next: () => {
-        this.isLoading = false;
         this.router.navigate(['/main/index']);
       },
       error: (error) => {
-        this.isLoading = false; 
-
         if (error.status === 0) {
           this.errorMessage = 'Cannot connect to server. Please verify the backend is running.';
         } else if (error.status === 401) {
@@ -98,9 +93,6 @@ export class Login {
 
         console.error('Login error:', error);
       },
-      complete: () => {
-        this.isLoading = false;
-      }
     });
   }
 }

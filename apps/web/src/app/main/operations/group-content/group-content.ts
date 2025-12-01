@@ -29,16 +29,6 @@ export class GroupContent implements OnInit {
   public submissions$ = this.submissionsService.mySubmissions$;
   public isLoadingSubmissions$ = this.submissionsService.isLoading$;
 
-  adminMember = computed(() => {
-    const group = this.currentGroup();
-    return group?.members.find(m => m.role === 'ADMIN') || null;
-  });
-
-  otherMembers = computed(() => {
-    const group = this.currentGroup();
-    return group?.members.filter(m => m.role !== 'ADMIN') || [];
-  });
-
   ngOnInit() {
     // Solo carga submissions, el grupo ya está cargado por el servicio
     this.submissionsService.loadMySubmissions();

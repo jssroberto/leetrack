@@ -107,14 +107,8 @@
         </h2>
 
         <div class="flex flex-wrap gap-3">
-            @if (adminMember(); as admin) {
-            <app-user-info [user]="admin" class="flex-[1_1_400px] border border-[var(--secondary-color)]/50 rounded-lg">
-            </app-user-info>
-            }
-
-            @for (member of otherMembers(); track member.userId) {
-            <app-user-info [user]="member" class="flex-[1_1_400px]">
-            </app-user-info>
+            @for (member of currentGroup()?.members; track $index) {
+            <app-user-info [user]="member" class="flex-[1_1_400px]"></app-user-info>
             }
         </div>
     </div>

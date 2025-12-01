@@ -57,7 +57,7 @@
 
                 <div class="flex w-[20%] min-w-[120px] gap-2">
                     <button (click)="handleJoin()" [disabled]="isLoading || !inviteCodeInput"
-                        class="cursor-pointer w-full bg-[var(--secondary-color)] hover:bg-[var(--secondary-hover)] text-white py-3 rounded-md font-bold transition-colors shadow-lg">
+                        class="cursor-pointer w-full bg-[var(--secondary-color)] hover:bg-[var(--secondary-hover)] text-white py-3 rounded-md font-bold transition-colors shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
                         {{ isLoading ? '...' : 'Join' }}
                     </button>
                     <button routerLink="/main/index"

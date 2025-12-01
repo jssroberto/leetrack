@@ -52,7 +52,7 @@ export class GroupsService {
   // Cargar datos del grupo actual
   private loadGroupData(groupId: string): void {
     this.isLoadingSubject.set(true);
-    
+
     this.http.get<any>(`${this.apiUrl}/${groupId}`).subscribe({
       next: (backendData) => {
         const group = this.mapBackendDataToGroup(backendData);
@@ -94,7 +94,7 @@ export class GroupsService {
   }
 
   joinGroup(inviteCode: string): Observable<Group> {
-    return this.http.post<Group>(`${this.apiUrl}/join`, { inviteCode }).pipe(
+    return this.http.post<Group>(`${this.apiUrl}/join/${inviteCode}`, {}).pipe(
       tap(group => this.selectGroup(group.id))
     );
   }

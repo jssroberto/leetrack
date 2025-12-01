@@ -1,9 +1,9 @@
 import { Component, inject, Input } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
-import { GroupData } from '../../main/operations/group-content/group-content';
 import { IconService } from '../../services/icon.service';
 import { LucideAngularModule } from "lucide-angular";
+import { Group } from '../../services/group.service';
 
 @Component({
   selector: 'app-user-info',
@@ -15,7 +15,7 @@ export class UserInfo {
   private authService = inject(AuthService);
   private iconService = inject(IconService);
 
-  @Input() user!: GroupData['members'][0];
+  @Input() user!: Group['members'][0];
 
   currentUser = this.authService.currentUser;
 

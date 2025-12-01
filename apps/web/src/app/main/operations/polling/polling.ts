@@ -4,10 +4,10 @@ import { MainTitle } from "@web/src/app/shared-components/main-title/main-title"
 import { SubTitle } from "@web/src/app/shared-components/sub-title/sub-title";
 import { LucideAngularModule } from "lucide-angular";
 import { VotingBasicCard } from "@web/src/app/shared-components/complex-components/voting-basic-card/voting-basic-card";
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { ProblemsService } from '@web/src/app/services/problem.service'; // <--- Importar servicio
-import { toSignal } from '@angular/core/rxjs-interop'; // <--- Importar toSignal
+import { ProblemsService } from '@web/src/app/services/problem.service';
+import { AuthService } from '@web/src/app/services/auth.service';
 
 @Component({
   selector: 'app-polling',
@@ -19,17 +19,17 @@ export class Polling {
   private iconService = inject(IconService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
-  private problemsService = inject(ProblemsService); // <--- Inyectar
+  private problemsService = inject(ProblemsService);
+  private authService = inject(AuthService);
 
   currentRoute = signal('');
   currentFilter = signal<string>('all');
 
-  // Convertimos el observable del servicio en una Signal para usarla fácil en el HTML
-  // initialValue: [] evita errores mientras cargan los datos
-  problems = toSignal(this.problemsService.problems$, { initialValue: [] });
+  user = this.authService.currentUser;
+
+  problems = this.problemsService.problems;
 
   constructor() {
-    // Cargar los problemas al iniciar el componente
     this.problemsService.loadProblems();
 
     this.route.queryParams.subscribe(params => {

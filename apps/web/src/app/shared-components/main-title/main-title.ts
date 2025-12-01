@@ -1,5 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { RouterLink } from "@angular/router";
+import { AuthService } from '../../services/auth.service';
+import { GroupsService } from '../../services/group.service';
 
 @Component({
   selector: 'app-main-title',
@@ -8,6 +10,12 @@ import { RouterLink } from "@angular/router";
   styleUrl: './main-title.css'
 })
 export class MainTitle {
+  private authService = inject(AuthService);
+  private groupsService = inject(GroupsService);
+
   @Input() title!: string;
-  @Input() subTitle!: string;
+
+  user = this.authService.currentUser;
+  currentGroup = this.groupsService.currentGroup;
+  isLoadingGroup = this.groupsService.isLoading;
 }

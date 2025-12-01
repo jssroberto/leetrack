@@ -1,17 +1,14 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, map, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 export interface Problem {
-  id: string; 
-  
+  id: string;
   leetcodeId: number;
   slug: string;
   title: string;
-  difficulty: 'EASY' | 'MEDIUM' | 'HARD'; 
+  difficulty: 'EASY' | 'MEDIUM' | 'HARD';
   category: string;
-  
   isNeetCode150: boolean;
   isBlind75: boolean;
   isPremium: boolean;
@@ -22,53 +19,47 @@ export interface Problem {
 })
 export class ProblemsService {
   private apiUrl = `${environment.apiBaseUrl}/problems`;
-
-  // 1. Estado Global de Problemas
-  private problemsSubject = new BehaviorSubject<Problem[]>([]);
-  public problems$ = this.problemsSubject.asObservable();
-
-  // 2. Estado de Carga
-  private isLoadingSubject = new BehaviorSubject<boolean>(false);
-  public isLoading$ = this.isLoadingSubject.asObservable();
-
   private httpClient = inject(HttpClient);
 
-  constructor() {}
+  private problemsSubject = signal<Problem[]>([]);
+  private isLoadingSubject = signal<boolean>(false);
 
-  /**
-   * Carga todos los problemas del backend
-   */
+  public readonly problems = this.problemsSubject.asReadonly();
+  public readonly isLoading = this.isLoadingSubject.asReadonly();
+
+  // Computed signals para listas filtradas
+  public readonly blind75 = computed(() =>
+    this.problemsSubject().filter(p => p.isBlind75)
+  );
+
+  public readonly neetCode150 = computed(() =>
+    this.problemsSubject().filter(p => p.isNeetCode150)
+  );
+
   loadProblems(): void {
-
-    this.isLoadingSubject.next(true);
+    this.isLoadingSubject.set(true);
 
     this.httpClient.get<Problem[]>(this.apiUrl).subscribe({
       next: (data) => {
-        this.problemsSubject.next(data);
-        this.isLoadingSubject.next(false);
+        this.problemsSubject.set(data);
+        this.isLoadingSubject.set(false);
       },
       error: (err) => {
         console.error('Error al cargar problemas:', err);
-        this.isLoadingSubject.next(false);
+        this.isLoadingSubject.set(false);
       }
     });
   }
 
-  getProblem(id: string): Observable<Problem | undefined> {
-    return this.problems$.pipe(
-      map(problems => problems.find(p => p.id === id || p.slug === id))
-    );
+  // Método síncrono que retorna el valor directamente
+  getProblem(id: string): Problem | undefined {
+    return this.problemsSubject().find(p => p.id === id || p.slug === id);
   }
 
-  getBlind75(): Observable<Problem[]> {
-    return this.problems$.pipe(
-      map(problems => problems.filter(p => p.isBlind75))
-    );
-  }
-
-  getNeetCode150(): Observable<Problem[]> {
-    return this.problems$.pipe(
-      map(problems => problems.filter(p => p.isNeetCode150))
+  // computed signal
+  getProblemSignal(id: string) {
+    return computed(() =>
+      this.problemsSubject().find(p => p.id === id || p.slug === id)
     );
   }
 }

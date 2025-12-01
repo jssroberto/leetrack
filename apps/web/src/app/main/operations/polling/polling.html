@@ -145,25 +145,18 @@
     </div>
 
     <div class="flex flex-wrap gap-3 overflow-auto scrollbar-hide h-full justify-start items-start content-start">
-        
+
         @for (item of problems(); track item.leetcodeId; let i = $index) {
-            
-            <app-voting-basic-card 
-                class="flex-[1_1_500px] max-w-full" 
-                [rank]="(i + 1).toString()" 
-                [user]="'System'"
-                [problem]="item.title" 
-                [number]="item.leetcodeId.toString()" 
-                [difficulty]="item.difficulty"
-                [size]="'16'" 
-                [iconWidth]="'1'" 
-                [isProposing]="true">
-            </app-voting-basic-card>
+
+        <app-voting-basic-card class="flex-[1_1_500px] max-w-full" [rank]="(i + 1).toString()" [user]="'System'"
+            [problem]="item.title" [number]="item.leetcodeId.toString()" [difficulty]="item.difficulty" [size]="'16'"
+            [iconWidth]="'1'" [isProposing]="true">
+        </app-voting-basic-card>
 
         } @empty {
-            <div class="w-full text-center text-[var(--gray)] mt-10">
-                Loading problems...
-            </div>
+        <div class="w-full text-center text-[var(--gray)] mt-10">
+            Loading problems...
+        </div>
         }
 
     </div>

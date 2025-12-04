@@ -1,6 +1,7 @@
 <main class="w-full h-full text-[var(--light)] flex flex-col gap-4">
     <div class="w-full flex justify-between flex-col">
         <app-main-title class="flex flex-col" [title]="'Log'"></app-main-title>
+        
         <app-sub-title [subTitle]="'Recent activities'">
             <div class="flex gap-2 items-center px-4 shadow-[0_6px_6px_var(--shadow)] bg-[var(--dark)] rounded-full w-[20vw] min-w-[250px] 
             transition-all duration-200 
@@ -10,15 +11,15 @@
                     [color]="'var(--gray)'"></lucide-icon>
 
                 <input type="search"
+                    (input)="onSearch($event)" 
                     class="bg-transparent focus:outline-none border-none text-xs py-3 text-[var(--gray)] w-full placeholder:text-[var(--gray)]"
-                    placeholder="Search member">
+                    placeholder="Search member or problem">
             </div>
+
             <ul class="flex gap-5 text-xs">
                 <li class="cursor-pointer">
                     <div class="flex items-center gap-2">
-                        <span>
-                            Date
-                        </span>
+                        <span>Date</span>
                         <lucide-icon [img]="getIcon('chevronDown')" class="my-icon" [size]="'16'"
                             [strokeWidth]="'2'"></lucide-icon>
                     </div>
@@ -27,28 +28,22 @@
         </app-sub-title>
     </div>
 
-    <div class="flex flex-col gap-3 overflow-auto scrollbar-hide">
-        <app-log-card time="2:47:50" date="27/10/2025" user="edtarsz" action=" finished" number="1"
-            problem="Longest Substring Without Repeating Characters"></app-log-card>
-        <app-log-card time="2:47:50" date="27/10/2025" user="edtarsz" action=" finished" number="1"
-            problem="Longest Substring Without Repeating Characters"></app-log-card>
-        <app-log-card time="2:47:50" date="27/10/2025" user="edtarsz" action=" finished" number="1"
-            problem="Longest Substring Without Repeating Characters"></app-log-card>
-        <app-log-card time="2:47:50" date="27/10/2025" user="edtarsz" action=" finished" number="1"
-            problem="Longest Substring Without Repeating Characters"></app-log-card>
-        <app-log-card time="2:47:50" date="27/10/2025" user="edtarsz" action=" finished" number="1"
-            problem="Longest Substring Without Repeating Characters"></app-log-card>
-        <app-log-card time="2:47:50" date="27/10/2025" user="edtarsz" action=" finished" number="1"
-            problem="Longest Substring Without Repeating Characters"></app-log-card>
-        <app-log-card time="2:47:50" date="27/10/2025" user="edtarsz" action=" finished" number="1"
-            problem="Longest Substring Without Repeating Characters"></app-log-card>
-        <app-log-card time="2:47:50" date="27/10/2025" user="edtarsz" action=" finished" number="1"
-            problem="Longest Substring Without Repeating Characters"></app-log-card>
-        <app-log-card time="2:47:50" date="27/10/2025" user="edtarsz" action=" finished" number="1"
-            problem="Longest Substring Without Repeating Characters"></app-log-card>
-        <app-log-card time="2:47:50" date="27/10/2025" user="edtarsz" action=" finished" number="1"
-            problem="Longest Substring Without Repeating Characters"></app-log-card>
-        <app-log-card time="2:47:50" date="27/10/2025" user="edtarsz" action=" finished" number="1"
-            problem="Longest Substring Without Repeating Characters"></app-log-card>
+    <div class="flex flex-col gap-3 overflow-auto scrollbar-hide pb-4">
+        
+        @for (sub of filteredSubmissions(); track sub.id) {
+            <app-log-card 
+                [time]="(sub.submittedAt | date:'HH:mm:ss') || ''" 
+                [date]="(sub.submittedAt | date:'dd/MM/yyyy') || ''" 
+                [user]="getDisplayName(sub)" 
+                action=" finished" 
+                [number]="(sub.problem?.leetcodeId || 0).toString()" 
+                [problem]="sub.problem?.title || 'Unknown Problem'">
+            </app-log-card>
+        } @empty {
+            <div class="text-center py-10 text-[var(--gray)]">
+                No recent activity found.
+            </div>
+        }
+
     </div>
 </main>

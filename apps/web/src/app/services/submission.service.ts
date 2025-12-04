@@ -8,14 +8,22 @@ export interface Submission {
   userId: string;
   problemId: string;
   lang: string;
-  submittedAt: string; // Las fechas vienen como string ISO desde JSON
-  confidenceLevel?: 'LOW' | 'MEDIUM' | 'HIGH'; // Asumiendo tu Enum
+  submittedAt: string;
+  confidenceLevel?: 'LOW' | 'MEDIUM' | 'HIGH';
 
+  user?: {
+    id: string;
+    email: string;
+    leetcodeUsername?: string;
+  };
+  
+  // AQUÍ ESTABA EL ERROR: Faltaba leetcodeId
   problem?: {
     id: string;
     title: string;
     slug: string;
     difficulty: 'EASY' | 'MEDIUM' | 'HARD';
+    leetcodeId?: number; // <--- Agrega esta línea
   };
 }
 
@@ -68,5 +76,9 @@ export class SubmissionsService {
   getSolvedCount(): number {
     const uniqueProblems = new Set(this.mySubmissionsSubject.value.map((s) => s.problemId));
     return uniqueProblems.size;
+  }
+
+  getGroupSubmissions(groupId: string): Observable<Submission[]> {
+    return this.httpClient.get<Submission[]>(`${this.apiUrl}/group/${groupId}`);
   }
 }

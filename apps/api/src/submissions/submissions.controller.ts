@@ -67,4 +67,21 @@ export class SubmissionsController {
     // en lugar del ID del token JWT.
     return this.submissionsService.findAll(userId);
   }
+  @Get('group/:groupId')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Get submissions by group',
+    description:
+      'Returns a feed of submissions from all members of a specific group, ordered by date',
+  })
+  @ApiParam({
+    name: 'groupId',
+    description: 'The ID of the group to retrieve submissions for',
+    type: String,
+  })
+  @ApiOkResponse({ description: 'Group submissions retrieved successfully' })
+  findAllByGroup(@Param('groupId') groupId: string) {
+    return this.submissionsService.findByGroup(groupId);
+  }
 }

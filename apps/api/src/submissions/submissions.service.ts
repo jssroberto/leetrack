@@ -93,4 +93,39 @@ export class SubmissionsService {
       orderBy: { submittedAt: 'desc' },
     });
   }
+
+  async findByGroup(groupId: string) {
+    return this.prisma.submission.findMany({
+      where: {
+        user: {
+          groups: {
+            some: {
+              groupId: groupId,
+            },
+          },
+        },
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            leetcodeUsername: true,
+            email: true,
+          },
+        },
+        problem: {
+          select: {
+            id: true,
+            title: true,
+            slug: true,
+            difficulty: true,
+            leetcodeId: true,
+          },
+        },
+      },
+      orderBy: {
+        submittedAt: 'desc',
+      },
+    });
+  }
 }

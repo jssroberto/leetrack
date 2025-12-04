@@ -1,6 +1,6 @@
-import { inject, Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '@web/src/environments/environment.prod';
+import { computed, inject, Injectable, signal } from '@angular/core';
+import { environment } from '@web/src/environments/environment';
 import { catchError, Observable, tap, throwError } from 'rxjs';
 
 export interface Problem {
@@ -16,7 +16,7 @@ export interface Problem {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ProblemsService {
   private apiUrl = `${environment.apiBaseUrl}/problems`;
@@ -27,36 +27,32 @@ export class ProblemsService {
 
   public readonly problems$ = this.problems.asReadonly();
 
-  public readonly blind75 = computed(() =>
-    this.problems().filter(p => p.isBlind75)
-  );
+  public readonly blind75 = computed(() => this.problems().filter((p) => p.isBlind75));
 
-  public readonly neetCode150 = computed(() =>
-    this.problems().filter(p => p.isNeetCode150)
-  );
+  public readonly neetCode150 = computed(() => this.problems().filter((p) => p.isNeetCode150));
 
   getProblem(id: string): Problem | undefined {
-    return this.problems().find(p => p.id === id || p.slug === id);
+    return this.problems().find((p) => p.id === id || p.slug === id);
   }
 
   getProblems(forceRefresh = false): Observable<Problem[]> {
     // Si ya tenemos datos cargados y no es refresh forzado, retornar los datos actuales
     if (this.problemsLoaded() && !forceRefresh) {
-      return new Observable(observer => {
+      return new Observable((observer) => {
         observer.next(this.problems());
         observer.complete();
       });
     }
 
     return this.httpClient.get<Problem[]>(this.apiUrl).pipe(
-      tap(data => {
+      tap((data) => {
         this.problems.set(data);
         this.problemsLoaded.set(true);
       }),
-      catchError(err => {
+      catchError((err) => {
         console.error('Error loading problems:', err);
         return throwError(() => err);
-      })
+      }),
     );
   }
 

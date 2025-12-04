@@ -1,7 +1,7 @@
-import { inject, Injectable, signal, computed, effect } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { tap, Observable, catchError, throwError } from 'rxjs';
-import { environment } from '@web/src/environments/environment.prod';
+import { effect, inject, Injectable, signal } from '@angular/core';
+import { environment } from '@web/src/environments/environment';
+import { catchError, Observable, tap, throwError } from 'rxjs';
 
 export interface Group {
   id: string;
@@ -20,7 +20,7 @@ export interface GroupMember {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class GroupsService {
   private apiUrl = `${environment.apiBaseUrl}/groups`;
@@ -65,7 +65,7 @@ export class GroupsService {
         if (err.status === 404) {
           this.clearSelectedGroup();
         }
-      }
+      },
     });
   }
 
@@ -80,22 +80,22 @@ export class GroupsService {
         name: m.user.leetcodeUsername || m.user.email.split('@')[0],
         email: m.user.email,
         role: m.role,
-        joinedAt: new Date(m.joinedAt)
-      }))
+        joinedAt: new Date(m.joinedAt),
+      })),
     };
   }
 
   // Métodos públicos
   createGroup(name: string): Observable<Group> {
-    return this.http.post<Group>(this.apiUrl, { name }).pipe(
-      tap(group => this.selectGroup(group.id))
-    );
+    return this.http
+      .post<Group>(this.apiUrl, { name })
+      .pipe(tap((group) => this.selectGroup(group.id)));
   }
 
   joinGroup(inviteCode: string): Observable<Group> {
-    return this.http.post<Group>(`${this.apiUrl}/join/${inviteCode}`, {}).pipe(
-      tap(group => this.selectGroup(group.id))
-    );
+    return this.http
+      .post<Group>(`${this.apiUrl}/join/${inviteCode}`, {})
+      .pipe(tap((group) => this.selectGroup(group.id)));
   }
 
   getMyGroups(): Observable<Group[]> {
@@ -130,17 +130,17 @@ export class GroupsService {
       tap(() => {
         const updatedGroup = {
           ...currentGroup,
-          members: currentGroup.members.filter(member => member.userId !== userId)
+          members: currentGroup.members.filter((member) => member.userId !== userId),
         };
         this.currentGroup.set(updatedGroup);
 
         console.log(`Member ${userId} removed from group ${groupId}`);
       }),
-      catchError(error => {
+      catchError((error) => {
         console.error('Error kicking member:', error);
         this.reloadCurrentGroup();
         return throwError(() => error);
-      })
+      }),
     );
   }
 

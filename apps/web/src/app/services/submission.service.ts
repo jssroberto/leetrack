@@ -1,7 +1,7 @@
-import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, tap, Observable } from 'rxjs';
-import { environment } from '@web/src/environments/environment.prod';
+import { inject, Injectable } from '@angular/core';
+import { environment } from '@web/src/environments/environment';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 export interface Submission {
   id: string;
@@ -20,7 +20,7 @@ export interface Submission {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SubmissionsService {
   private apiUrl = `${environment.apiBaseUrl}/submissions`;
@@ -33,7 +33,7 @@ export class SubmissionsService {
   private isLoadingSubject = new BehaviorSubject<boolean>(false);
   public isLoading$ = this.isLoadingSubject.asObservable();
 
-  constructor() { }
+  constructor() {}
 
   /**
    * Carga las submissions del usuario autenticado (Token JWT)
@@ -50,26 +50,23 @@ export class SubmissionsService {
       error: (err) => {
         console.error('Error al cargar submissions:', err);
         this.isLoadingSubject.next(false);
-      }
+      },
     });
   }
-
-
 
   getUserSubmissions(userId: string): Observable<Submission[]> {
     return this.httpClient.get<Submission[]>(`${this.apiUrl}/user/${userId}`);
   }
 
-
   isProblemSolved(problemId: string): boolean {
-    return this.mySubmissionsSubject.value.some(s => s.problemId === problemId);
+    return this.mySubmissionsSubject.value.some((s) => s.problemId === problemId);
   }
 
   /**
    * Cuenta cuántos problemas únicos ha resuelto
    */
   getSolvedCount(): number {
-    const uniqueProblems = new Set(this.mySubmissionsSubject.value.map(s => s.problemId));
+    const uniqueProblems = new Set(this.mySubmissionsSubject.value.map((s) => s.problemId));
     return uniqueProblems.size;
   }
 }

@@ -1,9 +1,9 @@
-import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject, tap, switchMap, map } from 'rxjs'; // <--- Importante: switchMap y map
+import { inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { GroupsService, Group } from '@web/src/app/services/group.service'; // Asegúrate de importar Group interface
-import { environment } from '@web/src/environments/environment.prod';
+import { GroupsService } from '@web/src/app/services/group.service'; // Asegúrate de importar Group interface
+import { environment } from '@web/src/environments/environment';
+import { BehaviorSubject, map, Observable, switchMap, tap } from 'rxjs'; // <--- Importante: switchMap y map
 
 interface LoginResponse {
   accessToken: string;
@@ -21,11 +21,11 @@ export interface User {
 
 export enum Role {
   ADMIN,
-  MEMBER
+  MEMBER,
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   private authBaseUrl = `${environment.apiBaseUrl}/auth`;
@@ -39,9 +39,7 @@ export class AuthService {
   private httpClient = inject(HttpClient);
   private router = inject(Router);
 
-  constructor(
-    private groupsService: GroupsService
-  ) { }
+  constructor(private groupsService: GroupsService) {}
 
   async initialize(): Promise<void> {
     if (this.hasToken()) {
@@ -52,27 +50,29 @@ export class AuthService {
   register(email: string, password: string): Observable<User> {
     return this.httpClient.post<User>(`${this.authBaseUrl}/register`, {
       email,
-      password
+      password,
     });
   }
 
   login(email: string, password: string): Observable<boolean> {
-    return this.httpClient.post<LoginResponse>(`${this.authBaseUrl}/login`, {
-      email,
-      password
-    }).pipe(
-      tap(response => {
-        this.setToken(response.accessToken);
-        this.isAuthenticatedSubject.next(true);
-      }),
-      switchMap(() => this.httpClient.get<User>(`${this.authBaseUrl}/me`)),
-      tap(user => this.currentUserSubject.set(user)),
-      switchMap(() => this.groupsService.getMyGroups()),
-      map(groups => {
-        this.handleGroupSelection(groups);
-        return true;
+    return this.httpClient
+      .post<LoginResponse>(`${this.authBaseUrl}/login`, {
+        email,
+        password,
       })
-    );
+      .pipe(
+        tap((response) => {
+          this.setToken(response.accessToken);
+          this.isAuthenticatedSubject.next(true);
+        }),
+        switchMap(() => this.httpClient.get<User>(`${this.authBaseUrl}/me`)),
+        tap((user) => this.currentUserSubject.set(user)),
+        switchMap(() => this.groupsService.getMyGroups()),
+        map((groups) => {
+          this.handleGroupSelection(groups);
+          return true;
+        }),
+      );
   }
 
   logout(): void {
@@ -94,14 +94,14 @@ export class AuthService {
           this.logout();
         }
         console.error('Error loading user:', error);
-      }
+      },
     });
   }
 
   private autoSelectGroup(): void {
     this.groupsService.getMyGroups().subscribe({
       next: (groups) => this.handleGroupSelection(groups),
-      error: (err) => console.error('Error fetching groups for auto-select', err)
+      error: (err) => console.error('Error fetching groups for auto-select', err),
     });
   }
 
@@ -113,7 +113,7 @@ export class AuthService {
 
     const storedId = this.groupsService.getStoredGroupId();
 
-    const isStoredValid = storedId && groups.some(g => g.id === storedId);
+    const isStoredValid = storedId && groups.some((g) => g.id === storedId);
 
     if (isStoredValid && storedId) {
       this.groupsService.selectGroup(storedId);

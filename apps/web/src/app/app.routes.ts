@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard, publicGuard } from './guards/auth.guard';
 // Importa tus nuevos guards
-import { requireGroupGuard, alreadyHasGroupGuard } from './guards/group.guard';
+import { alreadyHasGroupGuard, requireGroupGuard } from './guards/group.guard';
 
 export const routes: Routes = [
   {
@@ -10,7 +10,10 @@ export const routes: Routes = [
     canActivate: [publicGuard],
     children: [
       { path: 'login', loadComponent: () => import('./auth/login/login').then((m) => m.Login) },
-      { path: 'register', loadComponent: () => import('./auth/register/register').then((m) => m.Register) },
+      {
+        path: 'register',
+        loadComponent: () => import('./auth/register/register').then((m) => m.Register),
+      },
       { path: '', redirectTo: 'login', pathMatch: 'full' },
     ],
   },
@@ -22,7 +25,7 @@ export const routes: Routes = [
       {
         path: 'index',
         loadComponent: () => import('./main/index').then((m) => m.Index),
-        canActivate: [alreadyHasGroupGuard]
+        canActivate: [alreadyHasGroupGuard],
       },
       {
         path: 'group',
@@ -30,12 +33,22 @@ export const routes: Routes = [
       },
       {
         path: 'leaderboard',
-        loadComponent: () => import('./main/operations/leaderboard/leaderboard').then((m) => m.Leaderboard),
-        canActivate: [requireGroupGuard]
+        loadComponent: () =>
+          import('./main/operations/leaderboard/leaderboard').then((m) => m.Leaderboard),
+        canActivate: [requireGroupGuard],
       },
       {
         path: 'group-content',
-        loadComponent: () => import('./main/operations/group-content/group-content').then((m) => m.GroupContent),
+        loadComponent: () =>
+          import('./main/operations/group-content/group-content').then((m) => m.GroupContent),
+        canActivate: [requireGroupGuard],
+      },
+      {
+        path: 'groups/:groupId/proposals/new',
+        loadComponent: () =>
+          import('./main/proposals/create-proposal/create-proposal.component').then(
+            (m) => m.CreateProposalComponent,
+          ),
         canActivate: [requireGroupGuard],
       },
       {
@@ -46,18 +59,18 @@ export const routes: Routes = [
       {
         path: 'polling',
         loadComponent: () => import('./main/operations/polling/polling').then((m) => m.Polling),
-        canActivate: [requireGroupGuard]
+        canActivate: [requireGroupGuard],
       },
       {
         path: 'log',
         loadComponent: () => import('./main/operations/log/log').then((m) => m.Log),
-        canActivate: [requireGroupGuard]
+        canActivate: [requireGroupGuard],
       },
       {
         path: '**',
         redirectTo: 'index',
       },
-    ]
+    ],
   },
   {
     path: '**',

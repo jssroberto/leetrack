@@ -1,5 +1,13 @@
 <div class="flex gap-3 min-w-[100px] w-full">
-    <app-basic-card [color]="'var(--gray)'" [number]="'1'" class="w-auto"></app-basic-card>
+    <div class="aspect-square min-w-11 flex items-center justify-center h-full shadow-[0_6px_6px_var(--shadow)] text-[12px] rounded-md gap-2"
+        [ngClass]="{
+            'bg-[var(--yellow)]': rank === 1,
+            'bg-[var(--brown)]': rank === 2,
+            'bg-[var(--gray)]': rank === 3,
+            'bg-[var(--dark-gray)]': rank > 3
+        }">
+        <span class="">{{ rank }}</span>
+    </div>
     <app-basic-card [color]="'var(--light)'" [title]="name" class="w-full"></app-basic-card>
     <app-basic-card [color]="'var(--pink)'" [title]="'+450 XP'" class="w-auto"></app-basic-card>
     <app-basic-card [color]="'var(--light)'" [title]="'10/10'" class="w-auto"></app-basic-card>

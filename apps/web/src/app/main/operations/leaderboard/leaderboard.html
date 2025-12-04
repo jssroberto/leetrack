@@ -14,9 +14,11 @@
         </app-sub-title>
     </div>
 
-    <div class="w-full flex justify-center h-[10vh]">
+    <div class="w-full flex justify-center h-[15vh]">
         <div class="flex gap-1 max-w-[400px] w-full">
             <div class="text-xs flex flex-col gap-2 w-full justify-end">
+                <img src="assets/icon/ribbon-bronze.svg" alt="" class="w-10 mx-auto">
+
                 <h4 class="text-center">hiiramsan on ig</h4>
 
                 <div
@@ -27,7 +29,10 @@
                 </div>
             </div>
             <div class="text-xs flex flex-col gap-2 w-full justify-end">
+                <img src="assets/icon/ribbon-gold.svg" alt="" class="w-10 mx-auto">
+
                 <h4 class="text-center">edtarsz</h4>
+
                 <div
                     class="cursor-pointer group rounded-md h-[100%] bg-gradient-to-b from-[var(--yellow)] to-(--pink) w-full flex items-center justify-center relative">
                     <p class="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -36,9 +41,12 @@
                 </div>
             </div>
             <div class="text-xs flex flex-col gap-2 w-full justify-end">
+                <img src="assets/icon/ribbon-silver.svg" alt="" class="w-10 mx-auto">
+
                 <h4 class="text-center">crosto</h4>
+
                 <div
-                    class="cursor-pointer group rounded-md h-[60%] bg-gradient-to-b from-[var(--gray)] to-(--pink) w-full flex items-center justify-center relative">
+                    class="cursor-pointer group rounded-md h-[40%] bg-gradient-to-b from-[var(--gray)] to-(--pink) w-full flex items-center justify-center relative">
                     <p class="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         259p
                     </p>
@@ -55,9 +63,9 @@
         </div>
     </app-sub-title>
 
-    <div class="flex flex-col gap-3 overflow-auto scrollbar-hide">
+    <div class="flex flex-col gap-3 scrollbar-hide">
         @for (member of currentGroup()?.members; track $index) {
-        <app-ranking-card [user]="member"></app-ranking-card>
+        <app-ranking-card [user]="member" [rank]="$index + 1"></app-ranking-card>
         }
     </div>
 </main>

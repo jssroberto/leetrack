@@ -2,10 +2,11 @@ import { Component, inject, Input } from '@angular/core';
 import { BasicCard } from "../basic-card/basic-card";
 import { GroupMember } from '../../services/group.service';
 import { AuthService } from '../../services/auth.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-ranking-card',
-  imports: [BasicCard],
+  imports: [BasicCard, CommonModule],
   templateUrl: './ranking-card.html',
   styleUrl: './ranking-card.css'
 })
@@ -13,7 +14,7 @@ export class RankingCard {
   private authService = inject(AuthService);
 
   @Input() user!: GroupMember;
-  @Input() xp!: string;
+  @Input() rank!: number;
 
   get name() {
     if (this.user.userId == this.authService.currentUser()?.id) {

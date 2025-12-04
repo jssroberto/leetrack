@@ -1,1 +1,63 @@
-<p>leaderboard works!</p>
+<main class="w-full h-full text-[var(--light)] flex flex-col gap-4">
+    <div class="w-full flex justify-between flex-col">
+        <app-main-title class="flex flex-col" [title]="'Log'"></app-main-title>
+        <app-sub-title [subTitle]="'Top three of the week'">
+            <div></div>
+            <ul class="flex gap-5 text-xs">
+                <li class="cursor-pointer hover:underline underline-offset-4 hover:text-[var(--secondary-color)]">
+                    Weekly
+                </li>
+                <li class="cursor-pointer hover:underline underline-offset-4 hover:text-[var(--secondary-color)]">
+                    All Time
+                </li>
+            </ul>
+        </app-sub-title>
+    </div>
+
+    <div class="w-full flex justify-center h-[10vh]">
+        <div class="flex gap-1 max-w-[400px] w-full">
+            <div class="text-xs flex flex-col gap-2 w-full justify-end">
+                <h4 class="text-center">hiiramsan on ig</h4>
+
+                <div
+                    class="cursor-pointer group rounded-md h-[30%] bg-gradient-to-b from-[var(--brown)] to-(--pink) w-full flex items-center justify-center relative">
+                    <p class="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        259p
+                    </p>
+                </div>
+            </div>
+            <div class="text-xs flex flex-col gap-2 w-full justify-end">
+                <h4 class="text-center">edtarsz</h4>
+                <div
+                    class="cursor-pointer group rounded-md h-[100%] bg-gradient-to-b from-[var(--yellow)] to-(--pink) w-full flex items-center justify-center relative">
+                    <p class="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        259p
+                    </p>
+                </div>
+            </div>
+            <div class="text-xs flex flex-col gap-2 w-full justify-end">
+                <h4 class="text-center">crosto</h4>
+                <div
+                    class="cursor-pointer group rounded-md h-[60%] bg-gradient-to-b from-[var(--gray)] to-(--pink) w-full flex items-center justify-center relative">
+                    <p class="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        259p
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <app-sub-title [subTitle]="'Weekly ranking'">
+        <div></div>
+        <div class="w-full flex justify-end text-xs text-[var(--gray)] gap-1">
+            <p class="font-family-roboto-slab-bold">Maximum points achievable:</p>
+            <span>250p</span>
+        </div>
+    </app-sub-title>
+
+    <div class="flex flex-col gap-3 overflow-auto scrollbar-hide">
+        @for (member of currentGroup()?.members; track $index) {
+        <app-ranking-card [user]="member"></app-ranking-card>
+        }
+    </div>
+</main>

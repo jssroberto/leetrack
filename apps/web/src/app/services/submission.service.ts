@@ -19,7 +19,6 @@ export interface Submission {
   };
 }
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -34,7 +33,7 @@ export class SubmissionsService {
   private isLoadingSubject = new BehaviorSubject<boolean>(false);
   public isLoading$ = this.isLoadingSubject.asObservable();
 
-  constructor() {}
+  constructor() { }
 
   /**
    * Carga las submissions del usuario autenticado (Token JWT)
@@ -55,17 +54,17 @@ export class SubmissionsService {
     });
   }
 
-  
+
 
   getUserSubmissions(userId: string): Observable<Submission[]> {
     return this.httpClient.get<Submission[]>(`${this.apiUrl}/user/${userId}`);
   }
 
-  
+
   isProblemSolved(problemId: string): boolean {
     return this.mySubmissionsSubject.value.some(s => s.problemId === problemId);
   }
-  
+
   /**
    * Cuenta cuántos problemas únicos ha resuelto
    */

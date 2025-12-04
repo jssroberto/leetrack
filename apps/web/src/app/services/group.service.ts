@@ -1,7 +1,7 @@
 import { inject, Injectable, signal, computed, effect } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { tap, Observable } from 'rxjs';
-import { environment } from '../../environments/environment';
+import { tap, Observable, catchError, throwError } from 'rxjs';
+import { environment } from '@web/src/environments/environment.prod';
 
 export interface Group {
   id: string;
@@ -27,42 +27,41 @@ export class GroupsService {
   private http = inject(HttpClient);
   private readonly GROUP_ID_KEY = 'selected_group_id';
 
-  // Signals
-  private currentGroupIdSubject = signal<string | null>(this.getStoredGroupId());
-  public readonly currentGroupId = this.currentGroupIdSubject.asReadonly();
+  private currentGroupId = signal<string | null>(this.getStoredGroupId());
+  public readonly currentGroupId$ = this.currentGroupId.asReadonly();
 
-  private currentGroupSubject = signal<Group | null>(null);
-  public readonly currentGroup = this.currentGroupSubject.asReadonly();
+  private currentGroup = signal<Group | null>(null);
+  public readonly currentGroup$ = this.currentGroup.asReadonly();
 
-  private isLoadingSubject = signal<boolean>(false);
-  public readonly isLoading = this.isLoadingSubject.asReadonly();
+  private isLoading = signal<boolean>(false);
+  public readonly isLoading$ = this.isLoading.asReadonly();
 
   constructor() {
     // Auto-cargar el grupo cuando cambia el ID
     effect(() => {
-      const groupId = this.currentGroupIdSubject();
+      const groupId = this.currentGroupId();
       if (groupId) {
         this.loadGroupData(groupId);
       } else {
-        this.currentGroupSubject.set(null);
+        this.currentGroup.set(null);
       }
     });
   }
 
   // Cargar datos del grupo actual
   private loadGroupData(groupId: string): void {
-    this.isLoadingSubject.set(true);
+    this.isLoading.set(true);
 
     this.http.get<any>(`${this.apiUrl}/${groupId}`).subscribe({
       next: (backendData) => {
         const group = this.mapBackendDataToGroup(backendData);
-        this.currentGroupSubject.set(group);
-        this.isLoadingSubject.set(false);
+        this.currentGroup.set(group);
+        this.isLoading.set(false);
       },
       error: (err) => {
         console.error('Error loading group:', err);
-        this.isLoadingSubject.set(false);
-        // Opcionalmente limpiar si el grupo no existe
+        this.isLoading.set(false);
+
         if (err.status === 404) {
           this.clearSelectedGroup();
         }
@@ -105,23 +104,49 @@ export class GroupsService {
 
   selectGroup(groupId: string): void {
     localStorage.setItem(this.GROUP_ID_KEY, groupId);
-    this.currentGroupIdSubject.set(groupId);
-    // El effect() automáticamente cargará los datos
+    this.currentGroupId.set(groupId);
   }
 
   clearSelectedGroup(): void {
     localStorage.removeItem(this.GROUP_ID_KEY);
-    this.currentGroupIdSubject.set(null);
-    this.currentGroupSubject.set(null);
+    this.currentGroupId.set(null);
+    this.currentGroup.set(null);
   }
 
   getStoredGroupId(): string | null {
     return localStorage.getItem(this.GROUP_ID_KEY);
   }
 
+  kickMember(userId: string): Observable<any> {
+    const currentGroup = this.currentGroup$();
+
+    if (!currentGroup) {
+      throw new Error('No group selected');
+    }
+
+    const groupId = currentGroup.id;
+
+    return this.http.delete(`${this.apiUrl}/${groupId}/members/${userId}`).pipe(
+      tap(() => {
+        const updatedGroup = {
+          ...currentGroup,
+          members: currentGroup.members.filter(member => member.userId !== userId)
+        };
+        this.currentGroup.set(updatedGroup);
+
+        console.log(`Member ${userId} removed from group ${groupId}`);
+      }),
+      catchError(error => {
+        console.error('Error kicking member:', error);
+        this.reloadCurrentGroup();
+        return throwError(() => error);
+      })
+    );
+  }
+
   // Forzar recarga si es necesario
   reloadCurrentGroup(): void {
-    const groupId = this.currentGroupIdSubject();
+    const groupId = this.currentGroupId();
     if (groupId) {
       this.loadGroupData(groupId);
     }

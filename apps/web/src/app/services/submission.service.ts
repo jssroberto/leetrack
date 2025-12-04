@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, tap, Observable } from 'rxjs';
-import { environment } from '../../environments/environment';
+import { environment } from '@web/src/environments/environment.prod';
 
 export interface Submission {
   id: string;

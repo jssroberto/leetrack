@@ -16,6 +16,6 @@ export class MainTitle {
   @Input() title!: string;
 
   user = this.authService.currentUser;
-  currentGroup = this.groupsService.currentGroup;
-  isLoadingGroup = this.groupsService.isLoading;
+  currentGroup = this.groupsService.currentGroup$;
+  isLoadingGroup = this.groupsService.isLoading$;
 }

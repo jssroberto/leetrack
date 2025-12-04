@@ -1,5 +1,5 @@
 import { Injectable, Input } from "@angular/core";
-import { ChevronDown, LinkIcon, LucideIconData, SquareArrowOutUpRight, Search, Minus, ChevronUp, Check, ChevronsDown, Send, User, X, Settings, EllipsisVertical } from "lucide-angular";
+import { ChevronDown, LinkIcon, LucideIconData, SquareArrowOutUpRight, Search, Minus, ChevronUp, Check, ChevronsDown, Send, User, X, Settings, EllipsisVertical, CopyIcon, Calendar, CalendarIcon, ChevronLeft, Dices } from "lucide-angular";
 
 @Injectable({
     providedIn: 'root'
@@ -11,6 +11,7 @@ export class IconService {
         'link': LinkIcon,
         'chevronDown': ChevronDown,
         'chevronUp': ChevronUp,
+        'chevronLeft': ChevronLeft,
         'squareArrowOutUpRight': SquareArrowOutUpRight,
         'search': Search,
         'minus': Minus,
@@ -20,7 +21,10 @@ export class IconService {
         'user': User,
         'x': X,
         'settings': Settings,
-        'ellipsis-vertical': EllipsisVertical
+        'ellipsis-vertical': EllipsisVertical,
+        'copy': CopyIcon,
+        'calendar': CalendarIcon,
+        'dices': Dices
     };
 
     get icon() {

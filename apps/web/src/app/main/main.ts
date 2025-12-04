@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { Router, RouterOutlet, NavigationEnd, Event } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { ProblemsService } from '../services/problem.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs';
 
@@ -16,6 +17,7 @@ export class Main {
   private destroyRef = inject(DestroyRef);
   private router = inject(Router);
   private authService = inject(AuthService);
+  private problemsService = inject(ProblemsService);
 
   currentRoute = signal(this.router.url);
   user = this.authService.currentUser;
@@ -27,14 +29,15 @@ export class Main {
       return false;
     }
 
-    return route.startsWith('/main/dashboard') ||
+    return route.startsWith('/main/leaderboard') ||
+      route.startsWith('/main/dashboard') ||
       route.startsWith('/main/polling') ||
+      route.startsWith('/main/settings') ||
       route.startsWith('/main/log') ||
       route.startsWith('/main/group');
   });
 
   constructor() {
-    // Se suscribe al router para actualizar la ruta cuando cambia
     this.router.events
       .pipe(
         filter((event): event is NavigationEnd => event instanceof NavigationEnd),
@@ -52,7 +55,9 @@ export class Main {
     });
   }
 
+  // limpiar caché de problemas al hacer logout
   logout() {
+    this.problemsService.clearCache();
     this.authService.logout();
   }
 }

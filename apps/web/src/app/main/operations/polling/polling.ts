@@ -1,12 +1,12 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { IconService } from '@web/src/app/services/icon.service';
 import { MainTitle } from "@web/src/app/shared-components/main-title/main-title";
 import { SubTitle } from "@web/src/app/shared-components/sub-title/sub-title";
 import { LucideAngularModule } from "lucide-angular";
 import { VotingBasicCard } from "@web/src/app/shared-components/complex-components/voting-basic-card/voting-basic-card";
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { ProblemsService } from '@web/src/app/services/problem.service';
+import { Problem, ProblemsService } from '@web/src/app/services/problem.service';
 import { AuthService } from '@web/src/app/services/auth.service';
 
 @Component({
@@ -15,7 +15,7 @@ import { AuthService } from '@web/src/app/services/auth.service';
   templateUrl: './polling.html',
   styleUrl: './polling.css'
 })
-export class Polling {
+export class Polling implements OnInit {
   private iconService = inject(IconService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
@@ -26,14 +26,19 @@ export class Polling {
   currentFilter = signal<string>('all');
 
   user = this.authService.currentUser;
-
-  problems = this.problemsService.problems;
+  problems = this.problemsService.problems$;
 
   constructor() {
-    this.problemsService.loadProblems();
-
     this.route.queryParams.subscribe(params => {
       this.currentFilter.set(params['filter'] || 'all');
+    });
+  }
+
+  ngOnInit(): void {
+    this.problemsService.getProblems().subscribe({
+      error: (err) => {
+        console.error('Error loading problems in Polling component:', err);
+      }
     });
   }
 

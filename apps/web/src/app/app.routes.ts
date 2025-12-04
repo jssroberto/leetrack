@@ -29,9 +29,19 @@ export const routes: Routes = [
         loadComponent: () => import('./main/operations/group/group').then((m) => m.Group),
       },
       {
+        path: 'leaderboard',
+        loadComponent: () => import('./main/operations/leaderboard/leaderboard').then((m) => m.Leaderboard),
+        canActivate: [requireGroupGuard]
+      },
+      {
         path: 'group-content',
         loadComponent: () => import('./main/operations/group-content/group-content').then((m) => m.GroupContent),
-        canActivate: [requireGroupGuard]
+        canActivate: [requireGroupGuard],
+      },
+      {
+        path: 'settings',
+        loadComponent: () => import('./main/operations/settings/settings').then((m) => m.Settings),
+        canActivate: [requireGroupGuard],
       },
       {
         path: 'polling',

@@ -57,19 +57,20 @@
   </div>
 
   } @else {
-  <div class="flex gap-4">
-    <div class="flex flex-col gap-2 w-full">
-      <label for="weeklyLeetcodes" class="text-xs text-[var(--gray)]">Weekly Leetcodes</label>
+  <div class="flex flex-col gap-2">
+    <label for="weeklyLeetcodes" class="text-xs text-[var(--gray)]">Weekly Leetcodes</label>
+
+    <div class="flex gap-2 w-full">
       <input id="weeklyLeetcodes" type="number" placeholder="Go to settings to set weekly leetcodes" min="1" disabled
         class="w-full focus:border-[var(--secondary-color)] border-1 border-transparent transition-all duration-200 outline-none shadow-[0_6px_6px_var(--shadow)] bg-[var(--dark)] placeholder:text-[var(--gray)] text-[var(--gray)] rounded-md px-5 py-4 text-sm">
+      <button type="submit"
+        class="cursor-pointer min-w-[200px] bg-[var(--secondary-color)] hover:bg-[var(--secondary-hover)] text-[var(--light)] rounded-md px-5 py-4 text-sm font-family-roboto-slab-bold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+        Start Challenge
+      </button>
     </div>
-  </div>
 
-  <!-- poner disabled cuando no esté seteado la cantidad de weekly leetcodes -->
-  <button type="submit"
-    class="cursor-pointer min-w-[200px] bg-[var(--secondary-color)] hover:bg-[var(--secondary-hover)] text-[var(--light)] rounded-md px-5 py-4 text-sm font-family-roboto-slab-bold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
-    Start Challenge
-  </button>
+    <!-- poner disabled cuando no esté seteado la cantidad de weekly leetcodes -->
+  </div>
   }
 
   <div class="flex flex-col gap-6">

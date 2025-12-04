@@ -7,7 +7,6 @@ import { GroupsService } from '../../services/group.service';
   selector: 'app-main-title',
   imports: [RouterLink],
   templateUrl: './main-title.html',
-  styleUrl: './main-title.css'
 })
 export class MainTitle {
   private authService = inject(AuthService);

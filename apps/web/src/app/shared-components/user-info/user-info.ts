@@ -9,7 +9,6 @@ import { Group, GroupsService } from '../../services/group.service';
   selector: 'app-user-info',
   imports: [CommonModule, LucideAngularModule],
   templateUrl: './user-info.html',
-  styleUrl: './user-info.css'
 })
 export class UserInfo {
   private authService = inject(AuthService);

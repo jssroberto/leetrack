@@ -57,8 +57,8 @@ export const routes: Routes = [
         canActivate: [requireGroupGuard],
       },
       {
-        path: 'polling',
-        loadComponent: () => import('./main/operations/polling/polling').then((m) => m.Polling),
+        path: 'problems',
+        loadComponent: () => import('./main/operations/problems/problems').then((m) => m.Problems),
         canActivate: [requireGroupGuard],
       },
       {

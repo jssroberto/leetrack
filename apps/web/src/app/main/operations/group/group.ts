@@ -10,7 +10,6 @@ import { GroupsService } from '@web/src/app/services/group.service'; // Asegúra
   standalone: true,
   imports: [CommonModule, FormsModule, SubTitle, RouterLink],
   templateUrl: './group.html',
-  styleUrl: './group.css'
 })
 export class Group {
   private route = inject(ActivatedRoute);

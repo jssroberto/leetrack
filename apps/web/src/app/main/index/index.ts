@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
   selector: 'app-index',
   imports: [],
   templateUrl: './index.html',
-  styleUrl: './index.css'
 })
 export class Index {
   private router = inject(Router);

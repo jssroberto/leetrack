@@ -6,16 +6,17 @@ import { LucideAngularModule } from "lucide-angular";
 import { VotingBasicCard } from "@web/src/app/shared-components/complex-components/voting-basic-card/voting-basic-card";
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Problem, ProblemsService } from '@web/src/app/services/problem.service';
+import { ProblemsService } from '@web/src/app/services/problem.service';
 import { AuthService } from '@web/src/app/services/auth.service';
+import { BasicCard } from '@web/src/app/shared-components/basic-card/basic-card';
+import { InfoBasicCard } from '@web/src/app/shared-components/complex-components/info-basic-card/info-basic-card';
 
 @Component({
   selector: 'app-polling',
-  imports: [MainTitle, SubTitle, LucideAngularModule, VotingBasicCard, CommonModule],
-  templateUrl: './polling.html',
-  styleUrl: './polling.css'
+  imports: [MainTitle, SubTitle, LucideAngularModule, VotingBasicCard, CommonModule, InfoBasicCard],
+  templateUrl: './problems.html',
 })
-export class Polling implements OnInit {
+export class Problems implements OnInit {
   private iconService = inject(IconService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
@@ -23,16 +24,11 @@ export class Polling implements OnInit {
   private authService = inject(AuthService);
 
   currentRoute = signal('');
-  currentFilter = signal<string>('all');
 
   user = this.authService.currentUser;
   problems = this.problemsService.problems$;
 
-  constructor() {
-    this.route.queryParams.subscribe(params => {
-      this.currentFilter.set(params['filter'] || 'all');
-    });
-  }
+  constructor() { }
 
   ngOnInit(): void {
     this.problemsService.getProblems().subscribe({
@@ -51,13 +47,5 @@ export class Polling implements OnInit {
 
   getIcon(iconName: string) {
     return this.iconService.iconsMap[iconName];
-  }
-
-  get currentFilterValue(): string {
-    return this.currentFilter();
-  }
-
-  get subtitleText(): string {
-    return this.currentFilterValue === 'all' ? 'Proposed Problems' : 'My Proposals';
   }
 }

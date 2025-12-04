@@ -6,19 +6,14 @@ import { GroupsService } from '@web/src/app/services/group.service';
 import { IconService } from '@web/src/app/services/icon.service';
 import { SubmissionsService } from '@web/src/app/services/submission.service';
 import { BasicCard } from "@web/src/app/shared-components/basic-card/basic-card";
-import { InfoBasicCard } from '@web/src/app/shared-components/complex-components/info-basic-card/info-basic-card';
 import { UserInfo } from "@web/src/app/shared-components/user-info/user-info";
 import { LucideAngularModule } from "lucide-angular";
-
-// Estas interfaces ahora están en group.service.ts
-// Puedes eliminarlas de aquí si quieres o mantenerlas para referencia local
 
 @Component({
   selector: 'app-group-content',
   standalone: true,
-  imports: [CommonModule, FormsModule, BasicCard, UserInfo, InfoBasicCard, LucideAngularModule, RouterLink],
+  imports: [CommonModule, FormsModule, BasicCard, UserInfo, LucideAngularModule, RouterLink],
   templateUrl: './group-content.html',
-  styleUrl: './group-content.css'
 })
 export class GroupContent implements OnInit {
   private submissionsService = inject(SubmissionsService);

@@ -8,7 +8,6 @@ import { CommonModule } from '@angular/common';
   selector: 'app-ranking-card',
   imports: [BasicCard, CommonModule],
   templateUrl: './ranking-card.html',
-  styleUrl: './ranking-card.css'
 })
 export class RankingCard {
   private authService = inject(AuthService);

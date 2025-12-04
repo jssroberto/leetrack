@@ -9,7 +9,6 @@ import { LogCard } from "@web/src/app/shared-components/complex-components/log-c
   selector: 'app-log',
   imports: [MainTitle, SubTitle, LucideAngularModule, LogCard],
   templateUrl: './log.html',
-  styleUrl: './log.css'
 })
 export class Log {
   private iconService = inject(IconService);

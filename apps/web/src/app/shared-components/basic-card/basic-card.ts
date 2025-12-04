@@ -8,7 +8,6 @@ import { IconService } from '../../services/icon.service';
   standalone: true,
   imports: [CommonModule, LucideAngularModule],
   templateUrl: './basic-card.html',
-  styleUrls: ['./basic-card.css']
 })
 export class BasicCard {
   private iconService = inject(IconService);

@@ -8,7 +8,6 @@ import { BasicCard } from "../../basic-card/basic-card";
   standalone: true,
   imports: [CommonModule, LucideAngularModule, BasicCard],
   templateUrl: './log-card.html',
-  styleUrls: ['./log-card.css']
 })
 export class LogCard {
   @Input() time!: string;

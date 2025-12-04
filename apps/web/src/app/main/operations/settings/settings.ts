@@ -12,7 +12,6 @@ import { LucideAngularModule } from "lucide-angular";
   selector: 'app-settings',
   imports: [CommonModule, BasicCard, DatePipe, LucideAngularModule, ReactiveFormsModule],
   templateUrl: './settings.html',
-  styleUrl: './settings.css'
 })
 export class Settings {
   private submissionsService = inject(SubmissionsService);

@@ -31,7 +31,7 @@ export class Main {
 
     return route.startsWith('/main/leaderboard') ||
       route.startsWith('/main/dashboard') ||
-      route.startsWith('/main/polling') ||
+      route.startsWith('/main/problems') ||
       route.startsWith('/main/settings') ||
       route.startsWith('/main/log') ||
       route.startsWith('/main/group');

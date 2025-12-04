@@ -8,7 +8,6 @@ import { BasicCard } from "../../basic-card/basic-card";
   standalone: true,
   imports: [CommonModule, LucideAngularModule, BasicCard],
   templateUrl: './info-basic-card.html',
-  styleUrls: ['./info-basic-card.css']
 })
 export class InfoBasicCard {
   @Input() problem!: string;

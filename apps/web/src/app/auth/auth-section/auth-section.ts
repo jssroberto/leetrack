@@ -7,7 +7,6 @@ import { RouterLink } from '@angular/router';
   selector: 'app-auth-section',
   imports: [ReactiveFormsModule, CommonModule, RouterLink],
   templateUrl: './auth-section.html',
-  styleUrl: './auth-section.css',
 })
 export class AuthSection {
   @Input() title: string = '';

@@ -1,26 +1,11 @@
 @if (isLoadingGroup()) {
-<div
-  class="w-full h-full flex flex-col justify-center items-center gap-3 text-[var(--gray)] animate-pulse"
->
-  <svg
-    class="animate-spin h-8 w-8 text-[var(--secondary-color)]"
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-  >
-    <circle
-      class="opacity-25"
-      cx="12"
-      cy="12"
-      r="10"
-      stroke="currentColor"
-      stroke-width="4"
-    ></circle>
-    <path
-      class="opacity-75"
-      fill="currentColor"
-      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-    ></path>
+<div class="w-full h-full flex flex-col justify-center items-center gap-3 text-[var(--gray)] animate-pulse">
+  <svg class="animate-spin h-8 w-8 text-[var(--secondary-color)]" xmlns="http://www.w3.org/2000/svg" fill="none"
+    viewBox="0 0 24 24">
+    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+    <path class="opacity-75" fill="currentColor"
+      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+    </path>
   </svg>
   <p class="text-lg font-family-roboto-slab">Loading group details...</p>
 </div>
@@ -29,66 +14,38 @@
   <div class="w-full flex justify-between">
     <div class="flex flex-col gap-2 justify-between">
       <h1
-        class="text-center sm:text-start text-[var(--light)] text-[clamp(2rem,2vw,3rem)] font-family-roboto-slab-bold"
-      >
+        class="text-center sm:text-start text-[var(--light)] text-[clamp(2rem,2vw,3rem)] font-family-roboto-slab-bold">
         {{ group.name }}
       </h1>
 
       <h2 class="text-[var(--gray)] text-sm flex items-center gap-2">
-        <lucide-icon
-          [img]="getIcon('calendar')"
-          class="my-icon"
-          [size]="'16'"
-          [strokeWidth]="'2'"
-          [color]="'var(--gray)'"
-        ></lucide-icon>
+        <lucide-icon [img]="getIcon('calendar')" class="my-icon" [size]="'16'" [strokeWidth]="'2'"
+          [color]="'var(--gray)'"></lucide-icon>
         Created on {{ group.createdAt | date:'longDate' }}
       </h2>
     </div>
 
     <div class="flex items-center gap-3">
       <div
-        class="md:w-auto bg-[var(--surface)] px-4 py-4 rounded-md border border-[var(--dark-gray)] shadow-lg flex flex-col gap-2"
-      >
-        <span class="text-[var(--gray)] text-xs font-bold uppercase tracking-wider"
-          >Invite Code</span
-        >
+        class="md:w-auto bg-[var(--surface)] px-4 py-4 rounded-md border border-[var(--dark-gray)] shadow-lg flex flex-col gap-2">
+        <span class="text-[var(--gray)] text-xs font-bold uppercase tracking-wider">Invite Code</span>
         <div class="flex items-center gap-2">
           <code
-            class="cursor-pointer text-[var(--secondary-color)] text-nowrap whitespace-nowrap font-mono text-xl font-bold tracking-widest bg-[rgba(0,0,0,0.2)] px-4 py-1 rounded-md select-all"
-          >
+            class="cursor-pointer text-[var(--secondary-color)] text-nowrap whitespace-nowrap font-mono text-xl font-bold tracking-widest bg-[rgba(0,0,0,0.2)] px-4 py-1 rounded-md select-all">
             {{ group.inviteCode }}
           </code>
-          <button
-            (click)="copyInviteCode()"
+          <button (click)="copyInviteCode()"
             class="text-[var(--light)] cursor-pointer hover:text-white hover:bg-[var(--dark-gray)] p-2 rounded-md transition-all"
-            title="Copiar código"
-          >
-            <lucide-icon
-              [img]="getIcon('copy')"
-              class="my-icon"
-              [size]="'18'"
-              [strokeWidth]="'2'"
-              [color]="'var(--light)'"
-            ></lucide-icon>
+            title="Copiar código">
+            <lucide-icon [img]="getIcon('copy')" class="my-icon" [size]="'18'" [strokeWidth]="'2'"
+              [color]="'var(--light)'"></lucide-icon>
           </button>
         </div>
       </div>
-      <app-basic-card
-        [iconName]="'plus'"
-        [color]="'var(--light)'"
-        class="w-full h-full"
-        [size]="'36'"
-        [routerLink]="['/main/groups', group.id, 'proposals', 'new']"
-        title="Create Proposal"
-      ></app-basic-card>
-      <app-basic-card
-        [iconName]="'settings'"
-        [color]="'var(--light)'"
-        class="w-full h-full"
-        [size]="'36'"
-        routerLink="/main/settings"
-      ></app-basic-card>
+      <app-basic-card [iconName]="'plus'" [color]="'var(--light)'" class="w-full h-full" [size]="'36'"
+        [routerLink]="['/main/groups', group.id, 'proposals', 'new']" title="Create Proposal"></app-basic-card>
+      <app-basic-card [iconName]="'settings'" [color]="'var(--light)'" class="w-full h-full" [size]="'36'"
+        routerLink="/main/settings"></app-basic-card>
     </div>
   </div>
 
@@ -96,52 +53,9 @@
 
   <div class="flex flex-col gap-6">
     <h2 class="text-[var(--light)] text-2xl font-family-roboto-slab-bold flex items-center gap-3">
-      This week problems
-      <div
-        class="flex items-center justify-center bg-[var(--dark-gray)] text-[var(--gray)] text-sm rounded-full w-6 text-center aspect-square"
-      >
-        <span> {{ group.members.length }} </span>
-      </div>
-    </h2>
-
-    <div
-      class="flex flex-wrap gap-3 overflow-auto scrollbar-hide h-auto justify-start items-start content-start"
-    >
-      <app-info-basic-card
-        [problem]="'Uknown Problem'"
-        [number]="'0'"
-        [completedIn]="'N/A'"
-        [xp]="'10'"
-        [difficulty]="'Easy'"
-        class="flex-[1_1_500px] max-w-full"
-      >
-      </app-info-basic-card>
-
-      @if (isLoadingSubmissions$ | async) {
-      <div class="w-full text-center p-4 text-gray-400">Loading submissions...</div>
-      } @else { @if (submissions$ | async; as submissions) { @for (sub of submissions; track sub.id)
-      {
-      <app-info-basic-card
-        [problem]="sub.problem?.title ?? 'Problema Desconocido'"
-        [number]="sub.problem?.id?.substring(0,4) ?? '0'"
-        [completedIn]="(sub.submittedAt | date:'shortDate') ?? 'N/A'"
-        [xp]="sub.problem?.difficulty === 'HARD' ? '50' : sub.problem?.difficulty === 'MEDIUM' ? '30' : '10'"
-        [difficulty]="sub.problem?.difficulty ?? 'Easy'"
-        class="flex-[1_1_500px] max-w-full"
-      >
-      </app-info-basic-card>
-      } @empty {
-      <div class="w-full text-center p-4 text-gray-400">You haven't submitted yet.</div>
-      } } }
-    </div>
-  </div>
-
-  <div class="flex flex-col gap-6">
-    <h2 class="text-[var(--light)] text-2xl font-family-roboto-slab-bold flex items-center gap-3">
       Team Members
       <div
-        class="flex items-center justify-center bg-[var(--dark-gray)] text-[var(--gray)] text-sm rounded-full w-6 text-center aspect-square"
-      >
+        class="flex items-center justify-center bg-[var(--dark-gray)] text-[var(--gray)] text-sm rounded-full w-6 text-center aspect-square">
         <span> {{ group.members.length }} </span>
       </div>
     </h2>
@@ -155,17 +69,8 @@
 </main>
 } @else {
 <div class="w-full h-full flex flex-col justify-center items-center gap-3 text-[var(--gray)]">
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="64"
-    height="64"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    stroke-width="1"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
     <circle cx="9" cy="7" r="4"></circle>
     <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>

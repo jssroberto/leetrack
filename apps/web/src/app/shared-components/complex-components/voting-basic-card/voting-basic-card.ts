@@ -9,7 +9,6 @@ import { IconService } from '@web/src/app/services/icon.service';
   standalone: true,
   imports: [CommonModule, LucideAngularModule, BasicCard],
   templateUrl: './voting-basic-card.html',
-  styleUrls: ['./voting-basic-card.css']
 })
 export class VotingBasicCard {
   private iconService = inject(IconService);

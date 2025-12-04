@@ -10,7 +10,6 @@ import { Router } from "@angular/router";
   standalone: true,
   imports: [AuthSection, ReactiveFormsModule, CommonModule],
   templateUrl: './register.html',
-  styleUrl: './register.css'
 })
 export class Register {
   private fb = inject(FormBuilder);

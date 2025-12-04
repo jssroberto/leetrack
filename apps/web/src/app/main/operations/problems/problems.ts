@@ -3,23 +3,20 @@ import { IconService } from '@web/src/app/services/icon.service';
 import { MainTitle } from "@web/src/app/shared-components/main-title/main-title";
 import { SubTitle } from "@web/src/app/shared-components/sub-title/sub-title";
 import { LucideAngularModule } from "lucide-angular";
-import { VotingBasicCard } from "@web/src/app/shared-components/complex-components/voting-basic-card/voting-basic-card";
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ProblemsService } from '@web/src/app/services/problem.service';
 import { AuthService } from '@web/src/app/services/auth.service';
-import { BasicCard } from '@web/src/app/shared-components/basic-card/basic-card';
 import { InfoBasicCard } from '@web/src/app/shared-components/complex-components/info-basic-card/info-basic-card';
 
 @Component({
   selector: 'app-polling',
-  imports: [MainTitle, SubTitle, LucideAngularModule, VotingBasicCard, CommonModule, InfoBasicCard],
+  imports: [MainTitle, SubTitle, LucideAngularModule, CommonModule, InfoBasicCard],
   templateUrl: './problems.html',
 })
 export class Problems implements OnInit {
   private iconService = inject(IconService);
   private router = inject(Router);
-  private route = inject(ActivatedRoute);
   private problemsService = inject(ProblemsService);
   private authService = inject(AuthService);
 

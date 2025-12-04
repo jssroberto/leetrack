@@ -46,7 +46,7 @@ export const routes: Routes = [
       {
         path: 'groups/:groupId/proposals/new',
         loadComponent: () =>
-          import('./main/proposals/create-proposal/create-proposal.component').then(
+          import('./main/operations/create-proposal/create-proposal.component').then(
             (m) => m.CreateProposalComponent,
           ),
         canActivate: [requireGroupGuard],

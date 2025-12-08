@@ -1,12 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { effect, inject, Injectable, signal } from '@angular/core';
-import { environment } from '@web/src/environments/environment';
+import { environment } from '@web/src/environments/environment'; // O la ruta relativa si prefieres
 import { catchError, Observable, tap, throwError } from 'rxjs';
 
 export interface Group {
   id: string;
   name: string;
   inviteCode: string;
+  weeklyLeetcodes: number; // <--- 1. AGREGADO: Para que TypeScript lo reconozca
   createdAt: Date;
   members: GroupMember[];
 }
@@ -27,6 +28,7 @@ export class GroupsService {
   private http = inject(HttpClient);
   private readonly GROUP_ID_KEY = 'selected_group_id';
 
+  // Signals para el estado reactivo
   private currentGroupId = signal<string | null>(this.getStoredGroupId());
   public readonly currentGroupId$ = this.currentGroupId.asReadonly();
 
@@ -37,7 +39,7 @@ export class GroupsService {
   public readonly isLoading$ = this.isLoading.asReadonly();
 
   constructor() {
-    // Auto-cargar el grupo cuando cambia el ID
+    // Efecto: Cuando cambia el ID, cargamos los datos automáticamente
     effect(() => {
       const groupId = this.currentGroupId();
       if (groupId) {
@@ -48,7 +50,7 @@ export class GroupsService {
     });
   }
 
-  // Cargar datos del grupo actual
+  // --- Carga de Datos ---
   private loadGroupData(groupId: string): void {
     this.isLoading.set(true);
 
@@ -69,14 +71,17 @@ export class GroupsService {
     });
   }
 
+  // --- Mapeo de Datos (Backend -> Frontend) ---
   private mapBackendDataToGroup(data: any): Group {
     return {
       id: data.id,
       name: data.name,
       inviteCode: data.inviteCode,
+      weeklyLeetcodes: data.weeklyLeetcodes || 1, // <--- 2. AGREGADO: Mapeo del valor (con fallback a 1)
       createdAt: new Date(data.createdAt),
       members: data.members.map((m: any) => ({
         userId: m.user.id,
+        // Lógica para obtener el nombre más amigable posible
         name: m.user.leetcodeUsername || m.user.email.split('@')[0],
         email: m.user.email,
         role: m.role,
@@ -85,7 +90,8 @@ export class GroupsService {
     };
   }
 
-  // Métodos públicos
+  // --- Métodos Públicos (Actions) ---
+
   createGroup(name: string): Observable<Group> {
     return this.http
       .post<Group>(this.apiUrl, { name })
@@ -96,6 +102,18 @@ export class GroupsService {
     return this.http
       .post<Group>(`${this.apiUrl}/join/${inviteCode}`, {})
       .pipe(tap((group) => this.selectGroup(group.id)));
+  }
+
+  // Método updateGroup para Settings
+  updateGroup(groupId: string, data: Partial<Group> | any): Observable<Group> {
+    return this.http.patch<Group>(`${this.apiUrl}/${groupId}`, data).pipe(
+      tap((updatedGroup) => {
+        // Al recibir la respuesta actualizada, volvemos a mapear para actualizar la Signal
+        const mappedGroup = this.mapBackendDataToGroup(updatedGroup);
+        this.currentGroup.set(mappedGroup);
+        console.log('Group updated locally with:', mappedGroup);
+      })
+    );
   }
 
   getMyGroups(): Observable<Group[]> {
@@ -117,6 +135,8 @@ export class GroupsService {
     return localStorage.getItem(this.GROUP_ID_KEY);
   }
 
+  // --- Gestión de Miembros ---
+
   kickMember(userId: string): Observable<any> {
     const currentGroup = this.currentGroup$();
 
@@ -128,6 +148,7 @@ export class GroupsService {
 
     return this.http.delete(`${this.apiUrl}/${groupId}/members/${userId}`).pipe(
       tap(() => {
+        // Optimistic update: Eliminamos al miembro localmente
         const updatedGroup = {
           ...currentGroup,
           members: currentGroup.members.filter((member) => member.userId !== userId),
@@ -138,10 +159,21 @@ export class GroupsService {
       }),
       catchError((error) => {
         console.error('Error kicking member:', error);
+        // Si falla, recargamos los datos reales para asegurar consistencia
         this.reloadCurrentGroup();
         return throwError(() => error);
       }),
     );
+  }
+
+  // Método público para leer el ID directamente (útil para guards o componentes no reactivos)
+  getCurrentGroupId(): string | null {
+    return this.currentGroupId();
+  }
+  
+  // Método público para obtener el grupo directamente (útil si necesitas el valor snapshot)
+  getCurrentGroupSnapshot(): Group | null {
+    return this.currentGroup();
   }
 
   // Forzar recarga si es necesario
@@ -150,5 +182,10 @@ export class GroupsService {
     if (groupId) {
       this.loadGroupData(groupId);
     }
+  }
+
+  // Método auxiliar para obtener detalles (usado por group-content si no usa la signal)
+  getGroupById(groupId: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${groupId}`);
   }
 }

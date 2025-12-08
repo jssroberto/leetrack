@@ -38,6 +38,7 @@ model Group {
   members            UserGroup[]
   challenges         Challenge[]
   challengeProposals ChallengeProposal[]
+  weeklyLeetcodes    Int                 @default(1)
 
   @@index([inviteCode])
 }

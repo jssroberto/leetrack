@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateGroupDto } from './dto/create-group.dto';
+import { UpdateGroupDto } from './dto/update-group.dto';
 
 @Injectable()
 export class GroupsService {
@@ -51,6 +52,54 @@ export class GroupsService {
                 email: true,
                 leetcodeUsername: true,
               },
+            },
+          },
+        },
+      },
+    });
+  }
+
+  // === Método UPDATE agregado ===
+  async update(groupId: string, userId: string, updateGroupDto: UpdateGroupDto) {
+    // 1. Verificar Permisos: ¿Es el usuario ADMIN de este grupo?
+    const userGroup = await this.prisma.userGroup.findUnique({
+      where: {
+        userId_groupId: {
+          userId,
+          groupId,
+        },
+      },
+    });
+
+    if (!userGroup || userGroup.role !== Role.ADMIN) {
+      throw new ForbiddenException('Only admins can update group settings');
+    }
+
+    // 2. Validación Extra: Si cambia el inviteCode, verificar que no esté duplicado
+    if (updateGroupDto.inviteCode) {
+      const existing = await this.prisma.group.findUnique({
+        where: { inviteCode: updateGroupDto.inviteCode },
+      });
+      // Si existe y NO es el mismo grupo (es decir, alguien más ya lo tiene)
+      if (existing && existing.id !== groupId) {
+        throw new BadRequestException('This invite code is already taken');
+      }
+    }
+
+    // 3. Actualizar
+    return this.prisma.group.update({
+      where: { id: groupId },
+      data: {
+        name: updateGroupDto.name,
+        inviteCode: updateGroupDto.inviteCode,
+        weeklyLeetcodes: updateGroupDto.weeklyLeetcodes,
+      },
+      // Incluimos miembros para mantener la consistencia del objeto en el frontend
+      include: {
+        members: {
+          include: {
+            user: {
+              select: { id: true, email: true, leetcodeUsername: true },
             },
           },
         },
@@ -116,7 +165,7 @@ export class GroupsService {
       include: {
         members: {
           orderBy: {
-            role: 'asc', // Mostrar admins primero (ADMIN < MEMBER alfabéticamente? No, depende del Enum, mejor ordenar por fecha o lógica manual)
+            role: 'asc', // Mostrar admins primero
           },
           include: {
             user: {
@@ -161,7 +210,7 @@ export class GroupsService {
     });
 
     if (existingMember) {
-      // Si ya es miembro, devolvemos el grupo (y podrías lanzar una excepción si prefieres)
+      // Si ya es miembro, devolvemos el grupo
       return this.findOne(group.id);
     }
 
@@ -175,7 +224,6 @@ export class GroupsService {
     });
 
     // IMPORTANTE: Devolver el grupo con la información actualizada
-    // Llamamos a findOne para que nos traiga la estructura completa con el nuevo miembro
     return this.findOne(group.id);
   }
 
@@ -190,9 +238,6 @@ export class GroupsService {
     if (!userGroup) {
       throw new NotFoundException('You are not a member of this group');
     }
-
-    // Admin no puede salirse si es el único (lógica opcional pero recomendada)
-    // ...
 
     return this.prisma.userGroup.delete({
       where: {

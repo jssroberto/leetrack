@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Request, UseGuards } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -12,6 +12,7 @@ import {
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CreateGroupDto } from './dto/create-group.dto';
+import { UpdateGroupDto } from './dto/update-group.dto';
 import { GroupsService } from './groups.service';
 
 interface AuthenticatedRequest extends Request {
@@ -88,6 +89,24 @@ export class GroupsController {
   @ApiNotFoundResponse({ description: 'Group not found or not a member' })
   leave(@Param('id') id: string, @Request() req: AuthenticatedRequest) {
     return this.groupsService.leaveGroup(id, req.user.userId);
+  }
+
+  @Patch(':id')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Update group settings',
+    description: 'Updates group name, invite code, or weekly goals (Admin only)',
+  })
+  @ApiParam({ name: 'id', description: 'Group ID' })
+  @ApiOkResponse({ description: 'Group updated successfully' })
+  @ApiForbiddenResponse({ description: 'Only admins can update the group' })
+  update(
+    @Param('id') id: string,
+    @Body() updateGroupDto: UpdateGroupDto,
+    @Request() req: AuthenticatedRequest,
+  ) {
+    return this.groupsService.update(id, req.user.userId, updateGroupDto);
   }
 
   @Delete(':id/members/:userId')
